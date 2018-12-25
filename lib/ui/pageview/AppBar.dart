@@ -66,7 +66,9 @@ class TitleState extends State<Title> {
 			this.style = style;
 		});
 	}
+
 	var lastPositionOffset = 0.0;
+
 	_pageViewListener() {
 		var positionOffset = controller.position.pixels / screenSize.width;
 		var difference = lastPositionOffset - positionOffset;
@@ -94,13 +96,24 @@ class TitleState extends State<Title> {
 		update(leftMargin, titleBottomMargin, newTitleStyle);
 	}
 
+	void plugPositionListener() {
+		if (!controller.hasClients) {
+			Future.delayed(Duration(milliseconds: 500)).then((_) {
+				plugPositionListener();
+			});
+		} else {
+			controller.position.addListener(_pageViewListener);
+		}
+	}
+
 	@override
 	Widget build(BuildContext context) {
 		screenSize = MediaQuery
 				.of(context)
 				.size;
-		Future.delayed(Duration(seconds: 2))
-				.then((_) => controller.position.addListener(_pageViewListener));
+		plugPositionListener();
+//		Future.delayed(Duration(seconds: 2))
+//				.then((_) => controller.position.addListener(_pageViewListener));
 		return Container(
 				margin: EdgeInsets.only(left: leftMargin, bottom: _bottomMargin),
 				child: Text(

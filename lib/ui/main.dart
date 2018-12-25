@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:catch_me/pageview/PageView.dart';
+import 'package:catch_me/ui/pageview/PageView.dart';
 import 'package:flutter/services.dart';
 
 void main() {

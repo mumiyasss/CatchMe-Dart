@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:catch_me/chatlist/ChatList.dart';
-import 'package:catch_me/settings/Settings.dart';
+import 'package:catch_me/ui/chatlist/ChatList.dart';
+import 'package:catch_me/ui/settings/Settings.dart';
 import 'AppBar.dart';
+import 'package:catch_me/values/Dimens.dart';
 
 class MainPage extends StatefulWidget {
   final pageView = PageView(
@@ -25,7 +26,10 @@ class _MainPageState extends State<MainPage> {
     return Scaffold(
         body: SafeArea(
       child: Stack(
-        children: <Widget>[appBar, widget.pageView],
+        children: <Widget>[appBar,
+        Container(
+            margin: EdgeInsets.only(top: Dimens.appBarHeight),
+            child: widget.pageView)],
       ),
     ));
   }

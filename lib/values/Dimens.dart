@@ -9,5 +9,5 @@ class Dimens {
 
 	static const appBarHeight = 87.0;
 	static const maxValidShiftForAppBarTitle =
-			(leftMarginSubtitle * 2) + 225; // 225 - approx text length for sans-serif
+			(leftMarginSubtitle * 2) + 240; // 240 - approx text length for sans-serif
 }
