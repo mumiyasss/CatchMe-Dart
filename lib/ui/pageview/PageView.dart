@@ -28,6 +28,7 @@ class _MainPageState extends State<MainPage> {
       child: Stack(
         children: <Widget>[appBar,
         Container(
+            color: Colors.white,
             margin: EdgeInsets.only(top: Dimens.appBarHeight),
             child: widget.pageView)],
       ),
