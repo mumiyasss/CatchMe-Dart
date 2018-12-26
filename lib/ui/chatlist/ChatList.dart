@@ -61,28 +61,19 @@ class ChatList extends StatelessWidget {
 		);
 
 
-		Container wrappedText(String text, TextStyle style, double screenPersentage) => Container(
-				width: MediaQuery.of(context).size.width * 0.5,
-				child: Text(
-					text, style: style,
-					overflow: TextOverflow.ellipsis,
-					maxLines: 1,
-				)
-		);
-
-		var name = wrappedText(message['name'], Style.chatNameStyle(), 0.5);
-		var time = Text(message['time'], style: Style.lastMessageTime());
-		var lastMessage = wrappedText(message['message'], Style.lastMessageTime(), 0.5)
-		var _unread = message['unread'];
-		var badge = _unread == null ? Container() : Container(
-			padding: EdgeInsets.fromLTRB(7.2, 3, 7.2, 3),
-			decoration: BoxDecoration(
-				borderRadius: BorderRadius.all(Radius.circular(12)),
-				color: Color(0xFF2196f3),
-			),
-			child: Text(_unread.toString(), style: Style.newMessagesCounter()),
-		);
-
+		Container wrappedText(String text, TextStyle style,
+				double screenPercentage) =>
+				Container(
+						width: MediaQuery
+								.of(context)
+								.size
+								.width * screenPercentage,
+						child: Text(
+							text, style: style,
+							overflow: TextOverflow.ellipsis,
+							maxLines: 1,
+						)
+				);
 
 		Row messageRow(Widget widget1, Widget widget2) =>
 				Row(
@@ -94,94 +85,41 @@ class ChatList extends StatelessWidget {
 					],
 				);
 
-		var divider = Divider();
+		var name = wrappedText(message['name'], Style.chatNameStyle(), 0.5);
+		var time = Text(message['time'], style: Style.lastMessageTime());
+		var lastMessage = wrappedText(
+				message['message'], Style.lastMessageTime(), 0.5);
+		var _unread = message['unread'];
+		var badge = _unread == null ? Container() : Container(
+			padding: EdgeInsets.fromLTRB(7.2, 3, 7.2, 3),
+			decoration: BoxDecoration(
+				borderRadius: BorderRadius.all(Radius.circular(12)),
+				color: Color(0xFF2196f3),
+			),
+			child: Text(_unread.toString(), style: Style.newMessagesCounter()),
+		);
+
 		return Container(
 				child: Column(
 					children: <Widget>[
-						Container(
-							child: Row(
-								children: <Widget>[
-									profilePhoto,
-
-									Expanded(
-										child: Padding(
-											padding: EdgeInsets.only(left: 18),
-											child: Column(
-												children: <Widget>[
-													messageRow(name, time),
-													Container(height: 6,),
-													messageRow(lastMessage, badge)
-												],
-											),
+						Row(
+							children: <Widget>[
+								profilePhoto,
+								Expanded(
+									child: Padding(
+										padding: EdgeInsets.only(left: 18),
+										child: Column(
+											children: <Widget>[
+												messageRow(name, time),
+												Container(height: 6,),
+												messageRow(lastMessage, badge)
+											],
 										),
 									),
-
-								],
-							),
-						),
-						divider
-					],
-				)
-		);
-	}
-
-
-	Widget _buildListItem1(BuildContext context, Map message) {
-		var profilePhoto = message['photo'] == null ?
-		profilePictureDefault
-				: Image.asset('assets/hi.png', width: 72, height: 72);
-
-
-		var nameAndMessage =
-		Container(
-			//color: Colors.amber,
-			margin: EdgeInsets.only(left: 18),
-			child: Column(
-				crossAxisAlignment: CrossAxisAlignment.start,
-				children: <Widget>[
-					Text(message['name'], style: Style.chatNameStyle(),),
-					Container(height: 7,),
-					Text(message['message'], style: Style.messageInChatListStyle(),),
-				],
-			),
-		);
-
-		var timeAndUnread = Row(mainAxisAlignment: MainAxisAlignment.end,
-				children: <Widget>[
-					Column(
-						crossAxisAlignment: CrossAxisAlignment.end,
-						children: <Widget>[
-							Text(message['time'], style: Style.lastMessageTime(),),
-							Container(height: 0,),
-							Container(
-								padding: EdgeInsets.all(7),
-								decoration: BoxDecoration(
-										shape: BoxShape.circle,
-										color: Color(0xFF2196f3)
 								),
-								child: Text(message['unread'] == null ? "" : message['unread']
-										.toString(), style: Style.newMessagesCounter()),
-							),
-						],
-					),
-				]
-		);
-
-		var divider = Divider();
-		return Container(
-				child: Column(
-					children: <Widget>[
-						Container(
-							//color: Colors.blue,
-							child: Row(
-								children: <Widget>[
-									profilePhoto,
-									nameAndMessage,
-									Expanded(child: timeAndUnread)
-								],
-							),
+							],
 						),
-						divider
+						Divider()
 					],
 				)
 		);
