@@ -1,13 +1,44 @@
+import 'package:backdrop/backdrop.dart';
 import 'package:catch_me/values/Dimens.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class ChatScreenView extends StatelessWidget {
  
+  final title = Row(
+        children: <Widget>[
+          Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                image: DecorationImage(image: AssetImage('assets/hi.png'))),
+            //child: profilePhoto
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 12.0, top: 8.0, bottom: 8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text("James Smith", style: TextStyle(fontSize: 20)),
+                Text('last seen at 8:30', style: TextStyle(fontSize: 12),)
+              ],
+            ),
+          ),
+        ],
+      );
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
+    return BackdropScaffold(
+      frontLayerBorderRadius: const BorderRadius.only(
+      topLeft: Radius.circular(16.0),
+      topRight: Radius.circular(16.0),
+    ),
+      iconPosition: BackdropIconPosition.action,
+      title: title,
+      backLayer: Center(),
+      frontLayer: SafeArea(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
@@ -16,28 +47,31 @@ class ChatScreenView extends StatelessWidget {
               child: GestureDetector(
                 onTap: () =>
                     FocusScope.of(context).requestFocus(new FocusNode()),
-                child: ListView(
-                  reverse: true,
-                  children: <Widget>[
-                    MessageBubble(false, "Hello"),
-                    MessageBubble(true, "Hello"),
-                    MessageBubble(
-                        false, "Hello, how are you, buddy? I heard "),
-                    MessageBubble(false,
-                        "Hello, how are you, buddy? I heard a lot about you!!!"),
-                    MessageBubble(true,
-                        "Hello, how are you, buddy? I heard a lot about you!!!"),
-                    MessageBubble(true,
-                        "Hello, how are you, buddy? I heard a lot about you!!!"),
-                    MessageBubble(true,
-                        "Hello, how are you, buddy? I heard a lot about you!!!"),
-                    MessageBubble(false,
-                        "Hello, how are you, buddy? I heard a lot about you!!!"),
-                    MessageBubble(true,
-                        "Hello, how are you, buddy? I heard a lot about you!!!"),
-                    MessageBubble(false,
-                        "Hello, how are you, buddy? I heard a lot about you!!!"),
-                  ],
+                child: Container(
+                  color: Colors.white,
+                  child: ListView(
+                    reverse: true,
+                    children: <Widget>[
+                      MessageBubble(false, "Hello"),
+                      MessageBubble(true, "Hello"),
+                      MessageBubble(
+                          false, "Hello, how are you, buddy? I heard "),
+                      MessageBubble(false,
+                          "Hello, how are you, buddy? I heard a lot about you!!!"),
+                      MessageBubble(true,
+                          "Hello, how are you, buddy? I heard a lot about you!!!"),
+                      MessageBubble(true,
+                          "Hello, how are you, buddy? I heard a lot about you!!!"),
+                      MessageBubble(true,
+                          "Hello, how are you, buddy? I heard a lot about you!!!"),
+                      MessageBubble(false,
+                          "Hello, how are you, buddy? I heard a lot about you!!!"),
+                      MessageBubble(true,
+                          "Hello, how are you, buddy? I heard a lot about you!!!"),
+                      MessageBubble(false,
+                          "Hello, how are you, buddy? I heard a lot about you!!!"),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -71,7 +105,7 @@ class MessageBubble extends StatelessWidget {
         textAlign: TextAlign.justify,
         // textAlign: self ? TextAlign.end : TextAlign.start,
         style: TextStyle(
-            fontWeight: FontWeight.w500,
+            fontWeight: FontWeight.w400,
             fontSize: 16,
             color: self ? Colors.black : Colors.white),
       ),
@@ -119,6 +153,7 @@ class _MessageFieldState extends State<MessageField> {
               child: Padding(
                 padding: EdgeInsets.only(left: 10),
                 child: TextField(
+                  keyboardType: TextInputType.text,
                   onChanged: (text) {
                     text.length == 0
                         ? setState(() => actionButton = attach)

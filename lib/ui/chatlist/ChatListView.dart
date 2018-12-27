@@ -10,8 +10,8 @@ class ChatListView extends ChatList {
   static final profilePicture1 = AssetImage('assets/hi.png');
   final profilePictureDefault = SvgPicture.asset(
     'assets/profile.svg',
-    width: 72,
-    height: 72,
+    width: Dimens.chatListProfilePictureSize,
+    height: Dimens.chatListProfilePictureSize,
   );
 
   @override
@@ -39,8 +39,8 @@ class ChatListView extends ChatList {
     var profilePhoto = chat.photo == null
         ? profilePictureDefault
         : Container(
-            height: 72,
-            width: 72,
+            width: Dimens.chatListProfilePictureSize,
+    height: Dimens.chatListProfilePictureSize,
             decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 image: DecorationImage(image: AssetImage('assets/hi.png'))),
@@ -98,7 +98,7 @@ class ChatListView extends ChatList {
                       children: <Widget>[
                         messageRow(name, time),
                         Container(
-                          height: 6,
+                          height: 3,
                         ),
                         messageRow(lastMessage, badge)
                       ],
