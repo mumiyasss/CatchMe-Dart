@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:catch_me/ui/chatlist/ChatList.dart';
+import 'package:catch_me/ui/chatlist/ChatListView.dart';
 import 'package:catch_me/ui/settings/Settings.dart';
 import 'AppBar.dart';
 import 'package:catch_me/values/Dimens.dart';
 
 class MainPage extends StatefulWidget {
   final pageView = PageView(
+    physics: AlwaysScrollableScrollPhysics(),
     children: <Widget>[
-      ChatList(), Settings(),
+      ChatListView(), Settings(),
     ],
     controller: PageController(),
   );

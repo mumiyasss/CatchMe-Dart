@@ -72,7 +72,7 @@ class TitleState extends State<Title> {
 	_pageViewListener() {
 		var positionOffset = controller.position.pixels / screenSize.width;
 		var difference = lastPositionOffset - positionOffset;
-		if (difference > 0.01 || -difference > 0.01) {
+		if (difference > 0.001 || -difference > 0.001) {
 			if (positionOffset < 0) positionOffset *= -1;
 			else if (positionOffset >= 1) positionOffset = 0.99;
 			calculateNewValues(positionOffset);
