@@ -1,7 +1,9 @@
+import 'package:catch_me/values/Dimens.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class ChatScreenView extends StatelessWidget {
+ 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -9,35 +11,33 @@ class ChatScreenView extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
+            
             Flexible(
               child: GestureDetector(
                 onTap: () =>
                     FocusScope.of(context).requestFocus(new FocusNode()),
-                child: Container(
-                  height: 600,
-                  child: ListView(
-                    reverse: true,
-                    children: <Widget>[
-                      MessageBubble(false, "Hello"),
-                      MessageBubble(true, "Hello"),
-                      MessageBubble(
-                          false, "Hello, how are you, buddy? I heard "),
-                      MessageBubble(false,
-                          "Hello, how are you, buddy? I heard a lot about you!!!"),
-                      MessageBubble(true,
-                          "Hello, how are you, buddy? I heard a lot about you!!!"),
-                      MessageBubble(true,
-                          "Hello, how are you, buddy? I heard a lot about you!!!"),
-                      MessageBubble(true,
-                          "Hello, how are you, buddy? I heard a lot about you!!!"),
-                      MessageBubble(false,
-                          "Hello, how are you, buddy? I heard a lot about you!!!"),
-                      MessageBubble(true,
-                          "Hello, how are you, buddy? I heard a lot about you!!!"),
-                      MessageBubble(false,
-                          "Hello, how are you, buddy? I heard a lot about you!!!"),
-                    ],
-                  ),
+                child: ListView(
+                  reverse: true,
+                  children: <Widget>[
+                    MessageBubble(false, "Hello"),
+                    MessageBubble(true, "Hello"),
+                    MessageBubble(
+                        false, "Hello, how are you, buddy? I heard "),
+                    MessageBubble(false,
+                        "Hello, how are you, buddy? I heard a lot about you!!!"),
+                    MessageBubble(true,
+                        "Hello, how are you, buddy? I heard a lot about you!!!"),
+                    MessageBubble(true,
+                        "Hello, how are you, buddy? I heard a lot about you!!!"),
+                    MessageBubble(true,
+                        "Hello, how are you, buddy? I heard a lot about you!!!"),
+                    MessageBubble(false,
+                        "Hello, how are you, buddy? I heard a lot about you!!!"),
+                    MessageBubble(true,
+                        "Hello, how are you, buddy? I heard a lot about you!!!"),
+                    MessageBubble(false,
+                        "Hello, how are you, buddy? I heard a lot about you!!!"),
+                  ],
                 ),
               ),
             ),
@@ -94,13 +94,11 @@ class MessageField extends StatefulWidget {
 class _MessageFieldState extends State<MessageField> {
   static final send = SvgPicture.asset(
     'assets/ic_send.svg',
-    height: 80,
-    width: 80,
+    width: Dimens.messageFieldButtonWidth,
   );
   static final attach = SvgPicture.asset(
     'assets/ic_attach.svg',
-    height: 80,
-    width: 80,
+    width: Dimens.messageFieldButtonWidth,
   );
 
   var actionButton = attach;
@@ -109,7 +107,7 @@ class _MessageFieldState extends State<MessageField> {
   Widget build(BuildContext context) {
     return Container(
       child: Container(
-        height: 50,
+        height: Dimens.messageFieldHeight,
         decoration: BoxDecoration(color: Colors.white, boxShadow: [
           BoxShadow(
               offset: Offset(0, -2), blurRadius: 0, color: Color(0x22000000))
@@ -131,7 +129,7 @@ class _MessageFieldState extends State<MessageField> {
                 ),
               ),
             ),
-            actionButton,
+            actionButton
           ],
         ),
       ),
