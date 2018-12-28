@@ -1,4 +1,5 @@
 import 'package:catch_me/values/Dimens.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -70,35 +71,17 @@ class ChatScreenView extends StatelessWidget {
             appBar,
             Flexible(
               child: GestureDetector(
-                onTap: () =>
-                    FocusScope.of(context).requestFocus(new FocusNode()),
-                child: Container(
-                  color: Colors.white,
-                  child: ListView(
-                    reverse: true,
-                    children: <Widget>[
-                      MessageBubble(false, "Hello"),
-                      MessageBubble(true, "Hello"),
-                      MessageBubble(
-                          false, "Hello, how are you, buddy? I heard "),
-                      MessageBubble(false,
-                          "Hello, how are you, buddy? I heard a lot about you!!!"),
-                      MessageBubble(true,
-                          "Hello, how are you, buddy? I heard a lot about you!!!"),
-                      MessageBubble(true,
-                          "Hello, how are you, buddy? I heard a lot about you!!!"),
-                      MessageBubble(true,
-                          "Hello, how are you, buddy? I heard a lot about you!!!"),
-                      MessageBubble(false,
-                          "Hello, how are you, buddy? I heard a lot about you!!!"),
-                      MessageBubble(true,
-                          "Hello, how are you, buddy? I heard a lot about you!!!"),
-                      MessageBubble(false,
-                          "Hello, how are you, buddy? I heard a lot about you!!!"),
-                    ],
-                  ),
-                ),
-              ),
+                  onTap: () =>
+                      FocusScope.of(context).requestFocus(new FocusNode()),
+                  child: StreamBuilder<QuerySnapshot>(
+                    stream: Firestore.instance
+                        .collection('chats/CPTxvAPRNjLDpUMs96nD/messages')
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) return LinearProgressIndicator();
+                      return _buildList(context, snapshot.data.documents);
+                    },
+                  )),
             ),
             MessageField()
           ],
@@ -108,42 +91,50 @@ class ChatScreenView extends StatelessWidget {
   }
 }
 
-class MessageBubble extends StatelessWidget {
-  MessageBubble(this.self, this.text);
-  final bool self;
-  final String text;
+Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
+  return Container(
+    color: Colors.white,
+    child: ListView(
+      reverse: true,
+      children: snapshot
+          .map((data) => _buildMessageBubble(context, false, data))
+          .toList(),
+    ),
+  );
+}
 
-  @override
-  Widget build(BuildContext context) {
-    var bigMargin = MediaQuery.of(context).size.width * 0.3;
-    var bottomMargin = 9.0;
+Widget _buildMessageBubble(
+    BuildContext context, bool self, DocumentSnapshot data) {
+  final message = Message.fromSnapshot(data);
 
-    var message = Container(
-      padding: EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(20)),
-        border: Border.all(color: Color(self ? 0xFFCECECE : 0)),
-        color: Color(self ? 0xFFFFFFFF : 0xFF2196F3),
-      ),
-      child: Text(
-        text,
-        textAlign: TextAlign.justify,
-        // textAlign: self ? TextAlign.end : TextAlign.start,
-        style: TextStyle(
-            fontWeight: FontWeight.w400,
-            fontSize: 16,
-            color: self ? Colors.black : Colors.white),
-      ),
-    );
+  var bigMargin = MediaQuery.of(context).size.width * 0.3;
+  var bottomMargin = 9.0;
 
-    return Container(
-      padding: self
-          ? EdgeInsets.only(left: bigMargin, right: 10, bottom: bottomMargin)
-          : EdgeInsets.only(right: bigMargin, left: 10, bottom: bottomMargin),
-      alignment: self ? Alignment.centerRight : Alignment.centerLeft,
-      child: message,
-    );
-  }
+  var messageBubble = Container(
+    padding: EdgeInsets.all(10),
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.all(Radius.circular(20)),
+      border: Border.all(color: Color(self ? 0xFFCECECE : 0)),
+      color: Color(self ? 0xFFFFFFFF : 0xFF2196F3),
+    ),
+    child: Text(
+      message.text,
+      textAlign: TextAlign.justify,
+      // textAlign: self ? TextAlign.end : TextAlign.start,
+      style: TextStyle(
+          fontWeight: FontWeight.w400,
+          fontSize: 16,
+          color: self ? Colors.black : Colors.white),
+    ),
+  );
+
+  return Container(
+    padding: self
+        ? EdgeInsets.only(left: bigMargin, right: 10, bottom: bottomMargin)
+        : EdgeInsets.only(right: bigMargin, left: 10, bottom: bottomMargin),
+    alignment: self ? Alignment.centerRight : Alignment.centerLeft,
+    child: messageBubble,
+  );
 }
 
 class MessageField extends StatefulWidget {
@@ -151,16 +142,27 @@ class MessageField extends StatefulWidget {
 }
 
 class _MessageFieldState extends State<MessageField> {
-  static final send = SvgPicture.asset(
-    'assets/ic_send.svg',
-    width: Dimens.messageFieldButtonWidth,
-  );
+  static final send = GestureDetector(
+      onTap: () {
+        if (controller.text.length > 0) {
+        var data = {'text': controller.text, 'author': ""};
+        Firestore.instance
+            .collection('chats/CPTxvAPRNjLDpUMs96nD/messages')
+            .add(data);
+        controller.text = "";
+        }
+      },
+      child: SvgPicture.asset(
+        'assets/ic_send.svg',
+        width: Dimens.messageFieldButtonWidth,
+      ));
   static final attach = SvgPicture.asset(
     'assets/ic_attach.svg',
     width: Dimens.messageFieldButtonWidth,
   );
 
-  var actionButton = attach;
+  static final controller = TextEditingController();
+  Widget actionButton = attach;
 
   @override
   Widget build(BuildContext context) {
@@ -178,6 +180,7 @@ class _MessageFieldState extends State<MessageField> {
               child: Padding(
                 padding: EdgeInsets.only(left: 18),
                 child: TextField(
+                  controller: controller,
                   keyboardType: TextInputType.text,
                   onChanged: (text) {
                     text.length == 0
@@ -195,4 +198,22 @@ class _MessageFieldState extends State<MessageField> {
       ),
     );
   }
+}
+
+class Message {
+  final String text;
+  final String author;
+  final DocumentReference reference;
+
+  Message.fromMap(Map<String, dynamic> map, {this.reference})
+      : assert(map['text'] != null),
+        assert(map['author'] != null),
+        text = map['text'],
+        author = map['author'];
+
+  Message.fromSnapshot(DocumentSnapshot snapshot)
+      : this.fromMap(snapshot.data, reference: snapshot.reference);
+
+  @override
+  String toString() => "Record<$text:$author>";
 }

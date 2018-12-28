@@ -16,6 +16,8 @@ dependencies:
   flutter:
     sdk: flutter
   backdrop: ^0.1.8
+  cloud_firestore: ^0.8.2     # new
+
 
 
   # The following adds the Cupertino Icons font to your application.
