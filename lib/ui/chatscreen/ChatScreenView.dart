@@ -1,4 +1,3 @@
-import 'package:backdrop/backdrop.dart';
 import 'package:catch_me/values/Dimens.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -16,7 +15,9 @@ class ChatScreenView extends StatelessWidget {
         //child: profilePhoto
       ),
       Padding(
-        padding: const EdgeInsets.only(left: 12.0, top: 10.0, bottom: 8.0),
+        padding: const EdgeInsets.only(
+          left: 12.0,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -33,9 +34,23 @@ class ChatScreenView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final backButton = GestureDetector(
+        onTap: () => Navigator.of(context).pop(),
+        child: SvgPicture.asset(
+          'assets/ic_back.svg',
+          width: 20,
+          height: 20,
+        ));
+
+    final menuButton = SvgPicture.asset(
+      'assets/ic_hamm.svg',
+      width: 20,
+      height: 20,
+    );
+
     final appBar = Container(
-      height: 55,
-      padding: EdgeInsets.symmetric(horizontal: 26),
+      //height: 55,
+      padding: EdgeInsets.symmetric(horizontal: 26, vertical: 8),
       margin: EdgeInsets.only(bottom: 2),
       //color: Color(0x22000000),
       decoration: BoxDecoration(color: Colors.white, boxShadow: [
@@ -43,19 +58,7 @@ class ChatScreenView extends StatelessWidget {
       ]),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          SvgPicture.asset(
-            'assets/ic_back.svg',
-            width: 20,
-            height: 20,
-          ),
-          Expanded(child: title),
-          SvgPicture.asset(
-            'assets/ic_hamm.svg',
-            width: 20,
-            height: 20,
-          ),
-        ],
+        children: <Widget>[backButton, Expanded(child: title), menuButton],
       ),
     );
 
@@ -119,8 +122,8 @@ class MessageBubble extends StatelessWidget {
       padding: EdgeInsets.all(10),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(20)),
-        border: Border.all(color: Color(0xFFCECECE)),
-        color: self ? Color(0xFFFFFFFF) : Color(0xFF2196F3),
+        border: Border.all(color: Color(self ? 0xFFCECECE : 0)),
+        color: Color(self ? 0xFFFFFFFF : 0xFF2196F3),
       ),
       child: Text(
         text,

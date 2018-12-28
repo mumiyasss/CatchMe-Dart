@@ -1,4 +1,4 @@
-import 'package:catch_me/ui/chatlist/ChatList.dart';
+import 'package:catch_me/ui/chatlist/ChatListLogic.dart';
 import 'package:catch_me/ui/chatscreen/ChatScreenView.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -6,13 +6,27 @@ import 'package:catch_me/values/Dimens.dart';
 import 'package:catch_me/values/Styles.dart';
 import 'ChatListItemModel.dart';
 
-class ChatListView extends ChatList {
+class ChatListView extends ChatListLogic {
   static final profilePicture1 = AssetImage('assets/hi.png');
-  final profilePictureDefault = SvgPicture.asset(
-    'assets/profile.svg',
-    width: Dimens.chatListProfilePictureSize,
-    height: Dimens.chatListProfilePictureSize,
-  );
+  
+  Widget profilePicture(BuildContext context, String photo) {
+    double size = MediaQuery.of(context).size.width *
+        Dimens.chatListProfilePictureProportion;
+    return photo == null
+        ? SvgPicture.asset(
+            'assets/profile.svg',
+            width: size,
+            height: size,
+          )
+        : Container(
+            width: size,
+            height: size,
+            decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                image: DecorationImage(image: AssetImage('assets/hi.png'))),
+            //child: profilePhoto
+          );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,16 +50,7 @@ class ChatListView extends ChatList {
   }
 
   Widget _buildListItem(BuildContext context, ChatListItemModel chat) {
-    var profilePhoto = chat.photo == null
-        ? profilePictureDefault
-        : Container(
-            width: Dimens.chatListProfilePictureSize,
-    height: Dimens.chatListProfilePictureSize,
-            decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                image: DecorationImage(image: AssetImage('assets/hi.png'))),
-            //child: profilePhoto
-          );
+    var profilePhoto = profilePicture(context, chat.photo);
 
     Container wrappedText(
             String text, TextStyle style, double screenPercentage) =>

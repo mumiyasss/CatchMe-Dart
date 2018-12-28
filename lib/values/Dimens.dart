@@ -16,5 +16,5 @@ class Dimens {
   static const messageFieldHeight = 50.0;
 
   static const messageFieldButtonWidth = 80.0;
-  static const chatListProfilePictureSize = 60.0; // todo: !!!
+  static const chatListProfilePictureProportion = 0.147; // todo: !!!
 }
