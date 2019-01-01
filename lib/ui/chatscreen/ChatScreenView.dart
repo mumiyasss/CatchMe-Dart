@@ -1,7 +1,11 @@
+import 'package:catch_me/models/Message.dart';
 import 'package:catch_me/values/Dimens.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+
+String userId;
 
 class ChatScreenView extends StatelessWidget {
   final title = Row(
@@ -33,8 +37,14 @@ class ChatScreenView extends StatelessWidget {
     ],
   );
 
+  void initUser() async {
+    FirebaseUser user = await FirebaseAuth.instance.currentUser();
+    userId = await user.getIdToken();
+  }
+
   @override
   Widget build(BuildContext context) {
+    initUser();
     final backButton = GestureDetector(
         onTap: () => Navigator.of(context).pop(),
         child: SvgPicture.asset(
@@ -43,7 +53,10 @@ class ChatScreenView extends StatelessWidget {
           height: 20,
         ));
 
-    final menuButton = Icon(Icons.menu, size: 25,);
+    final menuButton = Icon(
+      Icons.menu,
+      size: 25,
+    );
 
     final appBar = Container(
       //height: 55,
@@ -72,6 +85,7 @@ class ChatScreenView extends StatelessWidget {
                   child: StreamBuilder<QuerySnapshot>(
                     stream: Firestore.instance
                         .collection('chats/CPTxvAPRNjLDpUMs96nD/messages')
+                        .orderBy('timestamp', descending: true)
                         .snapshots(),
                     builder: (context, snapshot) {
                       if (!snapshot.hasData) return LinearProgressIndicator();
@@ -92,17 +106,17 @@ Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
     color: Colors.white,
     child: ListView(
       reverse: true,
-      children: snapshot
-          .map((data) => _buildMessageBubble(context, false, data))
-          .toList(),
+      children:
+          snapshot.map((data) => _buildMessageBubble(context, data)).toList(),
     ),
   );
 }
 
-Widget _buildMessageBubble(
-    BuildContext context, bool self, DocumentSnapshot data) {
+Widget _buildMessageBubble(BuildContext context, DocumentSnapshot data) {
+  print(data.data.toString());
+  
   final message = Message.fromSnapshot(data);
-
+  bool self = message.author == userId;
   var bigMargin = MediaQuery.of(context).size.width * 0.3;
   var bottomMargin = 9.0;
 
@@ -116,7 +130,6 @@ Widget _buildMessageBubble(
     child: Text(
       message.text,
       textAlign: TextAlign.justify,
-      // textAlign: self ? TextAlign.end : TextAlign.start,
       style: TextStyle(
           fontWeight: FontWeight.w400,
           fontSize: 16,
@@ -139,17 +152,27 @@ class MessageField extends StatefulWidget {
 
 class _MessageFieldState extends State<MessageField> {
   static final send = GestureDetector(
-      onTap: () {
+      onTap: () async {
         if (controller.text.length > 0) {
-        var data = {'text': controller.text, 'author': ""};
-        Firestore.instance
-            .collection('chats/CPTxvAPRNjLDpUMs96nD/messages')
-            .add(data);
-        controller.text = "";
+          var data = {
+            'text': controller.text,
+            'author': userId,
+            'timestamp': Timestamp.now()
+          };
+          Firestore.instance
+              .collection('chats/CPTxvAPRNjLDpUMs96nD/messages')
+              .add(data);
+          controller.text = "";
         }
       },
-      child: Icon(Icons.send, size: Dimens.messageFieldButtonWidth,));
-  static final attach = Icon(Icons.attach_file, size:Dimens.messageFieldButtonWidth,);
+      child: Icon(
+        Icons.send,
+        size: Dimens.messageFieldButtonWidth,
+      ));
+  static final attach = Icon(
+    Icons.attach_file,
+    size: Dimens.messageFieldButtonWidth,
+  );
 
   static final controller = TextEditingController();
   Widget actionButton = attach;
@@ -188,22 +211,4 @@ class _MessageFieldState extends State<MessageField> {
       ),
     );
   }
-}
-
-class Message {
-  final String text;
-  final String author;
-  final DocumentReference reference;
-
-  Message.fromMap(Map<String, dynamic> map, {this.reference})
-      : assert(map['text'] != null),
-        assert(map['author'] != null),
-        text = map['text'],
-        author = map['author'];
-
-  Message.fromSnapshot(DocumentSnapshot snapshot)
-      : this.fromMap(snapshot.data, reference: snapshot.reference);
-
-  @override
-  String toString() => "Record<$text:$author>";
 }

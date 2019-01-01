@@ -1,9 +1,23 @@
 
-class Message {
-	Message(this.authorId, this.text, this.time, this.groupId);
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-	final String authorId;
-	final String text;
-	final String time;
-	final String groupId;
+class Message {
+  final String text;
+  final String author;
+  final DateTime timestamp;
+  final DocumentReference reference;
+
+  Message.fromMap(Map<String, dynamic> map, {this.reference})
+      : assert(map['text'] != null),
+        assert(map['author'] != null),
+        assert(map['timestamp'] != null),
+        text = map['text'],
+        timestamp = map['timestamp'],
+        author = map['author'];
+
+  Message.fromSnapshot(DocumentSnapshot snapshot)
+      : this.fromMap(snapshot.data, reference: snapshot.reference);
+
+  @override
+  String toString() => "Record<$text:$author>";
 }
