@@ -43,11 +43,7 @@ class ChatScreenView extends StatelessWidget {
           height: 20,
         ));
 
-    final menuButton = SvgPicture.asset(
-      'assets/ic_hamm.svg',
-      width: 20,
-      height: 20,
-    );
+    final menuButton = Icon(Icons.menu, size: 25,);
 
     final appBar = Container(
       //height: 55,
@@ -152,14 +148,8 @@ class _MessageFieldState extends State<MessageField> {
         controller.text = "";
         }
       },
-      child: SvgPicture.asset(
-        'assets/ic_send.svg',
-        width: Dimens.messageFieldButtonWidth,
-      ));
-  static final attach = SvgPicture.asset(
-    'assets/ic_attach.svg',
-    width: Dimens.messageFieldButtonWidth,
-  );
+      child: Icon(Icons.send, size: Dimens.messageFieldButtonWidth,));
+  static final attach = Icon(Icons.attach_file, size:Dimens.messageFieldButtonWidth,);
 
   static final controller = TextEditingController();
   Widget actionButton = attach;
@@ -173,12 +163,12 @@ class _MessageFieldState extends State<MessageField> {
           BoxShadow(
               offset: Offset(0, -2), blurRadius: 0, color: Color(0x22000000))
         ]),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Expanded(
-              child: Padding(
-                padding: EdgeInsets.only(left: 18),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Expanded(
                 child: TextField(
                   controller: controller,
                   keyboardType: TextInputType.text,
@@ -191,9 +181,9 @@ class _MessageFieldState extends State<MessageField> {
                       border: InputBorder.none, hintText: "Type your message"),
                 ),
               ),
-            ),
-            actionButton
-          ],
+              actionButton
+            ],
+          ),
         ),
       ),
     );

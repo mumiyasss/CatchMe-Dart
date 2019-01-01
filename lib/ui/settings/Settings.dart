@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class Settings extends StatefulWidget {
@@ -10,20 +11,12 @@ class Settings extends StatefulWidget {
 }
 
 class SettingsState extends State<Settings> {
-  String str = "Settings";
-
-  void update() {
-    setState(() {
-      str = "HELLLLLLLLLLLLLLLLLO";
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
         onTap: () {
-            update();
+            FirebaseAuth.instance.signOut();
         },
-        child: Center(child: Text(str)));
+        child: Center(child: Text("Sign out")));
   }
 }

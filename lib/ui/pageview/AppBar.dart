@@ -16,7 +16,7 @@ class MyAppBar extends StatelessWidget {
 				TitleState(
 						Dimens.leftMarginTitle,
 						Dimens.bottomMarginTitle,
-						Style.defaultTitle,
+						Styles.defaultTitle,
 						controller
 				));
 		var subtitle = Title(
@@ -24,7 +24,7 @@ class MyAppBar extends StatelessWidget {
 				SubtitleState(
 						Dimens.leftMarginSubtitle,
 						Dimens.bottomMarginSubtitle,
-						Style.defaultSubtitle,
+						Styles.defaultSubtitle,
 						controller
 				));
 
@@ -87,7 +87,7 @@ class TitleState extends State<Title> {
 	final bottomMargin = Dimens.bottomMarginSubtitle;
 
 	void calculateNewValues(double positionOffset) {
-		final newTitleStyle = Style.getToolbarTextStyle(
+		final newTitleStyle = Styles.getToolbarTextStyle(
 				fontSize: titleSize - titleSubtitleSizeDelta * positionOffset,
 				shade: (subtitleColorShade * positionOffset).toInt());
 		var titleBottomMargin = bottomMargin * positionOffset;
@@ -130,7 +130,7 @@ class SubtitleState extends TitleState {
 
 	@override
 	void calculateNewValues(double positionOffset) {
-		final newSubtitleStyle = Style.getToolbarTextStyle(
+		final newSubtitleStyle = Styles.getToolbarTextStyle(
 			fontSize: subtitleSize + titleSubtitleSizeDelta * positionOffset,
 			shade: (subtitleColorShade * (1 - positionOffset)).toInt(),
 		);

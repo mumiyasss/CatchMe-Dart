@@ -1,10 +1,10 @@
+import 'package:catch_me/models/UiChat.dart';
 import 'package:catch_me/ui/chatlist/ChatListLogic.dart';
 import 'package:catch_me/ui/chatscreen/ChatScreenView.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:catch_me/values/Dimens.dart';
 import 'package:catch_me/values/Styles.dart';
-import 'ChatListItemModel.dart';
 
 class ChatListView extends ChatListLogic {
   static final profilePicture1 = AssetImage('assets/hi.png');
@@ -38,7 +38,7 @@ class ChatListView extends ChatListLogic {
             .messages
             .map((message) => _buildListItem(
                 context,
-                ChatListItemModel(
+                UiChat(
                     name: message['name'],
                     message: message['message'],
                     time: message['time'],
@@ -49,7 +49,7 @@ class ChatListView extends ChatListLogic {
     );
   }
 
-  Widget _buildListItem(BuildContext context, ChatListItemModel chat) {
+  Widget _buildListItem(BuildContext context, UiChat chat) {
     var profilePhoto = profilePicture(context, chat.photo);
 
     Container wrappedText(
@@ -69,9 +69,9 @@ class ChatListView extends ChatListLogic {
           children: <Widget>[widget1, widget2],
         );
 
-    var name = wrappedText(chat.name, Style.chatNameStyle(), 0.5);
-    var time = Text(chat.time, style: Style.lastMessageTime());
-    var lastMessage = wrappedText(chat.message, Style.lastMessageTime(), 0.5);
+    var name = wrappedText(chat.name, Styles.chatNameStyle(), 0.5);
+    var time = Text(chat.time, style: Styles.lastMessageTime());
+    var lastMessage = wrappedText(chat.message, Styles.lastMessageTime(), 0.5);
     var _unread = chat.unread;
     var badge = _unread == null
         ? Container()
@@ -81,7 +81,7 @@ class ChatListView extends ChatListLogic {
               borderRadius: BorderRadius.all(Radius.circular(12)),
               color: Color(0xFF2196f3),
             ),
-            child: Text(_unread.toString(), style: Style.newMessagesCounter()),
+            child: Text(_unread.toString(), style: Styles.newMessagesCounter()),
           );
 
     return GestureDetector(

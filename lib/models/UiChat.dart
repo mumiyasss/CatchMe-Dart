@@ -1,5 +1,5 @@
-class ChatListItemModel {
-	ChatListItemModel(
+class UiChat {
+	UiChat(
 			{ this.name,
 				this.message,
 				this.time,

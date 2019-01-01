@@ -17,6 +17,11 @@ dependencies:
     sdk: flutter
   backdrop: ^0.1.8
   cloud_firestore: ^0.8.2     # new
+  firebase_auth: ^0.6.6
+  google_sign_in: ^3.2.4
+  flutter_signin_button: ^0.2.4
+  http: ^0.12.0
+
 
 
 
