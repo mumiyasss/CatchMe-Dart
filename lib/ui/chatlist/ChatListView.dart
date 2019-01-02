@@ -1,6 +1,6 @@
 import 'package:catch_me/models/UiChat.dart';
 import 'package:catch_me/ui/chatlist/ChatListLogic.dart';
-import 'package:catch_me/ui/chatscreen/ChatScreenView.dart';
+import 'package:catch_me/ui/chatscreen/ChatScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:catch_me/values/Dimens.dart';
@@ -88,7 +88,7 @@ class ChatListView extends ChatListLogic {
         onTap: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => ChatScreenView()),
+            MaterialPageRoute(builder: (context) => ChatScreen()),
           );
         },
         child: Column(

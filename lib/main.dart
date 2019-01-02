@@ -9,11 +9,11 @@ import 'ui/signin/SignIn.dart';
 void main() {
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((_) {
-    runApp(MyApp());
+    runApp(CatchMeApp());
   });
 }
 
-class MyApp extends StatelessWidget {
+class CatchMeApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
@@ -32,10 +32,20 @@ class MyApp extends StatelessWidget {
         builder: (BuildContext context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting)
             return SplashScreen();
-          else
-            return snapshot.hasData ? MainPage() : SignIn();
+          else if (snapshot.hasData) {
+            initUserId();
+            return MainPage();
+          } else
+            return SignIn();
         });
   }
+
+  void initUserId() async {
+    var user = await FirebaseAuth.instance.currentUser();
+    userId = await user.getIdToken();
+  }
+
+  static String userId;
 }
 
 class SplashScreen extends StatelessWidget {

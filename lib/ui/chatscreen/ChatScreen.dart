@@ -1,13 +1,14 @@
 import 'package:catch_me/models/Message.dart';
+import 'package:catch_me/ui/chatscreen/ChatViewModel.dart';
 import 'package:catch_me/values/Dimens.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-String userId;
+final ChatViewModel viewModel = ChatViewModel();
 
-class ChatScreenView extends StatelessWidget {
+class ChatScreen extends StatelessWidget {
   final title = Row(
     children: <Widget>[
       Container(
@@ -37,14 +38,8 @@ class ChatScreenView extends StatelessWidget {
     ],
   );
 
-  void initUser() async {
-    FirebaseUser user = await FirebaseAuth.instance.currentUser();
-    userId = await user.getIdToken();
-  }
-
   @override
   Widget build(BuildContext context) {
-    initUser();
     final backButton = GestureDetector(
         onTap: () => Navigator.of(context).pop(),
         child: SvgPicture.asset(
@@ -59,10 +54,8 @@ class ChatScreenView extends StatelessWidget {
     );
 
     final appBar = Container(
-      //height: 55,
       padding: EdgeInsets.symmetric(horizontal: 26, vertical: 8),
       margin: EdgeInsets.only(bottom: 2),
-      //color: Color(0x22000000),
       decoration: BoxDecoration(color: Colors.white, boxShadow: [
         BoxShadow(offset: Offset(0, 2), blurRadius: 5, color: Color(0x22000000))
       ]),
@@ -82,15 +75,11 @@ class ChatScreenView extends StatelessWidget {
               child: GestureDetector(
                   onTap: () =>
                       FocusScope.of(context).requestFocus(new FocusNode()),
-                  child: StreamBuilder<QuerySnapshot>(
-                    stream: Firestore.instance
-                        .collection('chats/CPTxvAPRNjLDpUMs96nD/messages')
-                        .orderBy('timestamp', descending: true)
-                        .snapshots(),
-                    builder: (context, snapshot) {
-                      if (!snapshot.hasData) return LinearProgressIndicator();
-                      return _buildList(context, snapshot.data.documents);
-                    },
+                  child: StreamBuilder<List<Message>>(
+                    stream: viewModel.messagesSnapshot,
+                    builder: (context, snapshot) => snapshot.hasData
+                        ? _buildList(context, snapshot.data)
+                        : LinearProgressIndicator(),
                   )),
             ),
             MessageField()
@@ -101,22 +90,19 @@ class ChatScreenView extends StatelessWidget {
   }
 }
 
-Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
+Widget _buildList(BuildContext context, List<Message> messages) {
   return Container(
     color: Colors.white,
     child: ListView(
       reverse: true,
       children:
-          snapshot.map((data) => _buildMessageBubble(context, data)).toList(),
+          messages.map((data) => _buildMessageBubble(context, data)).toList(),
     ),
   );
 }
 
-Widget _buildMessageBubble(BuildContext context, DocumentSnapshot data) {
-  print(data.data.toString());
-  
-  final message = Message.fromSnapshot(data);
-  bool self = message.author == userId;
+Widget _buildMessageBubble(BuildContext context, Message message) {
+  bool self = message.author == viewModel.userId;
   var bigMargin = MediaQuery.of(context).size.width * 0.3;
   var bottomMargin = 9.0;
 
@@ -152,16 +138,9 @@ class MessageField extends StatefulWidget {
 
 class _MessageFieldState extends State<MessageField> {
   static final send = GestureDetector(
-      onTap: () async {
+      onTap: () {
         if (controller.text.length > 0) {
-          var data = {
-            'text': controller.text,
-            'author': userId,
-            'timestamp': Timestamp.now()
-          };
-          Firestore.instance
-              .collection('chats/CPTxvAPRNjLDpUMs96nD/messages')
-              .add(data);
+          viewModel.sendMessage(controller.text);
           controller.text = "";
         }
       },
