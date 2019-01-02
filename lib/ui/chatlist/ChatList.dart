@@ -1,14 +1,16 @@
 import 'package:catch_me/models/UiChat.dart';
-import 'package:catch_me/ui/chatlist/ChatListLogic.dart';
+import 'package:catch_me/ui/chatlist/ChatListViewModel.dart';
 import 'package:catch_me/ui/chatscreen/ChatScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:catch_me/values/Dimens.dart';
 import 'package:catch_me/values/Styles.dart';
 
-class ChatListView extends ChatListLogic {
+final viewModel = ChatListViewModel();
+
+class ChatList extends StatelessWidget {
   static final profilePicture1 = AssetImage('assets/hi.png');
-  
+
   Widget profilePicture(BuildContext context, String photo) {
     double size = MediaQuery.of(context).size.width *
         Dimens.chatListProfilePictureProportion;
@@ -34,8 +36,7 @@ class ChatListView extends ChatListLogic {
       child: ListView(
         padding: EdgeInsets.only(
             left: Dimens.chatListPadding, right: Dimens.chatListPadding),
-        children: super
-            .messages
+        children: viewModel.messages
             .map((message) => _buildListItem(
                 context,
                 UiChat(

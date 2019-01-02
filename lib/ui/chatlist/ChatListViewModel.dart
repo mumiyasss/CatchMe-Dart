@@ -1,6 +1,5 @@
-import 'package:flutter/material.dart';
 
-abstract class ChatListLogic extends StatelessWidget {
+class ChatListViewModel {
   final messages = [
 		{
 			"name": "Kolya Grebnev",
@@ -16,7 +15,5 @@ abstract class ChatListLogic extends StatelessWidget {
 			"unread": null,
 			"photo": ","
 		},
-
 	];
-
 }
