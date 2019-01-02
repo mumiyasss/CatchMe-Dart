@@ -1,19 +1,20 @@
+import 'dart:async';
+
+import 'package:catch_me/models/UiChat.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ChatListViewModel {
-  final messages = [
-		{
-			"name": "Kolya Grebnev",
-			"message": "Hello, how are you? I saw a lot of diffrent beautiful things",
-			"time": "12:30",
-			"unread": 100,
-			"photo": null,
-		},
-		{
-			"name": "James Smith",
-			"message": "I'm fine, thank you",
-			"time": "12:21",
-			"unread": null,
-			"photo": ","
-		},
-	];
+  Stream<QuerySnapshot> get chatsCollection => Firestore.instance
+      .collection('chats')
+      //.where('members', arrayContains: CatchMeApp.userId)
+      //.orderBy('lastMessage')
+      .snapshots();
+
+  Stream<List<UiChat>> get chats async* {
+    await for (var chats in chatsCollection) {
+      yield chats.documents
+          .map((chatSnapshot) => UiChat.fromSnapshot(chatSnapshot))
+          .toList();
+    }
+  }
 }

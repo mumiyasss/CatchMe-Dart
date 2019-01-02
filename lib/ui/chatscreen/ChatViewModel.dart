@@ -6,7 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class ChatViewModel {
-  final userId = CatchMeApp.userId;
+  final userId = CatchMeApp.userUid;
   CollectionReference _chatMessageCollection =
       Firestore.instance.collection('chats/CPTxvAPRNjLDpUMs96nD/messages');
 

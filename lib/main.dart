@@ -42,10 +42,10 @@ class CatchMeApp extends StatelessWidget {
 
   void initUserId() async {
     var user = await FirebaseAuth.instance.currentUser();
-    userId = await user.getIdToken();
+    userUid = await user.getIdToken();
   }
 
-  static String userId;
+  static String userUid;
 }
 
 class SplashScreen extends StatelessWidget {

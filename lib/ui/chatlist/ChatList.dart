@@ -33,20 +33,19 @@ class ChatList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: ListView(
-        padding: EdgeInsets.only(
-            left: Dimens.chatListPadding, right: Dimens.chatListPadding),
-        children: viewModel.messages
-            .map((message) => _buildListItem(
-                context,
-                UiChat(
-                    name: message['name'],
-                    message: message['message'],
-                    time: message['time'],
-                    unread: message['unread'],
-                    photo: message['photo'])))
-            .toList(),
-      ),
+        child: StreamBuilder(
+      stream: viewModel.chats,
+      builder: (context, snapshot) => snapshot.hasData
+          ? _buildList(context, snapshot.data)
+          : LinearProgressIndicator(),
+    ));
+  }
+
+  Widget _buildList(BuildContext context, List<UiChat> chats) {
+    return ListView(
+      padding: EdgeInsets.only(
+          left: Dimens.chatListPadding, right: Dimens.chatListPadding),
+      children: chats.map((chat) => _buildListItem(context, chat)).toList(),
     );
   }
 
@@ -70,7 +69,10 @@ class ChatList extends StatelessWidget {
           children: <Widget>[widget1, widget2],
         );
 
-    var name = wrappedText(chat.name, Styles.chatNameStyle(), 0.5);
+    var name = StreamBuilder(
+        stream: chat.name,
+        builder: (context, snaphot) => wrappedText(
+            snaphot.hasData ? snaphot.data : "", Styles.chatNameStyle(), 0.5));
     var time = Text(chat.time, style: Styles.lastMessageTime());
     var lastMessage = wrappedText(chat.message, Styles.lastMessageTime(), 0.5);
     var _unread = chat.unread;
