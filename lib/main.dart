@@ -1,3 +1,4 @@
+import 'package:catch_me/ui/signin/SingInViewModel.dart';
 import 'package:catch_me/values/Strings.dart';
 import 'package:catch_me/values/Styles.dart';
 import 'package:flutter/material.dart';
@@ -33,18 +34,13 @@ class CatchMeApp extends StatelessWidget {
           if (snapshot.connectionState == ConnectionState.waiting)
             return SplashScreen();
           else if (snapshot.hasData) {
-            initUserId();
+            SignInViewModel().initUserId();
             return MainPage();
           } else
             return SignIn();
         });
   }
-
-  void initUserId() async {
-    var user = await FirebaseAuth.instance.currentUser();
-    userUid = await user.getIdToken();
-  }
-
+  
   static String userUid;
 }
 

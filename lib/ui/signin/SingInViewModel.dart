@@ -13,18 +13,26 @@ class SignInViewModel {
     await FirebaseAuth.instance.signInWithGoogle(
         idToken: authentication.idToken,
         accessToken: authentication.accessToken);
+    var user = await initUserId();
+    var userToCheck = (await Firestore.instance
+        .document('users/' + CatchMeApp.userUid)
+        .get());
+    var userDoesNotExists = userToCheck.data == null;
+    if (userDoesNotExists) {
+      Firestore.instance.document('users/' + CatchMeApp.userUid).setData({
+        'id': CatchMeApp.userUid,
+        'name': user.displayName,
+        'email': user.email,
+        'phone': user.phoneNumber,
+        'photo': user.photoUrl
+      });
+    }
+  }
+
+  Future<FirebaseUser> initUserId() async {
     var user = await FirebaseAuth.instance.currentUser();
     CatchMeApp.userUid = user.uid;
-    print(CatchMeApp.userUid);
-    // var userToCheck = (await Firestore.instance
-    //     .document('users/' + CatchMeApp.userUid)
-    //     .get());
-    // var userDoesNotExists = userToCheck.data == null;
-    // if (userDoesNotExists) {
-      Firestore.instance
-          .document('users/' + CatchMeApp.userUid)
-          .setData({'id': CatchMeApp.userUid, 'name': user.displayName});
-    // }
+    return user;
   }
 
   void signOut() {

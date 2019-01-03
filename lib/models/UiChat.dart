@@ -18,6 +18,7 @@ class UiChat {
       else print(userId);
     }
   }
+  
 
   UiChat.fromMap(Map<String, dynamic> data, this.chatReference)
       : assert(data['lastMessageTime'] != null),
