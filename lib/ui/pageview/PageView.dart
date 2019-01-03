@@ -1,3 +1,4 @@
+import 'package:catch_me/ui/writeToNewPerson/NewMessage.dart';
 import 'package:flutter/material.dart';
 import 'package:catch_me/ui/chatlist/ChatList.dart';
 import 'package:catch_me/ui/settings/Settings.dart';
@@ -25,6 +26,15 @@ class _MainPageState extends State<MainPage> {
     appBar = MyAppBar(widget.pageView.controller);
 
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.create),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => NewMessage()),
+          );
+        },
+      ),
         body: SafeArea(
       child: Stack(
         children: <Widget>[appBar,

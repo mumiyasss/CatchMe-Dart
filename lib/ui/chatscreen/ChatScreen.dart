@@ -6,9 +6,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-final ChatViewModel viewModel = ChatViewModel();
+ChatViewModel viewModel;
 
 class ChatScreen extends StatelessWidget {
+  ChatScreen(DocumentReference chatReference) {
+    viewModel = ChatViewModel(chatReference);
+  } 
   final title = Row(
     children: <Widget>[
       Container(

@@ -1,4 +1,5 @@
 import 'package:catch_me/models/UiChat.dart';
+import 'package:catch_me/ui/Widgets.dart';
 import 'package:catch_me/ui/chatlist/ChatListViewModel.dart';
 import 'package:catch_me/ui/chatscreen/ChatScreen.dart';
 import 'package:flutter/material.dart';
@@ -11,24 +12,7 @@ final viewModel = ChatListViewModel();
 class ChatList extends StatelessWidget {
   static final profilePicture1 = AssetImage('assets/hi.png');
 
-  Widget profilePicture(BuildContext context, String photo) {
-    double size = MediaQuery.of(context).size.width *
-        Dimens.chatListProfilePictureProportion;
-    return photo == null
-        ? SvgPicture.asset(
-            'assets/profile.svg',
-            width: size,
-            height: size,
-          )
-        : Container(
-            width: size,
-            height: size,
-            decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                image: DecorationImage(image: AssetImage('assets/hi.png'))),
-            //child: profilePhoto
-          );
-  }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +34,7 @@ class ChatList extends StatelessWidget {
   }
 
   Widget _buildListItem(BuildContext context, UiChat chat) {
-    var profilePhoto = profilePicture(context, chat.photo);
+    var profilePhoto = Widgets.profilePicture(context, chat.photo, Dimens.chatListProfilePictureProportion);
 
     Container wrappedText(
             String text, TextStyle style, double screenPercentage) =>
@@ -91,7 +75,7 @@ class ChatList extends StatelessWidget {
         onTap: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => ChatScreen()),
+            MaterialPageRoute(builder: (context) => ChatScreen(chat.chatReference)),
           );
         },
         child: Column(

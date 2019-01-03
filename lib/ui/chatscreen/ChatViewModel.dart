@@ -6,9 +6,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class ChatViewModel {
+  ChatViewModel(this._chatReference);
+
   final userId = CatchMeApp.userUid;
-  CollectionReference _chatMessageCollection =
-      Firestore.instance.collection('chats/CPTxvAPRNjLDpUMs96nD/messages');
+  final DocumentReference _chatReference;
+  CollectionReference get _chatMessageCollection =>
+      _chatReference.collection('messages');
 
   Stream<QuerySnapshot> get _messagesDocumentSnapshots =>
       _chatMessageCollection.orderBy('timestamp', descending: true).snapshots();
@@ -21,14 +24,9 @@ class ChatViewModel {
   }
 
   void sendMessage(String text) async {
-    var data = {
-            'text': text,
-            'author': userId,
-            'timestamp': Timestamp.now()
-          };
-          Firestore.instance
-              .collection('chats/CPTxvAPRNjLDpUMs96nD/messages')
-              .add(data);
+    var data = {'text': text, 'author': userId, 'timestamp': Timestamp.now()};
+    Firestore.instance
+        .collection('chats/CPTxvAPRNjLDpUMs96nD/messages')
+        .add(data);
   }
-
 }
