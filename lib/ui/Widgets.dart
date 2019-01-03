@@ -1,11 +1,10 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class Widgets {
-  static Widget profilePicture(BuildContext context, String photoUrl, double sizeProportion) {
-    double size = MediaQuery.of(context).size.width *
-        sizeProportion;
+  static Widget profilePicture(
+      BuildContext context, String photoUrl, double sizeProportion) {
+    double size = MediaQuery.of(context).size.width * sizeProportion;
     return photoUrl == null
         ? SvgPicture.asset(
             'assets/profile.svg',
@@ -17,7 +16,7 @@ class Widgets {
             height: size,
             decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                image: DecorationImage(image: AssetImage('assets/hi.png'))),
+                image: DecorationImage(image: NetworkImage(photoUrl))),
             //child: profilePhoto
           );
   }

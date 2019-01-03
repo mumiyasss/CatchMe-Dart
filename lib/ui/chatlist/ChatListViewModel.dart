@@ -13,9 +13,10 @@ class ChatListViewModel {
 
   Stream<List<UiChat>> get chats async* {
     await for (var chats in chatsCollection) {
-      yield chats.documents
-          .map((chatSnapshot) => UiChat.fromSnapshot(chatSnapshot))
-          .toList();
+      var tempChatList = List<UiChat>();
+      for (var chatSnapshot in chats.documents)
+        tempChatList.add(await UiChat.fromSnapshot(chatSnapshot));
+      yield tempChatList;
     }
   }
 }
