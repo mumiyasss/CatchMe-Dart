@@ -25,8 +25,6 @@ class ChatViewModel {
 
   void sendMessage(String text) async {
     var data = {'text': text, 'author': userId, 'timestamp': Timestamp.now()};
-    Firestore.instance
-        .collection('chats/CPTxvAPRNjLDpUMs96nD/messages')
-        .add(data);
+    _chatReference.collection('messages').add(data);
   }
 }

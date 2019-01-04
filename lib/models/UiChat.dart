@@ -28,16 +28,23 @@ class UiChat {
     return user.data['photo'];
   }
 
+  static String getCompanionId(List members) {
+    print(members);
+    for (var memberId in members) {
+      if (memberId != CatchMeApp.userUid) return memberId;
+    }
+    return "";
+  }
+
   static Future<UiChat> fromSnapshot(DocumentSnapshot chatSnapshot) async {
     UiChat chat = UiChat();
     chat.chatReference = chatSnapshot.reference;
     chat.time = "12:30";
     chat.message = chatSnapshot.data['lastMessageText'];
-    chat.photo = await getPersonPhoto(
-        chatSnapshot.data['talkWithFor' + CatchMeApp.userUid]);
     chat.unread = null;
-    chat.name =
-        updateChatName(chatSnapshot.data['talkWithFor' + CatchMeApp.userUid]);
+    var companionId = getCompanionId(chatSnapshot.data['members']);
+    chat.photo = await getPersonPhoto(companionId);
+    chat.name = updateChatName(companionId);
     return chat;
   }
 }
