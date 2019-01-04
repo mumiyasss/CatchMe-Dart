@@ -40,15 +40,17 @@ class CatchMeApp extends StatelessWidget {
             return SignIn();
         });
   }
-  
+
   static String userUid;
 }
 
 class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Text("LOADING..."),
+    return Scaffold(
+      body: Center(
+        child: Text("LOADING..."),
+      ),
     );
   }
 }

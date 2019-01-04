@@ -8,7 +8,7 @@ class ChatListViewModel {
   Stream<QuerySnapshot> get chatsCollection => Firestore.instance
       .collection('chats')
       .where('members', arrayContains: CatchMeApp.userUid)
-      .orderBy('lastMessageTime') // ??? Query requires Index.
+      .orderBy('lastMessageTime', descending: true ) // ??? Query requires Index.
       .snapshots();
 
   Stream<List<UiChat>> get chats async* {
