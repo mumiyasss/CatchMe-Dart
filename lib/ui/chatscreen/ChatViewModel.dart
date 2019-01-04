@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:catch_me/main.dart';
 import 'package:catch_me/models/Message.dart';
+import 'package:catch_me/models/UiPerson.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -26,5 +27,15 @@ class ChatViewModel {
   void sendMessage(String text) async {
     var data = {'text': text, 'author': userId, 'timestamp': Timestamp.now()};
     _chatReference.collection('messages').add(data);
+    _chatReference.updateData({
+      'lastMessageAuthorId': userId,
+      'lastMessageText': text,
+      'lastMessageTime': Timestamp.now()
+    });
+  }
+
+  Future<UiPerson> getChatInfo() async {
+    var snapshot = await _chatReference.get();
+    return await UiPerson.fromPrivateChatMembers(snapshot.data['members']);
   }
 }

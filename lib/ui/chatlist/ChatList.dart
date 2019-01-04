@@ -12,8 +12,6 @@ final viewModel = ChatListViewModel();
 class ChatList extends StatelessWidget {
   static final profilePicture1 = AssetImage('assets/hi.png');
 
-  
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -34,7 +32,8 @@ class ChatList extends StatelessWidget {
   }
 
   Widget _buildListItem(BuildContext context, UiChat chat) {
-    var profilePhoto = Widgets.profilePicture(context, chat.photo, Dimens.chatListProfilePictureProportion);
+    var profilePhoto = Widgets.profilePicture(
+        context, chat.photo, Dimens.chatListProfilePictureProportion);
 
     Container wrappedText(
             String text, TextStyle style, double screenPercentage) =>
@@ -53,10 +52,7 @@ class ChatList extends StatelessWidget {
           children: <Widget>[widget1, widget2],
         );
 
-    var name = StreamBuilder(
-        stream: chat.name,
-        builder: (context, snaphot) => wrappedText(
-            snaphot.hasData ? snaphot.data : "", Styles.chatNameStyle(), 0.5));
+    var name = wrappedText(chat.name, Styles.chatNameStyle(), 0.5);
     var time = Text(chat.time, style: Styles.lastMessageTime());
     var lastMessage = wrappedText(chat.message, Styles.lastMessageTime(), 0.5);
     var _unread = chat.unread;
@@ -75,7 +71,8 @@ class ChatList extends StatelessWidget {
         onTap: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => ChatScreen(chat.chatReference)),
+            MaterialPageRoute(
+                builder: (context) => ChatScreen(chat.chatReference)),
           );
         },
         child: Column(

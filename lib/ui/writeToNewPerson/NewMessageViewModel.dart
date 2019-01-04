@@ -15,9 +15,7 @@ class NewMessageViewModel {
   }
 
   Future<DocumentReference> startNewConversation(String companionId) async {
-    final members = List<String>();
-    members.add(companionId);
-    members.add(CatchMeApp.userUid);
+    
     var chat = await Firestore.instance
         .document('chats/' + chatName(companionId, CatchMeApp.userUid))
         .get();
@@ -29,7 +27,7 @@ class NewMessageViewModel {
           .collection('chats')
           .document(chatName(companionId, CatchMeApp.userUid))
           .setData({
-        'members': members,
+        'members': [companionId, CatchMeApp.userUid],
         'lastMessageText': "Hello",
         'lastMessageAuthorId': 1,
         'lastMessageTime': Timestamp.now(),

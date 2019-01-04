@@ -1,4 +1,5 @@
 import 'package:catch_me/models/Message.dart';
+import 'package:catch_me/models/UiPerson.dart';
 import 'package:catch_me/ui/chatscreen/ChatViewModel.dart';
 import 'package:catch_me/values/Dimens.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -11,35 +12,42 @@ ChatViewModel viewModel;
 class ChatScreen extends StatelessWidget {
   ChatScreen(DocumentReference chatReference) {
     viewModel = ChatViewModel(chatReference);
-  } 
-  final title = Row(
-    children: <Widget>[
-      Container(
-        margin: EdgeInsets.only(left: 18),
-        width: 40,
-        height: 40,
-        decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            image: DecorationImage(image: AssetImage('assets/hi.png'))),
-        //child: profilePhoto
-      ),
-      Padding(
-        padding: const EdgeInsets.only(
-          left: 12.0,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text("James Smith", style: TextStyle(fontSize: 20)),
-            Text(
-              'last seen at 8:30',
-              style: TextStyle(fontSize: 12),
-            )
-          ],
-        ),
-      ),
-    ],
-  );
+  }
+  Widget title(UiPerson person) => Row(
+        children: <Widget>[
+          Container(
+            margin: EdgeInsets.only(left: 18),
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                image: DecorationImage(image: NetworkImage(person.photoUrl))),
+            //child: profilePhoto
+          ),
+          Padding(
+            padding: const EdgeInsets.only(
+              left: 12.0,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(person.name, style: TextStyle(fontSize: 20)),
+                Text(
+                  'last seen at 8:30',
+                  style: TextStyle(fontSize: 12),
+                )
+              ],
+            ),
+          ),
+        ],
+      );
+
+  Widget _buildTitle(BuildContext context) => FutureBuilder<UiPerson>(
+        future: viewModel.getChatInfo(),
+        builder: (context, snapshot) => snapshot.hasData
+            ? title(snapshot.data)
+            : LinearProgressIndicator(),
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +72,7 @@ class ChatScreen extends StatelessWidget {
       ]),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[backButton, Expanded(child: title), menuButton],
+        children: <Widget>[backButton, Expanded(child: _buildTitle(context)), menuButton],
       ),
     );
 
