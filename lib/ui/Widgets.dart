@@ -15,8 +15,11 @@ class Widgets {
             width: size,
             height: size,
             decoration: BoxDecoration(
+                
                 shape: BoxShape.circle,
-                image: DecorationImage(image: NetworkImage(photoUrl))),
+                image: DecorationImage(
+                  fit: BoxFit.cover,
+                  image: NetworkImage(photoUrl))),
             //child: profilePhoto
           );
   }

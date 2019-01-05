@@ -16,19 +16,37 @@ class ChatList extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
         child: StreamBuilder(
-      stream: viewModel.chats,
-      builder: (context, snapshot) => snapshot.hasData
-          ? _buildList(context, snapshot.data)
-          : LinearProgressIndicator(),
-    ));
+            stream: viewModel.chats,
+            builder: (context, snapshot) =>
+                _buildList(context, snapshot.data)));
   }
 
   Widget _buildList(BuildContext context, List<UiChat> chats) {
-    return ListView(
-      padding: EdgeInsets.only(
-          left: Dimens.chatListPadding, right: Dimens.chatListPadding),
-      children: chats.map((chat) => _buildListItem(context, chat)).toList(),
-    );
+    if (chats != null && chats.length != 0)
+      return ListView(
+        padding: EdgeInsets.only(
+            left: Dimens.chatListPadding, right: Dimens.chatListPadding),
+        children: chats.map((chat) => _buildListItem(context, chat)).toList(),
+      );
+    else
+      return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+        Text(
+          "У вас пока нет сообщений.",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              color: Colors.black, fontSize: 20, fontWeight: FontWeight.w300),
+        ),
+        Container(height: 7,),
+        Text(
+          "Напишите первыми😏",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              color: Colors.black, fontSize: 20, fontWeight: FontWeight.w400),
+        ),
+      ]));
   }
 
   Widget _buildListItem(BuildContext context, UiChat chat) {

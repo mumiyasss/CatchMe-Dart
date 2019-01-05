@@ -11,11 +11,34 @@ class SignIn extends StatelessWidget {
   Widget build(BuildContext context) {
     viewModel.signOut();
     return Scaffold(
-      body: Center(
-        child: Container(
-          child: SignInButton(Buttons.Google, onPressed: () {
-            viewModel.googleSignIn();
-          }),
+      body: SafeArea(
+        child: Center(
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Column(crossAxisAlignment: CrossAxisAlignment.end,
+                  children: <Widget>[
+                    Text(
+                      "Welcome to CatchMe.",
+                      style: TextStyle(
+                          fontSize: 30,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    Text("v0.1 alpha", style: TextStyle(
+                          fontSize: 10,
+                          fontStyle: FontStyle.italic,
+                          fontWeight: FontWeight.w100),),
+                  ],
+                ),
+                Container(
+                  height: 45,
+                  child: SignInButton(Buttons.Google, onPressed: () {
+                    viewModel.googleSignIn();
+                  }),
+                ),
+              ]),
         ),
       ),
     );

@@ -6,17 +6,19 @@ class Settings extends StatefulWidget {
 
   @override
   State createState() {
-     return state;
+    return state;
   }
 }
 
 class SettingsState extends State<Settings> {
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-        onTap: () {
-            FirebaseAuth.instance.signOut();
-        },
-        child: Center(child: Text("Sign out")));
+    return Center(
+        child: RaisedButton(
+          elevation: 4,
+      onPressed: () => FirebaseAuth.instance.signOut(),
+      child: Text("Выйти", style: TextStyle(color: Colors.white),),
+      color: Colors.blue,
+    ));
   }
 }

@@ -1,5 +1,6 @@
 import 'package:catch_me/models/Message.dart';
 import 'package:catch_me/models/UiPerson.dart';
+import 'package:catch_me/ui/Widgets.dart';
 import 'package:catch_me/ui/chatscreen/ChatViewModel.dart';
 import 'package:catch_me/values/Dimens.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -13,16 +14,16 @@ class ChatScreen extends StatelessWidget {
   ChatScreen(DocumentReference chatReference) {
     viewModel = ChatViewModel(chatReference);
   }
-  Widget title(UiPerson person) => Row(
+  Widget title(context, UiPerson person) => Row(
         children: <Widget>[
           Container(
             margin: EdgeInsets.only(left: 18),
             width: 40,
             height: 40,
-            decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                image: DecorationImage(image: NetworkImage(person.photoUrl))),
-            //child: profilePhoto
+            // decoration: BoxDecoration(
+            //     shape: BoxShape.circle,
+            //     image: DecorationImage(image: NetworkImage(person.photoUrl))),
+            child: Widgets.profilePicture(context, person.photoUrl, 0.01)
           ),
           Padding(
             padding: const EdgeInsets.only(
@@ -45,7 +46,7 @@ class ChatScreen extends StatelessWidget {
   Widget _buildTitle(BuildContext context) => FutureBuilder<UiPerson>(
         future: viewModel.getChatInfo(),
         builder: (context, snapshot) => snapshot.hasData
-            ? title(snapshot.data)
+            ? title(context, snapshot.data)
             : LinearProgressIndicator(),
       );
 
