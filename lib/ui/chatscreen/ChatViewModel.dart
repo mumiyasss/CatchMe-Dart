@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:catch_me/main.dart';
 import 'package:catch_me/models/Message.dart';
-import 'package:catch_me/models/UiPerson.dart';
+import 'package:catch_me/models/Person.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -34,8 +34,8 @@ class ChatViewModel {
     });
   }
 
-  Future<UiPerson> getChatInfo() async {
+  Future<Person> getChatInfo() async {
     var snapshot = await _chatReference.get();
-    return await UiPerson.fromPrivateChatMembers(snapshot.data['members']);
+    return await Person.fromPrivateChatMembers(snapshot.data['members']);
   }
 }

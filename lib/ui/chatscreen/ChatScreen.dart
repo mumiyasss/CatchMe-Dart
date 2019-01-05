@@ -1,5 +1,5 @@
 import 'package:catch_me/models/Message.dart';
-import 'package:catch_me/models/UiPerson.dart';
+import 'package:catch_me/models/Person.dart';
 import 'package:catch_me/ui/Widgets.dart';
 import 'package:catch_me/ui/chatscreen/ChatViewModel.dart';
 import 'package:catch_me/values/Dimens.dart';
@@ -14,7 +14,7 @@ class ChatScreen extends StatelessWidget {
   ChatScreen(DocumentReference chatReference) {
     viewModel = ChatViewModel(chatReference);
   }
-  Widget title(context, UiPerson person) => Row(
+  Widget title(context, Person person) => Row(
         children: <Widget>[
           Container(
             margin: EdgeInsets.only(left: 18),
@@ -43,7 +43,7 @@ class ChatScreen extends StatelessWidget {
         ],
       );
 
-  Widget _buildTitle(BuildContext context) => FutureBuilder<UiPerson>(
+  Widget _buildTitle(BuildContext context) => FutureBuilder<Person>(
         future: viewModel.getChatInfo(),
         builder: (context, snapshot) => snapshot.hasData
             ? title(context, snapshot.data)

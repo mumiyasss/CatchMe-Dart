@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:catch_me/main.dart';
-import 'package:catch_me/models/UiChat.dart';
+import 'package:catch_me/models/Chat.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ChatListViewModel {
@@ -11,11 +11,11 @@ class ChatListViewModel {
       .orderBy('lastMessageTime', descending: true ) // ??? Query requires Index.
       .snapshots();
 
-  Stream<List<UiChat>> get chats async* {
+  Stream<List<Chat>> get chats async* {
     await for (var chats in chatsCollection) {
-      var tempChatList = List<UiChat>();
+      var tempChatList = List<Chat>();
       for (var chatSnapshot in chats.documents)
-        tempChatList.add(await UiChat.fromSnapshot(chatSnapshot));
+        tempChatList.add(await Chat.fromSnapshot(chatSnapshot));
       yield tempChatList;
     }
   }

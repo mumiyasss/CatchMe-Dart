@@ -1,4 +1,4 @@
-import 'package:catch_me/models/UiChat.dart';
+import 'package:catch_me/models/Chat.dart';
 import 'package:catch_me/ui/Widgets.dart';
 import 'package:catch_me/ui/chatlist/ChatListViewModel.dart';
 import 'package:catch_me/ui/chatscreen/ChatScreen.dart';
@@ -21,7 +21,7 @@ class ChatList extends StatelessWidget {
                 _buildList(context, snapshot.data)));
   }
 
-  Widget _buildList(BuildContext context, List<UiChat> chats) {
+  Widget _buildList(BuildContext context, List<Chat> chats) {
     if (chats != null && chats.length != 0)
       return ListView(
         padding: EdgeInsets.only(
@@ -49,7 +49,7 @@ class ChatList extends StatelessWidget {
       ]));
   }
 
-  Widget _buildListItem(BuildContext context, UiChat chat) {
+  Widget _buildListItem(BuildContext context, Chat chat) {
     var profilePhoto = Widgets.profilePicture(
         context, chat.photo, Dimens.chatListProfilePictureProportion);
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class Widgets {
   static Widget profilePicture(
@@ -15,11 +16,10 @@ class Widgets {
             width: size,
             height: size,
             decoration: BoxDecoration(
-                
                 shape: BoxShape.circle,
                 image: DecorationImage(
                   fit: BoxFit.cover,
-                  image: NetworkImage(photoUrl))),
+                  image: CachedNetworkImageProvider(photoUrl))),
             //child: profilePhoto
           );
   }

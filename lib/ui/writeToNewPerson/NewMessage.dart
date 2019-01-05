@@ -1,4 +1,4 @@
-import 'package:catch_me/models/UiPerson.dart';
+import 'package:catch_me/models/Person.dart';
 import 'package:catch_me/ui/Widgets.dart';
 import 'package:catch_me/ui/chatscreen/ChatScreen.dart';
 import 'package:catch_me/ui/writeToNewPerson/NewMessageViewModel.dart';
@@ -13,7 +13,7 @@ class NewMessage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: StreamBuilder<List<UiPerson>>(
+        child: StreamBuilder<List<Person>>(
           stream: viewModel.users,
           builder: (context, snapshot) => snapshot.hasData
               ? _buildList(context, snapshot.data)
@@ -23,7 +23,7 @@ class NewMessage extends StatelessWidget {
     );
   }
 
-  Widget _buildList(context, List<UiPerson> persons) {
+  Widget _buildList(context, List<Person> persons) {
     return Column(children: <Widget>[
       Container(
         alignment: Alignment.centerLeft,
@@ -45,7 +45,7 @@ class NewMessage extends StatelessWidget {
     ]);
   }
 
-  Widget _buildPersonItem(context, UiPerson person) {
+  Widget _buildPersonItem(context, Person person) {
     return GestureDetector(
       onTap: () {
         viewModel.startNewConversation(person.userId).then((chatReference) {

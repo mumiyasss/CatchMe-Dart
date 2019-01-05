@@ -1,3 +1,4 @@
+import 'package:catch_me/dao/CarDao.dart';
 import 'package:catch_me/ui/signin/SingInViewModel.dart';
 import 'package:catch_me/values/Strings.dart';
 import 'package:catch_me/values/Styles.dart';
@@ -5,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:catch_me/ui/pageview/PageView.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:jaguar_query_sqflite/jaguar_query_sqflite.dart';
+import 'package:sqflite/sqflite.dart';
 import 'ui/signin/SignIn.dart';
 
 void main() {

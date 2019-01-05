@@ -16,11 +16,18 @@ dependencies:
   flutter:
     sdk: flutter
   backdrop: ^0.1.8
+  # Firestore
   cloud_firestore: ^0.8.2     # new
   firebase_auth: ^0.6.6
   google_sign_in: ^3.2.4
   flutter_signin_button: ^0.2.4
   http: ^0.12.0
+  # Caching
+  cached_network_image: ^0.5.1
+  jaguar_query:  #Добавить
+  jaguar_orm: ^2.2.5 #Добавить
+  jaguar_query_sqflite: ^2.2.5 #Добавить  cached_network_image: ^0.5.1
+
 
 
 
@@ -34,6 +41,8 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  jaguar_orm_gen: ^2.2.20 #Добавить
+  build_runner: #Добавить
 
 
 # For information on the generic Dart part of this file, see the
