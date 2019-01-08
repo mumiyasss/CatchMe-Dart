@@ -1,22 +1,36 @@
+import 'dart:collection';
+
 import 'package:catch_me/db/Db.dart';
 import 'package:catch_me/db/dao/beans/PersonBean.dart';
 import 'package:catch_me/main.dart';
 import 'package:catch_me/models/Person.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:sqflite/src/exception.dart';
 
 class PersonDao {
+  static final cachedPeople = Map<String, Person>();
+
   static Stream<Person> fromPrivateChatCompanion(List members) async* {
     var companionId = _getCompanionId(members);
-    final personBean = PersonBean(await Db.getAdapter());
-    await personBean.createTable();
-    // Дальше todo
-    var user = await Firestore.instance
+    final personBean = await PersonBean.get();
+    var cachedPerson = cachedPeople[companionId];
+    var person = cachedPerson != null
+        ? cachedPerson
+        : await personBean.find(companionId);
+    if (person != null) {
+      yield person;
+      cachedPeople[companionId] = person; 
+    }
+    var userSnapshots = Firestore.instance
         .collection('users')
         .document(companionId)
-        .get();
-    var person = _fromSnapshot(user);
-    
-    yield person;
+        .snapshots();
+    await for (var user in userSnapshots) {
+      var newUser = _fromSnapshot(user);
+      yield newUser;
+      person == null ? personBean.insert(newUser) : personBean.update(newUser);
+      cachedPeople[companionId] = newUser;
+    }
   }
 
   static Person _fromSnapshot(DocumentSnapshot userSnapshot) {

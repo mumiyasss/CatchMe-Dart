@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:catch_me/db/dao/PersonDao.dart';
 import 'package:catch_me/main.dart';
 import 'package:catch_me/models/Message.dart';
 import 'package:catch_me/models/Person.dart';
@@ -34,8 +35,19 @@ class ChatViewModel {
     });
   }
 
-  Future<Person> getChatInfo() async {
-    var snapshot = await _chatReference.get();
-    return await Person.fromPrivateChatMembers(snapshot.data['members']);
+  DocumentSnapshot _chatSnapshot;
+  Future<DocumentSnapshot> getChatSnapshot() async {
+    if(_chatSnapshot == null) {
+      _chatSnapshot = await _chatReference.get();
+      return _chatSnapshot;
+    } return _chatSnapshot;
+  } 
+
+  Stream<Person> getChatInfo() async* {
+    var snapshot = await getChatSnapshot();
+    await for (var person
+        in PersonDao.fromPrivateChatCompanion(snapshot.data['members'])) {
+      yield person;
+    }
   }
 }

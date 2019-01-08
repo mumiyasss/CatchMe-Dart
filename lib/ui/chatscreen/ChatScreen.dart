@@ -43,8 +43,8 @@ class ChatScreen extends StatelessWidget {
         ],
       );
 
-  Widget _buildTitle(BuildContext context) => FutureBuilder<Person>(
-        future: viewModel.getChatInfo(),
+  Widget _buildTitle(BuildContext context) => StreamBuilder<Person>(
+        stream: viewModel.getChatInfo(),
         builder: (context, snapshot) => snapshot.hasData
             ? title(context, snapshot.data)
             : LinearProgressIndicator(),
