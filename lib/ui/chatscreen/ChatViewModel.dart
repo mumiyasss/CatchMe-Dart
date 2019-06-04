@@ -11,11 +11,9 @@ class ChatViewModel {
 
   final userId = CatchMeApp.userUid;
   final DocumentReference _chatReference;
-  CollectionReference get _chatMessageCollection =>
-      _chatReference.collection('messages');
 
   Stream<QuerySnapshot> get _messagesDocumentSnapshots =>
-      _chatMessageCollection.orderBy('timestamp', descending: true).snapshots();
+      _chatReference.collection('messages').orderBy('timestamp', descending: true).snapshots();
 
   Stream<List<Message>> get messagesSnapshot async* {
     await for (var snapshot in _messagesDocumentSnapshots)
@@ -24,7 +22,7 @@ class ChatViewModel {
           .toList();
   }
 
-  void sendMessage(String text) async {
+  sendMessage(String text) async {
     var data = {'text': text, 'author': userId, 'timestamp': Timestamp.now()};
     _chatReference.collection('messages').add(data);
     _chatReference.updateData({
@@ -34,8 +32,8 @@ class ChatViewModel {
     });
   }
 
-  Future<UiPerson> getChatInfo() async {
+  Future<Person> getChatInfo() async {
     var snapshot = await _chatReference.get();
-    return await UiPerson.fromPrivateChatMembers(snapshot.data['members']);
+    return await Person.fromPrivateChatMembers(snapshot.data['members']);
   }
 }

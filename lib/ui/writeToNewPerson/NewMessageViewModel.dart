@@ -6,10 +6,10 @@ class NewMessageViewModel {
   Stream<QuerySnapshot> get _usersCollection =>
       Firestore.instance.collection('users').snapshots();
 
-  Stream<List<UiPerson>> get users async* {
+  Stream<List<Person>> get users async* {
     await for (var users in _usersCollection) {
       yield users.documents
-          .map((userSnapshot) => UiPerson.fromSnapshot(userSnapshot))
+          .map((userSnapshot) => Person.fromSnapshot(userSnapshot))
           .toList();
     }
   }
@@ -28,7 +28,7 @@ class NewMessageViewModel {
           .setData({
         'members': [companionId, CatchMeApp.userUid],
         'lastMessageText':
-            (await UiPerson.fromUserId(CatchMeApp.userUid)).name +
+            (await Person.fromUserId(CatchMeApp.userUid)).name +
                 " создал",
         'lastMessageAuthorId': 1,
         'lastMessageTime': Timestamp.now(),

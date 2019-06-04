@@ -23,7 +23,7 @@ class Chat {
     chat.message = chatSnapshot.data['lastMessageText'];
     chat.unread = null;
     var companion =
-        await UiPerson.fromPrivateChatMembers(chatSnapshot.data['members']);
+        await Person.fromPrivateChatMembers(chatSnapshot.data['members']);
     chat.photo = companion.photoUrl;
     chat.name = companion.name;
     return chat;
