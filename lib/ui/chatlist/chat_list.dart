@@ -1,9 +1,9 @@
-import 'package:catch_me/bloc/chat_list/chat_list_bloc.dart';
+import 'package:catch_me/bloc/chat_list/bloc.dart';
 import 'package:catch_me/bloc/chat_list/events.dart';
 import 'package:catch_me/bloc/chat_list/states.dart';
 import 'package:catch_me/models/Chat.dart';
 import 'package:catch_me/ui/Widgets.dart';
-import 'package:catch_me/ui/chatscreen/ChatScreen.dart';
+import 'package:catch_me/ui/chatscreen/chat_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:catch_me/values/Dimens.dart';

@@ -1,5 +1,5 @@
 import 'package:catch_me/main.dart';
-import 'package:catch_me/models/UiPerson.dart';
+import 'package:catch_me/models/Person.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class NewMessageViewModel {

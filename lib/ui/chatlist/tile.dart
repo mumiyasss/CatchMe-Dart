@@ -1,5 +1,5 @@
 import 'package:catch_me/models/Chat.dart';
-import 'package:catch_me/ui/chatscreen/ChatScreen.dart';
+import 'package:catch_me/ui/chatscreen/chat_screen.dart';
 import 'package:catch_me/values/Dimens.dart';
 import 'package:catch_me/values/Styles.dart';
 import 'package:flutter/material.dart';

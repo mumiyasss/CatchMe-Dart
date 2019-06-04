@@ -1,4 +1,4 @@
-import 'package:catch_me/models/UiPerson.dart';
+import 'package:catch_me/models/Person.dart';
 import 'package:flutter/material.dart';
 
 import '../Widgets.dart';

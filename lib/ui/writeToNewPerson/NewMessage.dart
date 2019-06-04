@@ -1,6 +1,6 @@
-import 'package:catch_me/models/UiPerson.dart';
+import 'package:catch_me/models/Person.dart';
 import 'package:catch_me/ui/Widgets.dart';
-import 'package:catch_me/ui/chatscreen/ChatScreen.dart';
+import 'package:catch_me/ui/chatscreen/chat_screen.dart';
 import 'package:catch_me/ui/writeToNewPerson/NewMessageViewModel.dart';
 import 'package:catch_me/values/Dimens.dart';
 import 'package:flutter/material.dart';

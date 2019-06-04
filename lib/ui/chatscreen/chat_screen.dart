@@ -1,5 +1,5 @@
 import 'package:catch_me/models/Message.dart';
-import 'package:catch_me/models/UiPerson.dart';
+import 'package:catch_me/models/Person.dart';
 import 'package:catch_me/ui/Widgets.dart';
 import 'package:catch_me/ui/chatscreen/ChatViewModel.dart';
 import 'package:catch_me/ui/chatscreen/title.dart';
@@ -71,7 +71,7 @@ class ChatScreen extends StatelessWidget {
                             child: GestureDetector(
                                 onTap: () =>
                                     FocusScope.of(context).requestFocus(
-                                        new FocusNode()),
+                                        FocusNode()),
                                 child: StreamBuilder<List<Message>>(
                                     stream: viewModel.messagesSnapshot,
                                     builder: (context, snapshot) =>
