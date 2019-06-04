@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:catch_me/ui/writeToNewPerson/NewMessage.dart';
 import 'package:flutter/material.dart';
-import 'package:catch_me/ui/chatlist/ChatList.dart';
+import 'package:catch_me/ui/chatlist/chat_list.dart';
 import 'package:catch_me/ui/settings/Settings.dart';
 import 'AppBar.dart';
 import 'package:catch_me/values/Dimens.dart';
