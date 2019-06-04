@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Message {
   final String text;
   final String author;
-  final DateTime timestamp;
+  final Timestamp timestamp;
   final DocumentReference reference;
 
   Message.fromMap(Map<String, dynamic> map, {this.reference})

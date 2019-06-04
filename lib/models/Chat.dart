@@ -3,7 +3,7 @@ import 'package:catch_me/models/UiPerson.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-class UiChat {
+class Chat {
   String name;
   String message;
   String time;
@@ -11,12 +11,14 @@ class UiChat {
   String photo;
   DocumentReference chatReference;
 
-  static Future<UiChat> fromSnapshot(DocumentSnapshot chatSnapshot) async {
-    UiChat chat = UiChat();
+  static Future<Chat> fromSnapshot(DocumentSnapshot chatSnapshot) async {
+    Chat chat = Chat();
     chat.chatReference = chatSnapshot.reference;
 
-    var dateTime = (chatSnapshot.data['lastMessageTime'] as DateTime);
-    chat.time = dateTime.hour.toString() + ':' + dateTime.minute.toString();
+
+    // todo: timestamp is not a subtype of type dateTime
+    var timeStamp = (chatSnapshot.data['lastMessageTime'] as Timestamp);
+    chat.time = timeStamp.toDate().hour.toString() + ':' + timeStamp.toDate().minute.toString();
 
     chat.message = chatSnapshot.data['lastMessageText'];
     chat.unread = null;
