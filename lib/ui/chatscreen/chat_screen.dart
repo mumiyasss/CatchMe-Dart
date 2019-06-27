@@ -17,7 +17,9 @@ class ChatScreen extends StatelessWidget {
     final DocumentReference _chatReference;
 
     ChatScreen(this._chatReference) :
-            _bloc = MessagesBloc(_chatReference);
+            _bloc = MessagesBloc(_chatReference) {
+
+    }
 
     @override
     Widget build(BuildContext context) {

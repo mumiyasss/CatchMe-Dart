@@ -1,9 +1,7 @@
 import 'package:bloc/bloc.dart';
-import 'package:catch_me/models/Message.dart';
 import 'package:catch_me/models/Person.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../../../main.dart';
 import 'events.dart';
 import 'states.dart';
 
@@ -13,7 +11,9 @@ import 'states.dart';
 class ChatBloc extends Bloc<ChatInfoEvent, ChatInfoState> {
 
     final DocumentReference _chatReference;
-    ChatBloc(this._chatReference);
+    ChatBloc(this._chatReference) {
+        this.dispatch(GetChatInfo());
+    }
     
     // Todo: make chat info dao
 

@@ -1,4 +1,5 @@
 import 'package:catch_me/bloc/chat_screen/chat_info/bloc.dart';
+import 'package:catch_me/bloc/chat_screen/chat_info/events.dart';
 import 'package:catch_me/bloc/chat_screen/chat_info/states.dart';
 import 'package:catch_me/bloc/chat_screen/messages_panel/states.dart';
 import 'package:catch_me/models/Person.dart';

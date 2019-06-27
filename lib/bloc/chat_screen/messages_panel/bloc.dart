@@ -15,6 +15,7 @@ class MessagesBloc extends Bloc<ChatScreenEvent, ChatScreenState> {
                 .collection('messages')
                 .orderBy('timestamp', descending: true)
                 .snapshots();
+        this.dispatch(StartListenNewMessages());
     }
 
     @override
