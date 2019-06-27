@@ -15,8 +15,6 @@ class Chat {
     Chat chat = Chat();
     chat.chatReference = chatSnapshot.reference;
 
-
-    // todo: timestamp is not a subtype of type dateTime
     var timeStamp = (chatSnapshot.data['lastMessageTime'] as Timestamp);
     chat.time = timeStamp.toDate().hour.toString() + ':' + timeStamp.toDate().minute.toString();
 

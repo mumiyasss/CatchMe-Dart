@@ -1,11 +1,20 @@
 import 'package:catch_me/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+final String photoUrlColumn = 'photoUrl';
+final String nameColumn = 'name';
+final String userIdColumn = 'userId';
+
+
+
 class Person {
   String photoUrl;
   String name;
   String userId;
+  Timestamp lastSeen;
   DocumentReference reference;
+
+  Person();
 
   Person.fromSnapshot(DocumentSnapshot userSnapshot) {
     photoUrl = userSnapshot.data['photo'];
@@ -27,5 +36,26 @@ class Person {
       }
     }
     return await Person.fromUserId(CatchMeApp.userUid);
+  }
+
+  Map<String, dynamic> toMap() {
+    var map = <String, dynamic>{
+      photoUrlColumn: photoUrl,
+      nameColumn: name,
+      userIdColumn: userId
+    };
+    return map;
+  }
+
+  Person.fromMap(Map<String, dynamic> map) {
+    photoUrl = map[photoUrlColumn];
+    name = map[nameColumn];
+    userId = map[userIdColumn];
+  }
+
+
+  @override
+  String toString() {
+    return 'Person{photoUrl: $photoUrl, name: $name, userId: $userId, lastSeen: $lastSeen, reference: $reference}';
   }
 }

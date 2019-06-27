@@ -2,16 +2,21 @@ import 'dart:async';
 
 import 'package:catch_me/bloc/chat_list/events.dart';
 import 'package:catch_me/bloc/chat_list/states.dart';
+import 'package:catch_me/db/Database.dart';
 
 import 'package:catch_me/main.dart';
 import 'package:catch_me/models/Chat.dart';
+import 'package:catch_me/models/Person.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:bloc/bloc.dart';
 
 class ChatListBloc extends Bloc<ChatListEvent, ChatListState> {
 
     @override
-    ChatListState get initialState => ChatsAreLoading();
+    ChatListState get initialState {
+        return ChatsAreLoading();
+    }
+
 
     @override
     Stream<ChatListState> mapEventToState(ChatListEvent event) async* {

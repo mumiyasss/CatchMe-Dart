@@ -1,86 +1,52 @@
+import 'package:catch_me/bloc/chat_screen/chat_info/bloc.dart';
+import 'package:catch_me/bloc/chat_screen/messages_panel/bloc.dart';
+import 'package:catch_me/bloc/chat_screen/messages_panel/states.dart';
+import 'package:catch_me/bloc/chat_screen/sending_messages/bloc.dart';
 import 'package:catch_me/models/Message.dart';
-import 'package:catch_me/models/Person.dart';
-import 'package:catch_me/ui/Widgets.dart';
-import 'package:catch_me/ui/chatscreen/ChatViewModel.dart';
-import 'package:catch_me/ui/chatscreen/title.dart';
-import 'package:catch_me/values/Dimens.dart';
+import 'package:catch_me/ui/chatscreen/app_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'bubble.dart';
 import 'message_field.dart';
-
-ChatViewModel viewModel;
+import 'app_bar.dart';
 
 class ChatScreen extends StatelessWidget {
-    ChatScreen(DocumentReference chatReference) {
-        viewModel = ChatViewModel(chatReference);
-    }
+    final MessagesBloc _bloc;
+    final DocumentReference _chatReference;
 
-    _buildTitle(BuildContext context) =>
-        FutureBuilder<Person>(
-            future: viewModel.getChatInfo(),
-            builder: (context, snapshot) =>
-            snapshot.hasData
-                ? TopBar(snapshot.data)
-                : LinearProgressIndicator(),
-        );
+    ChatScreen(this._chatReference) :
+            _bloc = MessagesBloc(_chatReference);
 
     @override
     Widget build(BuildContext context) {
-        final backButton = GestureDetector(
-            onTap: () => Navigator.of(context).pop(),
-            child: SvgPicture.asset(
-                'assets/ic_back.svg',
-                width: 20,
-                height: 20,
-            ));
-
-        final menuButton = Icon(
-            Icons.menu,
-            size: 25,
-        );
-
-        final appBar = Container(
-            padding: EdgeInsets.symmetric(horizontal: 26, vertical: 8),
-            margin: EdgeInsets.only(bottom: 2),
-            decoration: BoxDecoration(color: Colors.white, boxShadow: [
-                BoxShadow(offset: Offset(0, 2),
-                    blurRadius: 5,
-                    color: Color(0x22000000))
-            ]),
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                    backButton,
-                    Expanded(child: _buildTitle(context)),
-                    menuButton
-                ],
-            ),
-        );
-
         return Scaffold(
             body: SafeArea(
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
-                        appBar,
+                        MyAppBar(ChatBloc(_chatReference)), // todo: wrong>
                         Flexible(
                             child: GestureDetector(
                                 onTap: () =>
                                     FocusScope.of(context).requestFocus(
                                         FocusNode()),
-                                child: StreamBuilder<List<Message>>(
-                                    stream: viewModel.messagesSnapshot,
-                                    builder: (context, snapshot) =>
-                                    snapshot.hasData
-                                        ? _buildList(context, snapshot.data)
-                                        : LinearProgressIndicator(),
-                                )),
+                                child: BlocBuilder( // ToDo: maybe bloc listener?
+                                    bloc: _bloc,
+                                    builder: (BuildContext context, ChatScreenState state) {
+                                        if (state is MessagesAreLoading) {
+                                            return CircularProgressIndicator();
+                                        }
+                                        if (state is MessagesAreLoaded) {
+                                            return MessagesList(state.messages);
+                                        }
+                                    }
+
+                                ),
+                            ),
                         ),
-                        MessageField()
+                        MessageField(SendingMessagesBloc(_chatReference))
                     ],
                 ),
             ),
@@ -88,13 +54,22 @@ class ChatScreen extends StatelessWidget {
     }
 }
 
-Widget _buildList(BuildContext context, List<Message> messages) {
-    return Container(
-        color: Colors.white,
-        child: ListView(
-            reverse: true,
-            children:
-            messages.map((message) => MessageBubble(message)).toList(),
-        ),
-    );
+
+// Todo: необходима обработка пустого диалога
+class MessagesList extends StatelessWidget {
+    final List<Message> _messages;
+
+    MessagesList(this._messages);
+
+    @override
+    Widget build(BuildContext context) {
+        return Container(
+            color: Colors.white,
+            child: ListView(
+                reverse: true,
+                children:
+                _messages.map((message) => MessageBubble(message)).toList(),
+            ),
+        );
+    }
 }
