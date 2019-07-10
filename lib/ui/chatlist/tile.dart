@@ -14,8 +14,8 @@ class ChatTile extends StatelessWidget {
     @override
     Widget build(BuildContext context) {
         var profilePhoto = Widgets.profilePicture(
-            context, _chat.photo, Dimens.chatListProfilePictureProportion);
-        var name = _wrappedText(context, _chat.name, Styles.chatNameStyle(), 0.5);
+            context, _chat.companion.photoUrl, Dimens.chatListProfilePictureProportion);
+        var name = _wrappedText(context, _chat.companion.name, Styles.chatNameStyle(), 0.5);
         var time = Text(_chat.time, style: Styles.lastMessageTime());
         var lastMessage = _wrappedText(context, _chat.message, Styles.lastMessageTime(), 0.5);
         var _unread = _chat.unread;
@@ -35,7 +35,7 @@ class ChatTile extends StatelessWidget {
                 Navigator.push(
                     context,
                     MaterialPageRoute( // TODO: cache hashMap chatReference
-                        builder: (context) => ChatScreen(_chat.chatReference)),
+                        builder: (context) => ChatScreen(_chat.reference)),
                 );
             },
             child: Column(

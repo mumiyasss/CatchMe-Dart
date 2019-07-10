@@ -2,7 +2,8 @@ import 'dart:async';
 
 import 'package:catch_me/bloc/chat_list/events.dart';
 import 'package:catch_me/bloc/chat_list/states.dart';
-import 'package:catch_me/db/Database.dart';
+import 'package:catch_me/dao/ChatDao.dart';
+import 'package:catch_me/dao/cached_db/cached_db.dart';
 
 import 'package:catch_me/main.dart';
 import 'package:catch_me/models/Chat.dart';
@@ -17,38 +18,20 @@ class ChatListBloc extends Bloc<ChatListEvent, ChatListState> {
         return ChatsAreLoading();
     }
 
-
     @override
     Stream<ChatListState> mapEventToState(ChatListEvent event) async* {
         if (event is StartListenChatList) {
-            _listeningStatus = true;
-            await for (var chatList in _chatListsStream) {
-                if (_listeningStatus == false) break;
-                yield chatList.isEmpty
-                    ? NoExistingChats()
-                    : SomeChatsExists(chatList);
+            var dao = await ChatDao.instance;
+
+            // Проблема в том что кэширование чатов не позволяет
+            // раскрыть свой потенциал так как не реализовано кэширование
+            // людей.
+            await for (var chatList in dao.getAll()) {
+                yield chatList.isNotEmpty
+                    ? SomeChatsExists(chatList)
+                    : NoExistingChats();
             }
-        } else if (event is StopListenChatList) {
-            _listeningStatus = false;
         }
     }
 
-    Stream<List<Chat>> get _chatListsStream async* {
-        await for (var chats in _chatsCollection) {
-            var tempChatList = List<Chat>();
-            for (var chatSnapshot in chats.documents)
-                tempChatList.add(await Chat.fromSnapshot(chatSnapshot));
-            yield tempChatList;
-        }
-    }
-
-    /// Initial state
-    bool _listeningStatus = false;
-
-    final _chatsCollection = Firestore.instance
-        .collection('chats')
-        .where('members', arrayContains: CatchMeApp.userUid)
-        .orderBy(
-        'lastMessageTime', descending: true) // ??? Query requires Index.
-        .snapshots();
 }

@@ -1,5 +1,5 @@
-import 'package:catch_me/db/Database.dart';
-import 'package:catch_me/models/Person.dart';
+import 'package:catch_me/LifecycleEventHandler.dart';
+import 'package:catch_me/dao/cached_db/db/Db.dart';
 import 'package:catch_me/ui/signin/SingInViewModel.dart';
 import 'package:catch_me/values/Strings.dart';
 import 'package:catch_me/values/Styles.dart';
@@ -12,7 +12,7 @@ import 'ui/signin/SignIn.dart';
 
 void main() {
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
-        .then((_) {
+        .then((_) async {
         runApp(CatchMeApp());
     });
 }
@@ -21,8 +21,14 @@ class CatchMeApp extends StatelessWidget {
     static String userUid;
     static BuildContext appContext;
 
+
     @override
     Widget build(BuildContext context) {
+        WidgetsBinding.instance.addObserver(LifecycleEventHandler(
+            inactiveCallBack: Db.onAppClose(),
+            pausedCallBack: Db.onAppClose(),
+            suspendingCallBack: Db.onAppClose()
+        ));
 
         appContext = context;
         SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(

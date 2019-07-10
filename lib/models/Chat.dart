@@ -1,29 +1,71 @@
+import 'package:catch_me/dao/cached_db/db/helpers/PersonHelper.dart';
 import 'package:catch_me/main.dart';
+import 'package:catch_me/models/Model.dart';
 import 'package:catch_me/models/Person.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-class Chat {
-  String name;
-  String message;
-  String time;
-  int unread;
-  String photo;
-  DocumentReference chatReference;
+// Todo: подвязать к Person ???
+final String companionColumn = "companionColumn";
+final String lastMessageColumn = "lastMessageColumn";
+final String timeColumn = "lastSeenColumn";
+final String unreadColumn = "unreadColumn";
+final String chatPathColumn = "documentPathColumn";
 
-  static Future<Chat> fromSnapshot(DocumentSnapshot chatSnapshot) async {
-    Chat chat = Chat();
-    chat.chatReference = chatSnapshot.reference;
+class Chat extends Model {
 
-    var timeStamp = (chatSnapshot.data['lastMessageTime'] as Timestamp);
-    chat.time = timeStamp.toDate().hour.toString() + ':' + timeStamp.toDate().minute.toString();
+    Person companion;
+    String message;
+    String time;
+    int unread;
+    DocumentReference reference;
 
-    chat.message = chatSnapshot.data['lastMessageText'];
-    chat.unread = null;
-    var companion =
+    @override
+    dynamic get pk => reference.path;
+
+    Chat();
+
+    static Future<Chat> fromSnapshot(DocumentSnapshot chatSnapshot) async {
+        Chat chat = Chat();
+        chat.reference = chatSnapshot.reference;
+
+        var timeStamp = (chatSnapshot.data['lastMessageTime'] as Timestamp);
+        chat.time = timeStamp
+            .toDate()
+            .hour
+            .toString() + ':' + timeStamp
+            .toDate()
+            .minute
+            .toString();
+
+        chat.message = chatSnapshot.data['lastMessageText'];
+        chat.unread = null;
+        chat.companion =
         await Person.fromPrivateChatMembers(chatSnapshot.data['members']);
-    chat.photo = companion.photoUrl;
-    chat.name = companion.name;
-    return chat;
-  }
+        return chat;
+    }
+
+
+    // Todo in Dart 2.4 => to expended methods
+    Map<String, dynamic> toMap() {
+        return <String, dynamic>{
+            companionColumn: companion.userId,
+            lastMessageColumn: message,
+            timeColumn: time,
+            unreadColumn: unread,
+            chatPathColumn: reference.path
+        };
+    }
+
+    // Todo in Dart 2.4 => to expended methods
+    static Future<Chat> fromMap(Map<String, dynamic> map) async {
+        return Chat()
+            ..companion = await (await PersonHelper.instance)
+                .get(map[userIdColumn])
+            ..message = map[lastMessageColumn]
+            ..unread = map[unreadColumn]
+            ..time = map[timeColumn]
+            ..reference = Firestore.instance
+                .document(map[chatPathColumn]);
+    }
 }
