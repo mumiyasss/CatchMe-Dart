@@ -12,7 +12,6 @@ class ChatHelper extends Repository<Chat> {
     ChatHelper._();
     static ChatHelper _dao;
     static Database _db;
-    Batch _batch;
 
     static Future<ChatHelper> get instance async {
         if (_dao == null) {
@@ -23,8 +22,8 @@ class ChatHelper extends Repository<Chat> {
                             $timeColumn text not null,
                             $unreadColumn integer,
                             $lastMessageColumn text not null,
-                            $companionColumn text not null,
-                            FOREIGN KEY ($companionColumn) 
+                            $companionIdColumn text not null,
+                            FOREIGN KEY ($companionIdColumn) 
                                 REFERENCES $personTable($userIdColumn)
                             )
                             ''');
@@ -35,7 +34,7 @@ class ChatHelper extends Repository<Chat> {
 
 
     insert(Chat chat) {
-         Db.batch.insert(chatTable, chat.toMap(),
+         _db.insert(chatTable, chat.toMap(),
             conflictAlgorithm: ConflictAlgorithm.replace);
     }
 
@@ -44,13 +43,13 @@ class ChatHelper extends Repository<Chat> {
     }
 
     update(Chat chat) {
-        Db.batch.update(chatTable, chat.toMap(),
+        _db.update(chatTable, chat.toMap(),
             where: '$chatPathColumn = ?',
             whereArgs: [chat.reference.path]);
     }
 
     deleteAll() {
-        Db.batch.rawQuery("DELETE FROM $chatTable");
+        _db.rawQuery("DELETE FROM $chatTable");
     }
 
 

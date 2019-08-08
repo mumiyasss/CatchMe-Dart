@@ -67,17 +67,24 @@ class _AppBarContent extends StatelessWidget {
         return BlocBuilder(
             bloc: _bloc,
             builder: (context, ChatInfoState state) {
-                if (state is ChatInfoIsLoading) {
-                    return LinearProgressIndicator();
-                }
                 if (state is ChatInfoLoadedState) {
-                    return _buildInfo(context, state.person);
+                    return
+                        StreamBuilder(
+                            stream: state.person,
+                            builder: (context, personSnapshot) {
+                                if (personSnapshot.hasData)
+                                    return _buildInfo(context, personSnapshot.data);
+                                else return LinearProgressIndicator();
+                            }
+                        );
                 }
+                return LinearProgressIndicator();
             },
         );
     }
 
     _buildInfo(BuildContext context, Person person) {
+        assert(person != null);
         return Row(
             children: <Widget>[
                 Container(

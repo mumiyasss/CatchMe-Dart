@@ -18,24 +18,9 @@ class Person extends Model {
         photoUrl = userSnapshot.data['photo'];
         name = userSnapshot.data['name'];
         userId = userSnapshot.data['id'];
-    }
-
-    static Future<Person> fromUserId(String userId) async {
-        var user = await Firestore
-            .instance
-            .collection('users')
-            .document(userId)
-            .get();
-        return Person.fromSnapshot(user);
-    }
-
-    static Future<Person> fromPrivateChatMembers(List members) async {
-        for (var memberId in members) {
-            if (memberId != CatchMeApp.userUid) {
-                return await Person.fromUserId(memberId);
-            }
-        }
-        return await Person.fromUserId(CatchMeApp.userUid);
+        assert(photoUrl != null);
+        assert(name != null);
+        assert(userId != null);
     }
 
     Map<String, dynamic> toMap() {
@@ -51,6 +36,9 @@ class Person extends Model {
         photoUrl = map[photoUrlColumn];
         name = map[nameColumn];
         userId = map[userIdColumn];
+        assert(photoUrl != null);
+        assert(name != null);
+        assert(userId != null);
     }
 
     @override

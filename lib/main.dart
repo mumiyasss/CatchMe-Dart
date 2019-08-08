@@ -1,5 +1,9 @@
 import 'package:catch_me/LifecycleEventHandler.dart';
+import 'package:catch_me/dao/cached_db/cached_db.dart';
 import 'package:catch_me/dao/cached_db/db/Db.dart';
+import 'package:catch_me/dao/cached_db/store.dart';
+import 'package:catch_me/models/Chat.dart';
+import 'package:catch_me/models/Person.dart';
 import 'package:catch_me/ui/signin/SingInViewModel.dart';
 import 'package:catch_me/values/Strings.dart';
 import 'package:catch_me/values/Styles.dart';
@@ -13,21 +17,31 @@ import 'ui/signin/SignIn.dart';
 void main() {
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
         .then((_) async {
+        onAppStart();
         runApp(CatchMeApp());
     });
+}
+
+onAppStart() async {
+    await ChatStore.instance;
+    await PersonStore.instance;
+}
+
+onAppClose() async {
+    ChatStore.instance.then((store) => store.updateDbRightNow());
+    PersonStore.instance.then((store) => store.updateDbRightNow());
 }
 
 class CatchMeApp extends StatelessWidget {
     static String userUid;
     static BuildContext appContext;
 
-
     @override
     Widget build(BuildContext context) {
         WidgetsBinding.instance.addObserver(LifecycleEventHandler(
-            inactiveCallBack: Db.onAppClose(),
-            pausedCallBack: Db.onAppClose(),
-            suspendingCallBack: Db.onAppClose()
+            inactiveCallBack: onAppClose(),
+            pausedCallBack: onAppClose(),
+            suspendingCallBack: onAppClose()
         ));
 
         appContext = context;

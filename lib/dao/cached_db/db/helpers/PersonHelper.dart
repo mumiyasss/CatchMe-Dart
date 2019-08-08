@@ -1,4 +1,5 @@
 import 'package:catch_me/dao/cached_db/db/db.dart';
+import 'package:catch_me/dao/cached_db/db/exceptions.dart';
 import 'package:catch_me/models/Person.dart';
 import 'package:catch_me/repository/repository.dart';
 import 'package:sqflite/sqflite.dart';
@@ -26,13 +27,13 @@ class PersonHelper extends Repository<Person> {
 
     @override
     insert(Person person) {
-        Db.batch.insert(personTable, person.toMap(),
+        _db.insert(personTable, person.toMap(),
             conflictAlgorithm: ConflictAlgorithm.replace);
     }
 
     @override
     update(Person person) {
-        Db.batch.update(personTable, person.toMap(),
+        _db.update(personTable, person.toMap(),
             where: '$userIdColumn = ?',
             whereArgs: [person.userId]);
     }
@@ -43,7 +44,7 @@ class PersonHelper extends Repository<Person> {
         List<Map> maps = await _db.query(personTable,
             columns: null
         );
-        return maps.map((personMap) => Person.fromMap(personMap));
+        return maps.map((personMap) => Person.fromMap(personMap)).toList();
     }
 
     @override
@@ -59,7 +60,11 @@ class PersonHelper extends Repository<Person> {
             whereArgs: [userId],
             limit: 1
         );
-        return Person.fromMap(maps.first);
+        try {
+            return Person.fromMap(maps.first);
+        } on StateError {
+            throw NotFound();
+        }
     }
 
     @override
