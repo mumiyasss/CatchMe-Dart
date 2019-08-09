@@ -27,6 +27,9 @@ class PersonDao {
             .document(userId)
             .snapshots());
 
+        return Observable.just(_personStore.get(userId));
+
+
         return observable.map((DocumentSnapshot personSnapshot) {
             var person = Person.fromSnapshot(personSnapshot);
             _personStore.insert(person);

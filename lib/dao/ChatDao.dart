@@ -36,14 +36,23 @@ class ChatDao {
 
     ChatDao._();
 
-    // Может быть сделать стрим кэша?
+//
+//    // Может быть сделать стрим кэша?
+//    Observable<List<Chat>> getAll() =>
+//        Observable
+//            .fromFuture(_chatsStore.getAll())
+//            .mergeWith([_chatCollectionFromNet]);
+
     Observable<List<Chat>> getAll() =>
-        Observable
-            .fromFuture(_chatsStore.getAll())
-            .mergeWith([_chatCollectionFromNet]);
+        Observable.just(_chatsStore.getAll());
 
     Future<Chat> getChatInfo(DocumentReference chatReference) async {
-        return await _chatsStore.get(chatReference.path);
+        var cached = _chatsStore.get(chatReference.path);
+        if (cached == null) {
+            var chat = await Chat.fromSnapshot(await chatReference.get());
+            _chatsStore.insert(chat);
+            return chat;
+        } else return cached;
     }
 
     static Future<Chat> fromSnapshot(DocumentSnapshot chatSnapshot) async {

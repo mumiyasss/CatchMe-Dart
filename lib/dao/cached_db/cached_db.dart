@@ -13,7 +13,7 @@ import 'package:meta/meta.dart';
 /// Постоянно актуальный кэш регулярно скидывает все свои данные
 /// в базу данных. Таким образом база данных будет постоянно
 /// актуальной, не будет ненужных операций.
-class CachedDb<T extends Model> implements Repository<T> {
+class CachedDb<T extends Model> {
 
     Repository<T> dbHelper;
     Map<dynamic, T> cachedData = Map<dynamic, T>();
@@ -52,35 +52,29 @@ class CachedDb<T extends Model> implements Repository<T> {
     /// Например:
     ///     pageNumber = 1 - последние 50 объектов.
     ///     pageNumber = 2 - последние 51-100 объектов, и т.д.
-    @override
-    Future<List<T>> getAll({int pageNumber = 0}) async {
+    List<T> getAll({int pageNumber = 0}){
         var objects = List<T>();
         cachedData?.forEach((_, obj) => objects.add(obj));
         return objects;
     }
 
-    @override
-    Future<T> get(String pk) async {
+    T get(String pk) {
         return cachedData[pk];
     }
 
-    @override
     insertAll(List<T> objects) {
         objects.forEach((obj) => insert(obj));
     }
 
-    @override
     insert(T obj) {
         assert(obj != null);
         cachedData[obj.pk] = obj;
     }
 
-    @override
     deleteAll() {
         cachedData.clear();
     }
 
-    @override
     update(T obj) {
         cachedData[obj.pk] = obj;
     }

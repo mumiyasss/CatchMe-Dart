@@ -2,6 +2,7 @@ import 'package:catch_me/bloc/chat_screen/chat_info/bloc.dart';
 import 'package:catch_me/bloc/chat_screen/messages_panel/bloc.dart';
 import 'package:catch_me/bloc/chat_screen/messages_panel/states.dart';
 import 'package:catch_me/bloc/chat_screen/sending_messages/bloc.dart';
+import 'package:catch_me/models/Chat.dart';
 import 'package:catch_me/models/Message.dart';
 import 'package:catch_me/ui/chatscreen/app_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -14,12 +15,10 @@ import 'app_bar.dart';
 
 class ChatScreen extends StatelessWidget {
     final MessagesBloc _bloc;
-    final DocumentReference _chatReference;
+    final Chat _chat;
 
-    ChatScreen(this._chatReference) :
-            _bloc = MessagesBloc(_chatReference) {
-
-    }
+    ChatScreen(this._chat) :
+            _bloc = MessagesBloc(_chat.reference) ;
 
     @override
     Widget build(BuildContext context) {
@@ -29,7 +28,7 @@ class ChatScreen extends StatelessWidget {
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
-                        MyAppBar(ChatBloc(_chatReference)), // todo: wrong>
+                        MyAppBar(ChatBloc(_chat)), // todo: wrong>
                         Flexible(
                             child: GestureDetector(
                                 onTap: () =>
@@ -49,7 +48,7 @@ class ChatScreen extends StatelessWidget {
                                 ),
                             ),
                         ),
-                        MessageField(SendingMessagesBloc(_chatReference))
+                        MessageField(SendingMessagesBloc(_chat.reference))
                     ],
                 ),
             ),

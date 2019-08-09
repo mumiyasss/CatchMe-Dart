@@ -26,6 +26,11 @@ class Chat extends Model {
 
     // Todo in Dart 2.5 => to expended methods
     Map<String, dynamic> toMap() {
+        if(companion == null) {
+            print(companion);
+        }
+        assert(companion != null);
+        assert(reference.path != null);
         return <String, dynamic>{
             companionIdColumn: companion.userId,
             lastMessageColumn: message,
@@ -33,6 +38,17 @@ class Chat extends Model {
             unreadColumn: unread,
             chatPathColumn: reference.path
         };
+    }
+
+    static Future<Chat> fromSnapshot(DocumentSnapshot snapshot) async {
+        var data = snapshot.data;
+        return Chat()
+            ..companion = await (await PersonDao.instance)
+                .fromPrivateChatMembers(data['members']).first
+            ..message = data['lastMessageText']
+            ..unread = data['unread']
+            ..time = data['lastMessageTime']
+            ..reference = snapshot.reference;
     }
 
     // Todo in Dart 2.5 => to expended methods

@@ -1,6 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:catch_me/dao/ChatDao.dart';
 import 'package:catch_me/dao/PersonDao.dart';
+import 'package:catch_me/main.dart';
+import 'package:catch_me/models/Chat.dart';
 import 'package:catch_me/models/Person.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rxdart/rxdart.dart';
@@ -12,22 +14,21 @@ import 'states.dart';
 /// но пока приложение слишком маленькое
 class ChatBloc extends Bloc<ChatInfoEvent, ChatInfoState> {
 
-    final DocumentReference _chatReference;
+    final Chat _chat;
 
-    ChatBloc(this._chatReference) {
+    ChatBloc(this._chat) {
         this.dispatch(GetChatInfo());
     }
 
     @override
-    ChatInfoState get initialState => ChatInfoIsLoading();
+    ChatInfoState get initialState => ChatInfoLoadedState(Observable.just(_chat.companion));
 
     @override
     Stream<ChatInfoState> mapEventToState(ChatInfoEvent event) async* {
         if (event is GetChatInfo) {
-            var snapshot = await _chatReference.get();
 
             yield ChatInfoLoadedState(
-                (await PersonDao.instance).fromPrivateChatMembers(snapshot.data['members'])
+                CatchMeApp.personDao.fromUserId(_chat.companion.userId)
             );
         }
     }

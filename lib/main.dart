@@ -1,4 +1,6 @@
 import 'package:catch_me/LifecycleEventHandler.dart';
+import 'package:catch_me/dao/ChatDao.dart';
+import 'package:catch_me/dao/PersonDao.dart';
 import 'package:catch_me/dao/cached_db/cached_db.dart';
 import 'package:catch_me/dao/cached_db/db/Db.dart';
 import 'package:catch_me/dao/cached_db/store.dart';
@@ -7,6 +9,7 @@ import 'package:catch_me/models/Person.dart';
 import 'package:catch_me/ui/signin/SingInViewModel.dart';
 import 'package:catch_me/values/Strings.dart';
 import 'package:catch_me/values/Styles.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:catch_me/ui/pageview/PageView.dart';
 import 'package:flutter/services.dart';
@@ -22,9 +25,10 @@ void main() {
     });
 }
 
+
 onAppStart() async {
-    await ChatStore.instance;
-    await PersonStore.instance;
+    CatchMeApp.chatDao = await ChatDao.instance;
+    CatchMeApp.personDao = await PersonDao.instance;
 }
 
 onAppClose() async {
@@ -35,6 +39,10 @@ onAppClose() async {
 class CatchMeApp extends StatelessWidget {
     static String userUid;
     static BuildContext appContext;
+
+    static PersonDao personDao;
+    static ChatDao chatDao;
+
 
     @override
     Widget build(BuildContext context) {
