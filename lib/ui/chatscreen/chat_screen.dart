@@ -29,7 +29,7 @@ class ChatScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
                         MyAppBar(ChatBloc(_chat)), // todo: wrong>
-                        Flexible(
+                        Expanded(
                             child: GestureDetector(
                                 onTap: () =>
                                     FocusScope.of(context).requestFocus(
@@ -38,7 +38,7 @@ class ChatScreen extends StatelessWidget {
                                     bloc: _bloc,
                                     builder: (BuildContext context, ChatScreenState state) {
                                         if (state is MessagesAreLoading) {
-                                            return CircularProgressIndicator();
+                                            return Center(child: CircularProgressIndicator());
                                         }
                                         if (state is MessagesAreLoaded) {
                                             return MessagesList(state.messages);
