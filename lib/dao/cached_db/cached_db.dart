@@ -1,3 +1,4 @@
+import 'package:catch_me/dao/cached_db/db/exceptions.dart';
 import 'package:catch_me/dao/cached_db/db/helpers/PersonHelper.dart';
 import 'package:catch_me/models/Chat.dart';
 import 'package:catch_me/models/Message.dart';
@@ -59,7 +60,8 @@ class CachedDb<T extends Model> {
     }
 
     T get(String pk) {
-        return cachedData[pk];
+        if (cachedData[pk] != null) return cachedData[pk];
+        else throw NotFound();
     }
 
     insertAll(List<T> objects) {

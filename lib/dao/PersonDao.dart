@@ -4,6 +4,8 @@ import 'package:catch_me/models/Person.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rxdart/rxdart.dart';
 
+import 'cached_db/db/exceptions.dart';
+
 class PersonDao {
     static PersonDao _instance;
     static PersonStore _personStore;
@@ -21,28 +23,32 @@ class PersonDao {
     // Необходимо сделать мерж с данными из Store.
     Observable<Person> fromUserId(String userId) {
         assert(userId != null);
-        var observable = Observable(Firestore
+        var netObservable = Observable(Firestore
             .instance
             .collection('users')
             .document(userId)
             .snapshots());
 
-        return Observable.just(_personStore.get(userId));
+        Observable<Person> dbObservable = Observable.empty();
+        try {
+            var person = _personStore.get(userId);
+            dbObservable = Observable.just(person);
+        } on NotFound {
+            print("Person with $userId ID not found in Database");
+        }
 
-
-        return observable.map((DocumentSnapshot personSnapshot) {
+        return netObservable.map((DocumentSnapshot personSnapshot) {
             var person = Person.fromSnapshot(personSnapshot);
             _personStore.insert(person);
             assert(person != null);
             return person;
-        });
+        }).mergeWith([dbObservable]);
     }
 
     // сделать в стрим?
     Observable<Person> fromPrivateChatMembers(List members) {
         for (var memberId in members) {
             if (memberId != CatchMeApp.userUid) {
-                print(memberId);
                 return fromUserId(memberId);
             }
         }

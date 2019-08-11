@@ -32,19 +32,21 @@ class ChatDao {
         }
         _chatsStore.insertAll(chats);
         return chats;
-    });
+    }).asBroadcastStream();
 
-    ChatDao._();
+    ChatDao._() {
+        _chatCollectionFromNet.listen((data) {
+            _chatsStore.insertAll(data);
+        });
+    }
 
-//
-//    // Может быть сделать стрим кэша?
-//    Observable<List<Chat>> getAll() =>
-//        Observable
-//            .fromFuture(_chatsStore.getAll())
-//            .mergeWith([_chatCollectionFromNet]);
 
+    // Может быть сделать стрим кэша?
     Observable<List<Chat>> getAll() =>
-        Observable.just(_chatsStore.getAll());
+        Observable
+            .just(_chatsStore.getAll())
+            .mergeWith([_chatCollectionFromNet]);
+
 
     Future<Chat> getChatInfo(DocumentReference chatReference) async {
         var cached = _chatsStore.get(chatReference.path);

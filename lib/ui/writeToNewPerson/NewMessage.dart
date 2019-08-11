@@ -29,8 +29,8 @@ class NewMessage extends StatelessWidget {
         return Column(children: <Widget>[
             Container(
                 alignment: Alignment.centerLeft,
-                padding: EdgeInsets.all(25),
-                height: 90,
+                padding: EdgeInsets.only(left: 25, top: 25, bottom: 20),
+//                height: 90,
                 child: Text(
                     "All Users",
                     style: TextStyle(

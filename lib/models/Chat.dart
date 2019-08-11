@@ -47,7 +47,7 @@ class Chat extends Model {
                 .fromPrivateChatMembers(data['members']).first
             ..message = data['lastMessageText']
             ..unread = data['unread']
-            ..time = data['lastMessageTime']
+            ..time = (data['lastMessageTime'] as Timestamp).toString() // todo : исправить
             ..reference = snapshot.reference;
     }
 

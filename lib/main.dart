@@ -25,7 +25,6 @@ void main() {
     });
 }
 
-
 onAppStart() async {
     CatchMeApp.chatDao = await ChatDao.instance;
     CatchMeApp.personDao = await PersonDao.instance;
@@ -43,9 +42,9 @@ class CatchMeApp extends StatelessWidget {
     static PersonDao personDao;
     static ChatDao chatDao;
 
-
     @override
     Widget build(BuildContext context) {
+        print(SystemUiOverlayStyle.dark.statusBarColor);
         WidgetsBinding.instance.addObserver(LifecycleEventHandler(
             inactiveCallBack: onAppClose(),
             pausedCallBack: onAppClose(),
@@ -53,9 +52,7 @@ class CatchMeApp extends StatelessWidget {
         ));
 
         appContext = context;
-        SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
-            statusBarColor: Colors.white,
-        ));
+
         return MaterialApp(
             title: Strings.appTitle,
             theme: Styles.mainTheme,
@@ -73,8 +70,9 @@ class CatchMeApp extends StatelessWidget {
                 else if (snapshot.hasData) {
                     SignInViewModel().initUserId();
                     return MainPage();
-                } else
+                } else {
                     return SignIn();
+                }
             });
     }
 }

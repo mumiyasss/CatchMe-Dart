@@ -4,6 +4,7 @@ import 'package:catch_me/ui/writeToNewPerson/NewMessage.dart';
 import 'package:flutter/material.dart';
 import 'package:catch_me/ui/chatlist/chat_list.dart';
 import 'package:catch_me/ui/settings/Settings.dart';
+import 'package:flutter/services.dart';
 import 'AppBar.dart';
 import 'package:catch_me/values/Dimens.dart';
 
@@ -35,6 +36,9 @@ class MainPage extends StatelessWidget {
 
     @override
     Widget build(BuildContext context) {
+        SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
+            statusBarColor: Colors.white,
+        ));
         var appBar = MyAppBar(pageViewStreamController);
         plugPositionListener();
         return Scaffold(

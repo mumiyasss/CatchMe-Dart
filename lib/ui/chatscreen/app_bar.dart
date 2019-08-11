@@ -3,6 +3,7 @@ import 'package:catch_me/bloc/chat_screen/chat_info/events.dart';
 import 'package:catch_me/bloc/chat_screen/chat_info/states.dart';
 import 'package:catch_me/bloc/chat_screen/messages_panel/states.dart';
 import 'package:catch_me/models/Person.dart';
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -47,13 +48,49 @@ class _BackButton extends StatelessWidget {
             ));
 }
 
-class _MenuButton extends StatelessWidget {
+/// Кнопка меню
+class _MenuButton extends StatefulWidget {
+//    @override
+//    build(BuildContext context) =>
+//        Icon(
+//            Icons.menu,
+//            size: 25,
+//        );
     @override
-    build(BuildContext context) =>
-        Icon(
-            Icons.menu,
-            size: 25,
+    __MenuButtonState createState() => __MenuButtonState();
+}
+
+class __MenuButtonState extends State<_MenuButton> {
+    bool opened;
+
+    get _animation {
+        if (opened == null)
+            return null;
+        else
+            return opened ? 'To Close' : 'To Ham';
+    }
+
+    @override
+    Widget build(BuildContext context) {
+        return GestureDetector(
+            onTap: () {
+                setState(() {
+                    if (opened == null)
+                        opened = false;
+                    opened = !opened;
+                });
+            },
+
+            child: SizedBox(
+                width: 40,
+                height: 30,
+                child: FlareActor(
+                    'assets/Ham2Close.flr',
+                    animation: _animation,
+                ),
+            )
         );
+    }
 }
 
 class _AppBarContent extends StatelessWidget {
@@ -73,8 +110,10 @@ class _AppBarContent extends StatelessWidget {
                             stream: state.person,
                             builder: (context, personSnapshot) {
                                 if (personSnapshot.hasData)
-                                    return _buildInfo(context, personSnapshot.data);
-                                else return LinearProgressIndicator();
+                                    return _buildInfo(
+                                        context, personSnapshot.data);
+                                else
+                                    return LinearProgressIndicator();
                             }
                         );
                 }
