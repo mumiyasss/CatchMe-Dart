@@ -17,7 +17,9 @@ class MyAppBar extends StatelessWidget {
 
     @override
     Widget build(BuildContext context) {
-        return Container(
+        // Todo: ???
+        return AnimatedContainer(
+            duration: Duration(seconds: 1),
             padding: EdgeInsets.symmetric(horizontal: 26, vertical: 8),
             margin: EdgeInsets.only(bottom: 2),
             decoration: BoxDecoration(color: Colors.white, boxShadow: [

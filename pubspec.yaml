@@ -29,6 +29,8 @@ dependencies:
   cached_network_image: ^1.1.1
   jaguar_orm: ^2.2.6
   flare_flutter: any
+  image_picker: any
+  firebase_storage: any
 
 
 

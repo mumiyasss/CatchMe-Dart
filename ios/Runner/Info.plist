@@ -2,6 +2,12 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Дайте доступ к микрофону, чтобы послушать ваш чудесный голос:)</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Нам нужен доступ к камере, чтобы можно было запечатлеть самые лучшие моменты вашей жизни</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Пожалуйста, разрешите доступ к галерее, чтобы можно было отправлять фотки:)</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleExecutable</key>
@@ -41,15 +47,15 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>CFBundleURLTypes</key>
-    <array>
-    	<dict>
-    		<key>CFBundleTypeRole</key>
-    		<string>Editor</string>
-    		<key>CFBundleURLSchemes</key>
-    		<array>
-    			<string>com.googleusercontent.apps.761658287629-uerabnmtb6m68engqq61vuqunc39l5du</string>
-    		</array>
-    	</dict>
-    </array>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.761658287629-uerabnmtb6m68engqq61vuqunc39l5du</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>

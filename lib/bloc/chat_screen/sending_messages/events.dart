@@ -1,3 +1,5 @@
+import 'dart:io';
+
 abstract class NewMessageEvent {}
 
 class WriteNewTextMessageEvent extends NewMessageEvent {
@@ -5,3 +7,5 @@ class WriteNewTextMessageEvent extends NewMessageEvent {
 
     WriteNewTextMessageEvent(this.message);
 }
+
+class AttachImageEvent extends NewMessageEvent { }

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:catch_me/models/Message.dart';
 import 'package:flutter/material.dart';
 
@@ -25,13 +26,19 @@ class MessageBubble extends StatelessWidget {
                 border: Border.all(color: Color(self ? 0xFFCECECE : 0)),
                 color: Color(self ? 0xFFFFFFFF : 0xFF2196F3),
             ),
-            child: Text(
-                _message.text,
-                textAlign: TextAlign.justify,
-                style: TextStyle(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 16,
-                    color: self ? Colors.black : Colors.white),
+            child: Column(
+                children: <Widget>[
+                    _message.imageUrl != null ? CachedNetworkImage(
+                        imageUrl: _message.imageUrl) :
+                    Text(
+                        _message.text,
+                        textAlign: TextAlign.justify,
+                        style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 16,
+                            color: self ? Colors.black : Colors.white),
+                    ),
+                ],
             ),
         );
 

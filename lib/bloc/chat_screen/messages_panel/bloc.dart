@@ -31,5 +31,6 @@ class MessagesBloc extends Bloc<ChatScreenEvent, ChatScreenState> {
                 yield MessagesAreLoaded(listOfMessages);
             }
         }
+
     }
 }

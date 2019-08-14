@@ -1,9 +1,14 @@
+import 'dart:io';
+
 import 'package:catch_me/bloc/chat_screen/messages_panel/bloc.dart';
 import 'package:catch_me/bloc/chat_screen/messages_panel/events.dart';
 import 'package:catch_me/bloc/chat_screen/sending_messages/bloc.dart';
 import 'package:catch_me/bloc/chat_screen/sending_messages/events.dart';
+import 'package:catch_me/main.dart';
 import 'package:catch_me/values/Dimens.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class MessageField extends StatefulWidget {
     final SendingMessagesBloc bloc;
@@ -25,7 +30,7 @@ class _MessageFieldState extends State<MessageField> {
     @override
     void initState() {
         send = _SendButton(_controller, widget.bloc);
-        actionButton = attach = _AttachButton();
+        actionButton = attach = _AttachButton(widget.bloc);
         super.initState();
     }
 
@@ -80,7 +85,7 @@ abstract class _ActionButton extends StatelessWidget {
 
     void onTap();
 
-    Icon get icon;
+    Widget get icon;
 }
 
 class _SendButton extends _ActionButton {
@@ -112,15 +117,22 @@ class _SendButton extends _ActionButton {
 }
 
 class _AttachButton extends _ActionButton {
+    final SendingMessagesBloc _bloc;
+
+    _AttachButton(this._bloc);
+
     @override
-    Icon get icon =>
-        Icon(
-            Icons.attach_file,
-            size: Dimens.messageFieldButtonWidth,
+    Widget get icon =>
+        Transform.rotate(
+            angle: 3.14 / 4 * 5,
+            child: Icon(
+                Icons.attach_file,
+                size: Dimens.messageFieldButtonWidth,
+            ),
         );
 
     @override
-    void onTap() {
-        // TODO: make method
+    void onTap() async {
+        _bloc.dispatch(AttachImageEvent());
     }
 }
