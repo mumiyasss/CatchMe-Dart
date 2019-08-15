@@ -20,8 +20,7 @@ class ChatList extends StatelessWidget {
   Widget build(BuildContext context) {
 
       _chatListBloc.dispatch(StartListenChatList());
-      return SafeArea(
-        child: BlocBuilder(
+      return BlocBuilder(
             bloc: _chatListBloc,
             builder: (BuildContext context, ChatListState state) {
                 if (state is ChatsAreLoading) {
@@ -52,7 +51,7 @@ class ChatList extends StatelessWidget {
                     return _buildList(context, state.chats);
                 }
             }
-        ),
+        
       );
   }
 

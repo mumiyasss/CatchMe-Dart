@@ -42,16 +42,13 @@ class MainPage extends StatelessWidget {
         var appBar = MyAppBar(pageViewStreamController);
         plugPositionListener();
         return Scaffold(
-            body: SafeArea(
-                child: Stack(
+            backgroundColor: Colors.white,
+            body: Column(
                     children: <Widget>[
                         appBar,
-                        Container(
-                            color: Colors.white,
-                            margin: EdgeInsets.only(top: Dimens.appBarHeight),
-                            child: pageView)
+                        Expanded(child: pageView)
                     ],
-                )),
+                ),
             floatingActionButton: FloatingActionButton(
                 child: Icon(Icons.create),
                 onPressed: () {

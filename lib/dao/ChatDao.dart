@@ -27,9 +27,9 @@ class ChatDao {
             .orderBy(
             'lastMessageTime', descending: true) // ? Query requires Index.
             .snapshots())
-        .asyncMap((chatDoc) async {
+        .asyncMap((chatCollection) async {
         var chats = List<Chat>();
-        for (var chatSnapshot in chatDoc.documents) {
+        for (var chatSnapshot in chatCollection.documents) {
             chats.add(await Chat.fromSnapshot(chatSnapshot));
         }
         _chatsStore.insertAll(chats);

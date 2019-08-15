@@ -18,36 +18,41 @@ class ChatScreen extends StatelessWidget {
     final Chat _chat;
 
     ChatScreen(this._chat) :
-            _bloc = MessagesBloc(_chat.reference) ;
+            _bloc = MessagesBloc(_chat.reference);
 
     @override
     Widget build(BuildContext context) {
-
         return Scaffold(
+            backgroundColor: Colors.white,
             body: SafeArea(
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
-                        MyAppBar(ChatBloc(_chat)), // todo: wrong>
                         Expanded(
-                            child: GestureDetector(
-                                onTap: () =>
-                                    FocusScope.of(context).requestFocus(
-                                        FocusNode()),
-                                child: BlocBuilder( // ToDo: maybe bloc listener?
-                                    bloc: _bloc,
-                                    builder: (BuildContext context, ChatScreenState state) {
-                                        if (state is MessagesAreLoading) {
-                                            return Center(child: CircularProgressIndicator());
-                                        }
-                                        if (state is MessagesAreLoaded) {
-                                            return MessagesList(state.messages);
-                                        }
-                                    }
+                          child: Stack(children: <Widget>[
 
-                                ),
-                            ),
+                              FocusSwitcher(
+                                  child: BlocBuilder( // ToDo: maybe bloc listener?
+                                      bloc: _bloc,
+                                      builder: (BuildContext context,
+                                          ChatScreenState state) {
+                                          if (state is MessagesAreLoading) {
+                                              return Center(
+                                                  child: CircularProgressIndicator());
+                                          }
+                                          if (state is MessagesAreLoaded) {
+                                              return MessagesList(
+                                                  state.messages);
+                                          }
+                                      }
+
+                                  ),
+                              ),
+                              MyAppBar(ChatBloc(_chat)),
+                          ],
+                          ),
                         ),
+
                         MessageField(SendingMessagesBloc(_chat.reference))
                     ],
                 ),
@@ -56,6 +61,21 @@ class ChatScreen extends StatelessWidget {
     }
 }
 
+/// For keyboard
+class FocusSwitcher extends StatelessWidget {
+    final Widget child;
+
+    FocusSwitcher({@required this.child});
+
+    @override
+    Widget build(BuildContext context) {
+        return GestureDetector(
+            onTap: () =>
+                FocusScope.of(context).requestFocus(
+                    FocusNode()),
+            child: this.child);
+    }
+}
 
 // Todo: необходима обработка пустого диалога
 class MessagesList extends StatelessWidget {

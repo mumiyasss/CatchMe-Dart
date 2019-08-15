@@ -27,7 +27,7 @@ class Styles {
   static TextStyle lastMessageTime() => TextStyle(
       fontFamily: 'sans-serif-light',
       fontSize: 15,
-      fontStyle: FontStyle.italic,
+      fontStyle: FontStyle.normal,
       color: Color(0xFF0e0e0e));
 
   static TextStyle newMessagesCounter() => TextStyle(

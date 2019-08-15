@@ -19,13 +19,14 @@ class MyAppBar extends StatelessWidget {
     Widget build(BuildContext context) {
         // Todo: ???
         return AnimatedContainer(
+            height: 58, // todo: make more flexible
             duration: Duration(seconds: 1),
             padding: EdgeInsets.symmetric(horizontal: 26, vertical: 8),
             margin: EdgeInsets.only(bottom: 2),
             decoration: BoxDecoration(color: Colors.white, boxShadow: [
-                BoxShadow(offset: Offset(0, 2),
+                BoxShadow(offset: Offset(0, 5),
                     blurRadius: 5,
-                    color: Color(0x22000000))
+                    color: Color(0x09000000))
             ]),
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
