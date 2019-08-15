@@ -2,6 +2,7 @@ import 'package:catch_me/models/Chat.dart';
 import 'package:catch_me/ui/chatscreen/chat_screen.dart';
 import 'package:catch_me/values/Dimens.dart';
 import 'package:catch_me/values/Styles.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import '../Widgets.dart';
@@ -16,7 +17,7 @@ class ChatTile extends StatelessWidget {
         var profilePhoto = Widgets.profilePicture(
             context, _chat.companion.photoUrl, Dimens.chatListProfilePictureProportion);
         var name = _wrappedText(context, _chat.companion.name, Styles.chatNameStyle(), 0.5);
-        var time = Text(_chat.time, style: Styles.lastMessageTime());
+        var time = Text(toReadableTime(_chat.time), style: Styles.lastMessageTime());
         var lastMessage = _wrappedText(context, _chat.message, Styles.lastMessageTime(), 0.5);
         var _unread = _chat.unread;
         var badge = _unread == null
@@ -81,3 +82,27 @@ class ChatTile extends StatelessWidget {
         children: <Widget>[widget1, widget2],
     );
 }
+
+String toReadableTime(Timestamp timestamp) {
+    var date = timestamp.toDate();
+    if (DateTime.now().year != date.year) {
+        return "${plusZero(date.day)}.${plusZero(date.month)}.${date.year % 2000}";
+    } else if (DateTime.now().difference(date) > Duration(days: 7)) {
+        return "${plusZero(date.day)}.${plusZero(date.month)}";
+    } else if (DateTime.now().weekday != date.weekday) {
+        switch (date.weekday) {
+            case DateTime.monday: return "Mon";
+            case DateTime.tuesday: return "Tue";
+            case DateTime.wednesday: return "Wed";
+            case DateTime.thursday: return "Thu";
+            case DateTime.friday: return "Fri";
+            case DateTime.saturday: return "Sat";
+            case DateTime.sunday: return "Sun";
+        }
+        throw Exception("no such weekday");
+    } else {
+        return "${plusZero(date.hour)}:${plusZero(date.minute)}";
+    }
+}
+
+String plusZero(int x) => "${x < 10 ? "0$x" : x}";

@@ -17,7 +17,7 @@ class Chat extends Model {
 
     Person companion;
     String message;
-    String time;
+    Timestamp time;
     int unread;
     DocumentReference reference;
 
@@ -26,15 +26,12 @@ class Chat extends Model {
 
     // Todo in Dart 2.5 => to expended methods
     Map<String, dynamic> toMap() {
-        if(companion == null) {
-            print(companion);
-        }
         assert(companion != null);
         assert(reference.path != null);
         return <String, dynamic>{
             companionIdColumn: companion.userId,
             lastMessageColumn: message,
-            timeColumn: time,
+            timeColumn: time.millisecondsSinceEpoch,
             unreadColumn: unread,
             chatPathColumn: reference.path
         };
@@ -47,7 +44,7 @@ class Chat extends Model {
                 .fromPrivateChatMembers(data['members']).first
             ..message = data['lastMessageText']
             ..unread = data['unread']
-            ..time = (data['lastMessageTime'] as Timestamp).toString() // todo : исправить
+            ..time = (data['lastMessageTime'] as Timestamp)
             ..reference = snapshot.reference;
     }
 
@@ -60,7 +57,7 @@ class Chat extends Model {
                 .first
             ..message = map[lastMessageColumn]
             ..unread = map[unreadColumn]
-            ..time = map[timeColumn]
+            ..time = Timestamp.fromMillisecondsSinceEpoch(int.parse(map[timeColumn]))
             ..reference = Firestore.instance
                 .document(map[chatPathColumn]);
     }

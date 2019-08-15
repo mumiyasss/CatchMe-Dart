@@ -4,6 +4,8 @@ import 'package:catch_me/main.dart';
 import 'package:catch_me/models/Chat.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:catch_me/dao/cached_db/db/exceptions.dart';
+
 
 class ChatDao {
 
@@ -28,7 +30,7 @@ class ChatDao {
         .asyncMap((chatDoc) async {
         var chats = List<Chat>();
         for (var chatSnapshot in chatDoc.documents) {
-            chats.add(await ChatDao.fromSnapshot(chatSnapshot));
+            chats.add(await Chat.fromSnapshot(chatSnapshot));
         }
         _chatsStore.insertAll(chats);
         return chats;
@@ -49,36 +51,12 @@ class ChatDao {
 
 
     Future<Chat> getChatInfo(DocumentReference chatReference) async {
-        var cached = _chatsStore.get(chatReference.path);
-        if (cached == null) {
+        try {
+            return _chatsStore.get(chatReference.path);
+        } on NotFound {
             var chat = await Chat.fromSnapshot(await chatReference.get());
             _chatsStore.insert(chat);
             return chat;
-        } else return cached;
-    }
-
-    static Future<Chat> fromSnapshot(DocumentSnapshot chatSnapshot) async {
-        Chat chat = Chat();
-        chat.reference = chatSnapshot.reference;
-
-        var timeStamp = (chatSnapshot.data['lastMessageTime'] as Timestamp);
-        chat.time = timeStamp
-            .toDate()
-            .hour
-            .toString() + ':' + timeStamp
-            .toDate()
-            .minute
-            .toString();
-
-        chat.message = chatSnapshot.data['lastMessageText'];
-        chat.unread = null;
-
-        chat.companion = await
-        (await PersonDao.instance)
-            .fromPrivateChatMembers(chatSnapshot.data['members'])
-            .first;
-
-        assert(chat.companion != null);
-        return chat;
+        }
     }
 }

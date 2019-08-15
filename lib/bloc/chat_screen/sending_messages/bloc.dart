@@ -64,7 +64,7 @@ class SendingMessagesBloc extends Bloc<NewMessageEvent, MessageSent> {
         _chatReference.collection('messages').add(data);
         _chatReference.updateData({
             'lastMessageAuthorId': CatchMeApp.userUid,
-            'lastMessageText': data['text'] ?? '🏞 Изображение', // TODO: locale
+            'lastMessageText': data['text'] ?? '🏞 Picture', // TODO: locale
             'lastMessageTime': Timestamp.now() // Todo: cloud function
         });
     }
