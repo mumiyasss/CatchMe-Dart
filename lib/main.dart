@@ -42,6 +42,7 @@ class CatchMeApp extends StatelessWidget {
     static PersonDao personDao;
     static ChatDao chatDao;
 
+
     @override
     Widget build(BuildContext context) {
         print(SystemUiOverlayStyle.dark.statusBarColor);

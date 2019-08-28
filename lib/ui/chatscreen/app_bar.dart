@@ -10,32 +10,90 @@ import 'package:flutter_svg/svg.dart';
 
 import '../Widgets.dart';
 
-class MyAppBar extends StatelessWidget {
+class MyAppBar extends StatefulWidget {
     final ChatBloc _bloc;
 
     MyAppBar(this._bloc) : assert(_bloc != null);
 
     @override
+    _MyAppBarState createState() => _MyAppBarState();
+}
+
+class _MyAppBarState extends State<MyAppBar> {
+    bool opened = false;
+
+    callback(bool opened) {
+        setState(() {
+            this.opened = opened;
+            print("state changed ${this.opened}");
+        });
+    }
+
+    @override
     Widget build(BuildContext context) {
-        // Todo: ???
-        return AnimatedContainer(
-            height: 58, // todo: make more flexible
-            duration: Duration(seconds: 1),
-            padding: EdgeInsets.symmetric(horizontal: 26, vertical: 8),
-            margin: EdgeInsets.only(bottom: 2),
-            decoration: BoxDecoration(color: Colors.white, boxShadow: [
-                BoxShadow(offset: Offset(0, 5),
-                    blurRadius: 5,
-                    color: Color(0x09000000))
-            ]),
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                    _BackButton(),
-                    Expanded(child: _AppBarContent(_bloc)),
-                    _MenuButton()
-                ],
-            ),);
+        return Stack(children: <Widget>[
+            AnimatedContainer(
+                duration: Duration(milliseconds: 500),
+                curve: Curves.fastOutSlowIn,
+                height: opened ? 115 : 70,
+                margin: EdgeInsets.only(top: opened ? 60 : 0),
+                child: MenuPanel(widget._bloc)
+            ),
+            Container(
+                height: 60,
+                padding: EdgeInsets.symmetric(horizontal: 26, vertical: 8),
+                margin: EdgeInsets.only(bottom: 2),
+                decoration: BoxDecoration(color: Colors.white, boxShadow: [
+                    BoxShadow(offset: Offset(0, 5),
+                        blurRadius: 5,
+                        color: Color(0x09000000))
+                ]),
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                        _BackButton(),
+                        Expanded(child: _AppBarContent(widget._bloc)),
+                        _MenuButton(callback)
+                    ],
+                ),
+            ),
+
+        ],);
+    }
+}
+
+class MenuPanel extends StatelessWidget {
+    final ChatBloc _bloc;
+    MenuPanel(this._bloc);
+
+
+    @override
+    Widget build(BuildContext context) {
+        return Container(
+            decoration: BoxDecoration(
+                border: Border.all(color: Colors.black12, width: 1.5),
+                borderRadius: BorderRadius.circular(30),
+                color: Colors.white,
+                boxShadow: [
+                    BoxShadow(offset: Offset(0, 0),
+                        blurRadius: 20,
+                        color: Color(0x22000000))
+                ]
+            ),
+            margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+            height: 80,
+            child: _child(),
+        );
+    }
+
+    _child() {
+        return Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+                Icon(Icons.delete_forever, color: Colors.red, size: 30,),
+                Text("Удалить этот чат навсегда", style: TextStyle(color:  Colors.red, fontSize: 20),)
+            ],
+        );
     }
 }
 
@@ -53,12 +111,11 @@ class _BackButton extends StatelessWidget {
 
 /// Кнопка меню
 class _MenuButton extends StatefulWidget {
-//    @override
-//    build(BuildContext context) =>
-//        Icon(
-//            Icons.menu,
-//            size: 25,
-//        );
+
+    final Function(bool opened) callback;
+
+    _MenuButton(this.callback);
+
     @override
     __MenuButtonState createState() => __MenuButtonState();
 }
@@ -81,6 +138,7 @@ class __MenuButtonState extends State<_MenuButton> {
                     if (opened == null)
                         opened = false;
                     opened = !opened;
+                    widget.callback(opened);
                 });
             },
 
@@ -141,6 +199,7 @@ class _AppBarContent extends StatelessWidget {
                         left: 12.0,
                     ),
                     child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                             Text(person.name, style: TextStyle(fontSize: 20)),

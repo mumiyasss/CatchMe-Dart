@@ -43,6 +43,11 @@ class ChatDao {
     }
 
 
+    deleteChat(Chat chat) async {
+        chat.reference.delete();
+        _chatsStore.cachedData.remove(chat.pk);
+    }
+
     // Может быть сделать стрим кэша?
     Observable<List<Chat>> getAll() =>
         Observable

@@ -5,3 +5,5 @@ abstract class ChatInfoEvent {}
 /// Maybe for getting person info to app bar
 class GetChatInfo extends ChatInfoEvent {
 }
+
+class DeleteChat extends ChatInfoEvent {}
