@@ -37,6 +37,10 @@ onAppClose() async {
 
 class CatchMeApp extends StatelessWidget {
     static String userUid;
+    static String userName;
+    static String userEmail;
+    static String userPhotoUrl;
+
     static BuildContext appContext;
 
     static PersonDao personDao;
@@ -69,7 +73,7 @@ class CatchMeApp extends StatelessWidget {
                 if (snapshot.connectionState == ConnectionState.waiting)
                     return SplashScreen();
                 else if (snapshot.hasData) {
-                    SignInViewModel().initUserId();
+                    SignInViewModel().initUser();
                     return MainPage();
                 } else {
                     return SignIn();

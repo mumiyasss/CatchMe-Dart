@@ -1,5 +1,7 @@
 import 'package:catch_me/dao/cached_db/db/Db.dart';
 import 'package:catch_me/dao/cached_db/db/helpers/ChatHelper.dart';
+import 'package:catch_me/main.dart';
+import 'package:catch_me/ui/Widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -62,12 +64,7 @@ class _Avatar extends StatefulWidget {
 class __AvatarState extends State<_Avatar> {
     @override
     Widget build(BuildContext context) {
-        return Container(
-            height: 113,
-            width: 113,
-            decoration: BoxDecoration(
-                shape: BoxShape.circle, color: Colors.grey),
-        );
+        return Widgets.profilePicture(context, CatchMeApp.userPhotoUrl, 0.25);
     }
 }
 
@@ -77,17 +74,39 @@ class _NameRename extends StatefulWidget {
 }
 
 class __NameRenameState extends State<_NameRename> {
+
+    @override
+    void initState() {
+        nameController.text = CatchMeApp.userName;
+        emailController.text = CatchMeApp.userEmail;
+
+        super.initState();
+    }
+
+    final nameController = TextEditingController();
+    final emailController = TextEditingController();
+
     @override
     Widget build(BuildContext context) {
         return Container(
             margin: EdgeInsets.only(left: 20),
-            width: MediaQuery.of(context).size.width * 0.50,
+            width: MediaQuery
+                .of(context)
+                .size
+                .width * 0.50,
             height: 90,
             child: Column(children: <Widget>[
-                TextField(decoration: InputDecoration(
-                    hintText: "Name"
-                ),),
-                TextField(decoration: InputDecoration(
+                TextField(
+                    style: TextStyle(color: Colors.black),
+                    controller: nameController,
+                    decoration: InputDecoration(
+                        hintText: "Name"
+                    ),),
+                TextField(
+                    style: TextStyle(color: Colors.black),
+                    controller: emailController,
+                    decoration: InputDecoration(
+
                     hintText: "Email"
                 ),)
             ],),

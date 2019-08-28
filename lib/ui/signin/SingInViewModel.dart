@@ -11,7 +11,7 @@ class SignInViewModel {
     void googleSignIn() async {
         final googleCredential = await _getGoogleCredential();
         await FirebaseAuth.instance.signInWithCredential(googleCredential);
-        var user = await initUserId();
+        var user = await initUser();
         var userToCheck = (await Firestore.instance
             .document('users/' + CatchMeApp.userUid)
             .get());
@@ -38,9 +38,12 @@ class SignInViewModel {
         );
     }
 
-    Future<FirebaseUser> initUserId() async {
+    Future<FirebaseUser> initUser() async {
         var user = await FirebaseAuth.instance.currentUser();
         CatchMeApp.userUid = user.uid;
+        CatchMeApp.userName = user.displayName;
+        CatchMeApp.userEmail = user.email;
+        CatchMeApp.userPhotoUrl = user.photoUrl;
         return user;
     }
 
