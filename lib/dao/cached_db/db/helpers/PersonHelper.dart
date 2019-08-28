@@ -68,6 +68,11 @@ class PersonHelper extends Repository<Person> {
     }
 
     @override
+    delete(Person obj) {
+        throw Exception('Not implemented delete method for Person()');
+    }
+
+    @override
     deleteAll() {
         _db.delete(personTable);
     }

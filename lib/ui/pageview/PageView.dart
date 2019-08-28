@@ -15,9 +15,9 @@ class MainPage extends StatelessWidget {
     final pageView = PageView(
         physics: AlwaysScrollableScrollPhysics(),
         children: <Widget>[
+            ChatList(),
 
             Settings(),
-            ChatList(),
 
 
         ],

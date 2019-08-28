@@ -32,6 +32,12 @@ class ChatHelper extends Repository<Chat> {
         return _dao;
     }
 
+    delete(Chat chat) {
+        _db.delete(chatTable,
+            where: '$chatPathColumn = ?',
+            whereArgs: [chat.reference.path]
+        );
+    }
 
     insert(Chat chat) {
          _db.insert(chatTable, chat.toMap(),

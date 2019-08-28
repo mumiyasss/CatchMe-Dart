@@ -21,7 +21,8 @@ class ChatBloc extends Bloc<ChatInfoEvent, ChatInfoState> {
     }
 
     @override
-    ChatInfoState get initialState => ChatInfoLoadedState(Observable.just(_chat.companion));
+    ChatInfoState get initialState =>
+        ChatInfoLoadedState(Observable.just(_chat.companion));
 
     @override
     Stream<ChatInfoState> mapEventToState(ChatInfoEvent event) async* {
@@ -31,15 +32,12 @@ class ChatBloc extends Bloc<ChatInfoEvent, ChatInfoState> {
             );
         }
         if (event is DeleteChat) {
-            // ToDO: dao очищает кэш и firebase, нужно сделать диалог
-            //  подтверждения удаления, потом послать событие DeleteChat,
-            //  и вернуться (Или остаться, чтобы выдно было что нет сообщений,
+            // ToDO: dao очищает кэш и firebase, (Или остаться, чтобы выдно было что нет сообщений,
             //  но тогда надо так сделать, чтобы чат создавался только после
             //  первого сообщения.
-            //
-            //  также надо бы проверить анимацию на физ телефоне
             CatchMeApp.chatDao.deleteChat(_chat);
         }
     }
+
 
 }

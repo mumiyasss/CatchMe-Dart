@@ -68,6 +68,11 @@ class CachedDb<T extends Model> {
         objects.forEach((obj) => insert(obj));
     }
 
+    delete(T obj) {
+        cachedData.remove(obj.pk);
+        dbHelper.delete(obj);
+    }
+
     insert(T obj) {
         assert(obj != null);
         cachedData[obj.pk] = obj;

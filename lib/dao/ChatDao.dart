@@ -45,7 +45,7 @@ class ChatDao {
 
     deleteChat(Chat chat) async {
         chat.reference.delete();
-        _chatsStore.cachedData.remove(chat.pk);
+        _chatsStore.delete(chat);
     }
 
     // Может быть сделать стрим кэша?

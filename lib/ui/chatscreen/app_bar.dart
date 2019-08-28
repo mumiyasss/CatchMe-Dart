@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:catch_me/bloc/chat_screen/chat_info/bloc.dart';
 import 'package:catch_me/bloc/chat_screen/chat_info/events.dart';
 import 'package:catch_me/bloc/chat_screen/chat_info/states.dart';
 import 'package:catch_me/bloc/chat_screen/messages_panel/states.dart';
 import 'package:catch_me/models/Person.dart';
 import 'package:flare_flutter/flare_actor.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -64,8 +67,8 @@ class _MyAppBarState extends State<MyAppBar> {
 
 class MenuPanel extends StatelessWidget {
     final ChatBloc _bloc;
-    MenuPanel(this._bloc);
 
+    MenuPanel(this._bloc);
 
     @override
     Widget build(BuildContext context) {
@@ -82,17 +85,63 @@ class MenuPanel extends StatelessWidget {
             ),
             margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
             height: 80,
-            child: _child(),
+            child: _child(context),
         );
     }
 
-    _child() {
-        return Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-                Icon(Icons.delete_forever, color: Colors.red, size: 30,),
-                Text("Удалить этот чат навсегда", style: TextStyle(color:  Colors.red, fontSize: 20),)
-            ],
+    _child(BuildContext context) {
+        return GestureDetector(
+            onTap: () {
+                showDialog(context: context, builder: (context) {
+                    return Platform.isIOS ?
+                    CupertinoAlertDialog(
+                        title: Text("Вы уверены?"),
+                        content: Text("Чат будет удалён на этом устройстве и у собеседника"),
+                        actions: <Widget>[
+                            FlatButton(
+                                child: Text("Удалить", style: TextStyle(color: Colors.red, fontSize: 18, fontWeight: FontWeight.w400),),
+                                onPressed: () {
+                                    _bloc.dispatch(DeleteChat());
+                                    Navigator.of(context).pop();
+                                    Navigator.of(context).pop();
+                                },
+                            ),
+                            FlatButton(
+                                child: Text("Отмена", style: TextStyle(color: Colors.blue, fontSize: 18, fontWeight: FontWeight.bold),),
+                                onPressed: () {
+                                    Navigator.of(context).pop();
+                                },
+                            ),
+                        ],) :
+                    AlertDialog(
+                        title: Text("Вы уверены?"),
+                        content: Text("Чат будет удалён на этом устройстве и у собеседника"),
+                        actions: <Widget>[
+                            FlatButton(
+                                child: Text("Удалить", style: TextStyle(color: Colors.red, fontSize: 18, fontWeight: FontWeight.w400),),
+                                onPressed: () {
+                                    _bloc.dispatch(DeleteChat());
+                                    Navigator.of(context).pop();
+                                    Navigator.of(context).pop();
+                                },
+                            ),
+                            FlatButton(
+                                child: Text("Отмена", style: TextStyle(color: Colors.blue, fontSize: 18, fontWeight: FontWeight.bold),),
+                                onPressed: () {
+                                    Navigator.of(context).pop();
+                                },
+                            ),
+                        ],);
+                });
+            },
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                    Icon(Icons.delete_forever, color: Colors.red, size: 30,),
+                    Text("Удалить этот чат навсегда",
+                        style: TextStyle(color: Colors.red, fontSize: 20),)
+                ],
+            ),
         );
     }
 }
