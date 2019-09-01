@@ -1,6 +1,7 @@
 import 'package:catch_me/main.dart';
 import 'package:catch_me/models/Model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 final String photoUrlColumn = 'photoUrl';
 final String nameColumn = 'name';
@@ -10,6 +11,7 @@ class Person extends Model {
     String photoUrl;
     String name;
     String userId;
+    String email; // todo: not saving to database
     Timestamp lastSeen;
 
     Person();
@@ -18,9 +20,17 @@ class Person extends Model {
         photoUrl = userSnapshot.data['photo'];
         name = userSnapshot.data['name'];
         userId = userSnapshot.data['id'];
+        email = userSnapshot.data['email'];
         assert(photoUrl != null);
         assert(name != null);
         assert(userId != null);
+    }
+
+    Person.fromFirebaseUserInfo(UserInfo info) {
+        photoUrl = info.photoUrl;
+        name = info.displayName;
+        userId = info.uid;
+        email = info.email;
     }
 
     Map<String, dynamic> toMap() {

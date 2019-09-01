@@ -1,3 +1,4 @@
+import 'package:catch_me/bloc/settings/bloc.dart';
 import 'package:catch_me/dao/cached_db/db/Db.dart';
 import 'package:catch_me/dao/cached_db/db/helpers/ChatHelper.dart';
 import 'package:catch_me/main.dart';
@@ -8,6 +9,8 @@ import 'package:flutter/services.dart';
 
 class Settings extends StatefulWidget {
     final state = SettingsState();
+
+    final bloc = SettingsBloc();
 
     @override
     State createState() {
@@ -26,7 +29,7 @@ class SettingsState extends State<Settings> {
                         horizontal: 25.0, vertical: 5),
                     child: Row(children: <Widget>[
                         _Avatar(),
-                        _NameRename(),
+                        _AccountCredentials(widget.bloc),
                     ],
                     ),
                 ),
@@ -64,22 +67,28 @@ class _Avatar extends StatefulWidget {
 class __AvatarState extends State<_Avatar> {
     @override
     Widget build(BuildContext context) {
-        return Widgets.profilePicture(context, CatchMeApp.userPhotoUrl, 0.25);
+        return Widgets.profilePicture(context, CatchMeApp.userPhotoUrl, 0.27);
     }
 }
 
-class _NameRename extends StatefulWidget {
+class _AccountCredentials extends StatefulWidget {
+    
+    final SettingsBloc bloc;
+
+    _AccountCredentials(this.bloc);
+
     @override
-    __NameRenameState createState() => __NameRenameState();
+    _AccountCredentialsState createState() => _AccountCredentialsState();
 }
 
-class __NameRenameState extends State<_NameRename> {
+class _AccountCredentialsState extends State<_AccountCredentials> {
+
+    get bloc => widget.bloc;
 
     @override
     void initState() {
-        nameController.text = CatchMeApp.userName;
-        emailController.text = CatchMeApp.userEmail;
-
+        nameController.text = CatchMeApp.currentUser.name;
+        emailController.text = CatchMeApp.currentUser.email;
         super.initState();
     }
 
@@ -97,18 +106,24 @@ class __NameRenameState extends State<_NameRename> {
             height: 90,
             child: Column(children: <Widget>[
                 TextField(
+                    onChanged: (name) {
+                        bloc.dispatch(NameChangedEvents(name));
+                    },
                     style: TextStyle(color: Colors.black),
                     controller: nameController,
                     decoration: InputDecoration(
                         hintText: "Name"
                     ),),
                 TextField(
+                    onChanged: (email) {
+                        bloc.dispatch(EmailChangedEvents(email));
+                    },
                     style: TextStyle(color: Colors.black),
                     controller: emailController,
                     decoration: InputDecoration(
-
-                    hintText: "Email"
-                ),)
+                        hintText: "Email"
+                    ),
+                )
             ],),
         );
     }

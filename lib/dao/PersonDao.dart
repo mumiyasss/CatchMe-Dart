@@ -20,14 +20,17 @@ class PersonDao {
 
     PersonDao._();
 
+    final usersCollection = Firestore
+        .instance
+        .collection('users');
+
     // Необходимо сделать мерж с данными из Store.
     Observable<Person> fromUserId(String userId) {
         assert(userId != null);
-        var netObservable = Observable(Firestore
-            .instance
-            .collection('users')
-            .document(userId)
-            .snapshots());
+
+        var netObservable = Observable(
+            usersCollection.document(userId).snapshots()
+        );
 
         Observable<Person> dbObservable = Observable.empty();
         try {
@@ -55,4 +58,12 @@ class PersonDao {
         return fromUserId(CatchMeApp.userUid);
     }
 
+    updatePersonInfo(Person newPersonInfo) {
+        usersCollection
+            .document(newPersonInfo.userId)
+            .updateData(newPersonInfo.toMap()).then((_) {
+                // currentUser не сохраняется в базу данных
+                // _personStore.update(newPersonInfo);
+        });
+    }
 }

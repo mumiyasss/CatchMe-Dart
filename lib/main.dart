@@ -15,6 +15,7 @@ import 'package:catch_me/ui/pageview/PageView.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:rxdart/rxdart.dart';
 import 'ui/signin/SignIn.dart';
 
 void main() {
@@ -36,6 +37,7 @@ onAppClose() async {
 }
 
 class CatchMeApp extends StatelessWidget {
+    static Person currentUser;
     static String userUid;
     static String userName;
     static String userEmail;
@@ -45,7 +47,6 @@ class CatchMeApp extends StatelessWidget {
 
     static PersonDao personDao;
     static ChatDao chatDao;
-
 
     @override
     Widget build(BuildContext context) {
@@ -67,13 +68,18 @@ class CatchMeApp extends StatelessWidget {
     }
 
     Widget _handleCurrentScreen() {
+        var authStream =
+        Observable(FirebaseAuth.instance.onAuthStateChanged).asyncMap((
+            FirebaseUser user) async {
+            await SignInViewModel().initUser();
+            return user;
+        });
         return StreamBuilder<FirebaseUser>(
-            stream: FirebaseAuth.instance.onAuthStateChanged,
+            stream: authStream,
             builder: (BuildContext context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting)
                     return SplashScreen();
                 else if (snapshot.hasData) {
-                    SignInViewModel().initUser();
                     return MainPage();
                 } else {
                     return SignIn();

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:catch_me/main.dart';
+import 'package:catch_me/models/Person.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -39,12 +40,12 @@ class SignInViewModel {
     }
 
     Future<FirebaseUser> initUser() async {
-        var user = await FirebaseAuth.instance.currentUser();
-        CatchMeApp.userUid = user.uid;
-        CatchMeApp.userName = user.displayName;
-        CatchMeApp.userEmail = user.email;
-        CatchMeApp.userPhotoUrl = user.photoUrl;
-        return user;
+        var firebaseUser = await FirebaseAuth.instance.currentUser();
+        if (firebaseUser != null) {
+            var user = Person.fromFirebaseUserInfo(firebaseUser);
+            CatchMeApp.currentUser = user;
+        }
+        return firebaseUser;
     }
 
     void signOut() {
