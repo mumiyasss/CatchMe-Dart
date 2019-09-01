@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:catch_me/dao/PersonDao.dart';
 import 'package:catch_me/main.dart';
 import 'package:catch_me/models/Person.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -42,8 +43,9 @@ class SignInViewModel {
     Future<FirebaseUser> initUser() async {
         var firebaseUser = await FirebaseAuth.instance.currentUser();
         if (firebaseUser != null) {
-            var user = Person.fromFirebaseUserInfo(firebaseUser);
+            var user = await CatchMeApp.personDao.fromUserId(firebaseUser.uid).first;
             CatchMeApp.currentUser = user;
+            CatchMeApp.userUid = firebaseUser.uid;
         }
         return firebaseUser;
     }

@@ -67,7 +67,7 @@ class _Avatar extends StatefulWidget {
 class __AvatarState extends State<_Avatar> {
     @override
     Widget build(BuildContext context) {
-        return Widgets.profilePicture(context, CatchMeApp.userPhotoUrl, 0.27);
+        return Widgets.profilePicture(context, CatchMeApp.currentUser.photoUrl, 0.27);
     }
 }
 
