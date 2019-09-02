@@ -21,7 +21,7 @@ import 'ui/signin/SignIn.dart';
 void main() {
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
         .then((_) async {
-        onAppStart();
+        await onAppStart();
         runApp(CatchMeApp());
     });
 }
@@ -68,20 +68,21 @@ class CatchMeApp extends StatelessWidget {
     }
 
     Widget _handleCurrentScreen() {
-        var authStream =
-        Observable(FirebaseAuth.instance.onAuthStateChanged).asyncMap((
-            FirebaseUser user) async {
+        var stream = Observable(FirebaseAuth.instance.onAuthStateChanged)
+            .asyncMap((user) async {
             await SignInViewModel().initUser();
             return user;
         });
         return StreamBuilder<FirebaseUser>(
-            stream: authStream,
+            stream: stream,
             builder: (BuildContext context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting)
                     return SplashScreen();
                 else if (snapshot.hasData) {
+                    //SignInViewModel().initUser();
                     return MainPage();
                 } else {
+                    print(snapshot.toString());
                     return SignIn();
                 }
             });
@@ -98,3 +99,4 @@ class SplashScreen extends StatelessWidget {
         );
     }
 }
+

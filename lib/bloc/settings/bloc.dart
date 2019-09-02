@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:catch_me/main.dart';
+import 'package:catch_me/utils.dart';
 import 'package:rxdart/rxdart.dart';
 
 class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
@@ -34,11 +35,18 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
         if (event is NameChangedEvents) {
             CatchMeApp.personDao.updatePersonInfo(CatchMeApp.currentUser..name = event.name);
         }
+        if (event is UploadNewAvatarEvent) {
+            var newAvatarUrl = await takePhotoAndUploadToStorage();
+            CatchMeApp.personDao.updatePersonInfo(CatchMeApp.currentUser..photoUrl = newAvatarUrl);
+        }
+
         yield SettingsState();
     }
 }
 
 abstract class SettingsEvent {}
+
+class UploadNewAvatarEvent extends SettingsEvent {}
 
 class EmailChangedEvents extends SettingsEvent {
     final String email;

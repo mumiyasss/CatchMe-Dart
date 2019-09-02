@@ -28,7 +28,7 @@ class SettingsState extends State<Settings> {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 25.0, vertical: 5),
                     child: Row(children: <Widget>[
-                        _Avatar(),
+                        _Avatar(widget.bloc),
                         _AccountCredentials(widget.bloc),
                     ],
                     ),
@@ -60,6 +60,10 @@ class SettingsState extends State<Settings> {
 }
 
 class _Avatar extends StatefulWidget {
+    SettingsBloc bloc;
+
+    _Avatar(this.bloc);
+
     @override
     __AvatarState createState() => __AvatarState();
 }
@@ -67,12 +71,17 @@ class _Avatar extends StatefulWidget {
 class __AvatarState extends State<_Avatar> {
     @override
     Widget build(BuildContext context) {
-        return Widgets.profilePicture(context, CatchMeApp.currentUser.photoUrl, 0.27);
+        return GestureDetector(
+            onTap: () {
+                widget.bloc.dispatch(UploadNewAvatarEvent());
+            }, // todo: email пропадает, observable photoUrl
+            child: Widgets.profilePicture(
+                context, CatchMeApp.currentUser.photoUrl, 0.27));
     }
 }
 
 class _AccountCredentials extends StatefulWidget {
-    
+
     final SettingsBloc bloc;
 
     _AccountCredentials(this.bloc);

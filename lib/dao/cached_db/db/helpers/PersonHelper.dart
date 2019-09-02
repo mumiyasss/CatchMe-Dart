@@ -18,7 +18,8 @@ class PersonHelper extends Repository<Person> {
                 ..execute('''CREATE TABLE IF NOT EXISTS $personTable (
                             $userIdColumn text primary key,
                             $nameColumn text not null,
-                            $photoUrlColumn text)
+                            $photoUrlColumn text,
+                            $emailColumn text)
                             ''');
             _dao = PersonHelper._();
         }

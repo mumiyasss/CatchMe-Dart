@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 final String photoUrlColumn = 'photoUrl';
 final String nameColumn = 'name';
 final String userIdColumn = 'userId';
+final String emailColumn = 'email';
 
 class Person extends Model {
     String photoUrl;
@@ -37,7 +38,8 @@ class Person extends Model {
         var map = <String, dynamic>{
             photoUrlColumn: photoUrl,
             nameColumn: name,
-            userIdColumn: userId
+            userIdColumn: userId,
+            emailColumn: email,
         };
         return map;
     }
@@ -46,6 +48,7 @@ class Person extends Model {
         photoUrl = map[photoUrlColumn];
         name = map[nameColumn];
         userId = map[userIdColumn];
+        email = map[emailColumn];
         assert(photoUrl != null);
         assert(name != null);
         assert(userId != null);
