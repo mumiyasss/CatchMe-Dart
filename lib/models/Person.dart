@@ -18,10 +18,10 @@ class Person extends Model {
     Person();
 
     Person.fromSnapshot(DocumentSnapshot userSnapshot) {
-        photoUrl = userSnapshot.data['photo'];
-        name = userSnapshot.data['name'];
-        userId = userSnapshot.data['id'];
-        email = userSnapshot.data['email'];
+        photoUrl = userSnapshot.data[photoUrlColumn];
+        name = userSnapshot.data[nameColumn];
+        userId = userSnapshot.data[userIdColumn];
+        email = userSnapshot.data[emailColumn];
         assert(photoUrl != null);
         assert(name != null);
         assert(userId != null);

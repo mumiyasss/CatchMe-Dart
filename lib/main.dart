@@ -6,6 +6,8 @@ import 'package:catch_me/dao/cached_db/db/Db.dart';
 import 'package:catch_me/dao/cached_db/store.dart';
 import 'package:catch_me/models/Chat.dart';
 import 'package:catch_me/models/Person.dart';
+import 'package:catch_me/ui/chatlist/chat_list.dart';
+import 'package:catch_me/ui/settings/Settings.dart';
 import 'package:catch_me/ui/signin/SingInViewModel.dart';
 import 'package:catch_me/values/Strings.dart';
 import 'package:catch_me/values/Styles.dart';
@@ -37,11 +39,7 @@ onAppClose() async {
 }
 
 class CatchMeApp extends StatelessWidget {
-    static Person currentUser;
     static String userUid;
-    static String userName;
-    static String userEmail;
-    static String userPhotoUrl;
 
     static BuildContext appContext;
 

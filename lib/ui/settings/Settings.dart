@@ -2,6 +2,7 @@ import 'package:catch_me/bloc/settings/bloc.dart';
 import 'package:catch_me/dao/cached_db/db/Db.dart';
 import 'package:catch_me/dao/cached_db/db/helpers/ChatHelper.dart';
 import 'package:catch_me/main.dart';
+import 'package:catch_me/models/Person.dart';
 import 'package:catch_me/ui/Widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -21,16 +22,32 @@ class Settings extends StatefulWidget {
 class SettingsState extends State<Settings> {
 
     @override
+  void dispose() {
+        // todo нужно каждый раз создавать новый observable а не сохранять его глобально чтобы
+    super.dispose();
+  }
+
+    @override
     Widget build(BuildContext context) {
         return Column(
             children: <Widget>[
                 Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 25.0, vertical: 5),
-                    child: Row(children: <Widget>[
-                        _Avatar(widget.bloc),
-                        _AccountCredentials(widget.bloc),
-                    ],
+                    child: StreamBuilder<Person>(
+                        stream: CatchMeApp.personDao.fromUserId(CatchMeApp.userUid),
+                        builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                                return Row(children: <Widget>[
+                                    _Avatar(widget.bloc, snapshot.data),
+                                    _AccountCredentials(
+                                        widget.bloc, snapshot.data),
+                                ],);
+                            } else if (snapshot.hasError) {
+                                throw Exception([snapshot.error]);
+                            }
+                            return CircularProgressIndicator();
+                        }
                     ),
                 ),
 
@@ -61,8 +78,9 @@ class SettingsState extends State<Settings> {
 
 class _Avatar extends StatefulWidget {
     SettingsBloc bloc;
+    Person person;
 
-    _Avatar(this.bloc);
+    _Avatar(this.bloc, this.person);
 
     @override
     __AvatarState createState() => __AvatarState();
@@ -73,18 +91,20 @@ class __AvatarState extends State<_Avatar> {
     Widget build(BuildContext context) {
         return GestureDetector(
             onTap: () {
-                widget.bloc.dispatch(UploadNewAvatarEvent());
-            }, // todo: email пропадает, observable photoUrl
+                print("on tap");
+                widget.bloc.dispatch(UploadNewAvatarEvent(widget.person));
+            },
             child: Widgets.profilePicture(
-                context, CatchMeApp.currentUser.photoUrl, 0.27));
+                context, widget.person.photoUrl, 0.27));
     }
 }
 
 class _AccountCredentials extends StatefulWidget {
-
     final SettingsBloc bloc;
 
-    _AccountCredentials(this.bloc);
+    final Person person;
+
+    _AccountCredentials(this.bloc, this.person);
 
     @override
     _AccountCredentialsState createState() => _AccountCredentialsState();
@@ -96,8 +116,8 @@ class _AccountCredentialsState extends State<_AccountCredentials> {
 
     @override
     void initState() {
-        nameController.text = CatchMeApp.currentUser.name;
-        emailController.text = CatchMeApp.currentUser.email;
+        nameController.text = widget.person.name;
+        emailController.text = widget.person.email;
         super.initState();
     }
 
@@ -116,7 +136,7 @@ class _AccountCredentialsState extends State<_AccountCredentials> {
             child: Column(children: <Widget>[
                 TextField(
                     onChanged: (name) {
-                        bloc.dispatch(NameChangedEvents(name));
+                        bloc.dispatch(NameChangedEvents(name, widget.person));
                     },
                     style: TextStyle(color: Colors.black),
                     controller: nameController,
@@ -125,7 +145,7 @@ class _AccountCredentialsState extends State<_AccountCredentials> {
                     ),),
                 TextField(
                     onChanged: (email) {
-                        bloc.dispatch(EmailChangedEvents(email));
+                        bloc.dispatch(EmailChangedEvents(email, widget.person));
                     },
                     style: TextStyle(color: Colors.black),
                     controller: emailController,

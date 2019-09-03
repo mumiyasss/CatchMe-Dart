@@ -68,7 +68,6 @@ class TitleState extends State<Title> {
     var lastPositionOffset = 0.0;
 
     _pageViewListener(double pixels) {
-        print("IN PAGEVIEWLISTENER");
         var positionOffset = pixels / screenSize.width;
         var difference = lastPositionOffset - positionOffset;
         if (difference > 0.001 || -difference > 0.001) {

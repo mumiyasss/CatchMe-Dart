@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:catch_me/main.dart';
 import 'package:catch_me/ui/writeToNewPerson/NewMessage.dart';
 import 'package:flutter/material.dart';
 import 'package:catch_me/ui/chatlist/chat_list.dart';

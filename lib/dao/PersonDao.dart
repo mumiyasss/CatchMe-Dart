@@ -59,6 +59,7 @@ class PersonDao {
     }
 
     updatePersonInfo(Person newPersonInfo) {
+        // photoUrl - photo, userId - id
         usersCollection
             .document(newPersonInfo.userId)
             .updateData(newPersonInfo.toMap()).then((_) {

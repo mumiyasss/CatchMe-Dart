@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'main.dart';
 
 Future<String> takePhotoAndUploadToStorage() async {
+
     File image = await ImagePicker.pickImage(source: ImageSource.gallery);
     var filename = CatchMeApp.userUid + image.path + Timestamp.now().seconds.toString();
     final StorageReference storageRef =
