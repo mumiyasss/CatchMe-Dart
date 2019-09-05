@@ -29,6 +29,7 @@ void main() {
 }
 
 onAppStart() async {
+    await SignInViewModel().initUser();
     CatchMeApp.chatDao = await ChatDao.instance;
     CatchMeApp.personDao = await PersonDao.instance;
 }
@@ -39,7 +40,17 @@ onAppClose() async {
 }
 
 class CatchMeApp extends StatelessWidget {
-    static String userUid;
+    static String _userUid;
+
+    static String get userUid {
+        assert(_userUid != null );
+        return _userUid;
+    }
+
+    static set userUid(String userUid) {
+        assert(userUid != null);
+        _userUid = userUid;
+    }
 
     static BuildContext appContext;
 

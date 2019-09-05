@@ -52,16 +52,11 @@ class NewMessage extends StatelessWidget {
     Widget _buildPersonItem(context, Person person) {
         return GestureDetector(
             onTap: () {
-                viewModel.startNewConversation(person.userId).then((
-                    chatReference) {
-                    CatchMeApp.chatDao.getChatInfo(chatReference).then((chat) {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ChatScreen(chat)),
-                        );
-                    });
-                });
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ChatScreen(person)),
+                );
             },
             child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 25, vertical: 5),

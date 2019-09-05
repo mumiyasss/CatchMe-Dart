@@ -45,7 +45,7 @@ class PersonDao {
             _personStore.insert(person);
             assert(person != null);
             return person;
-        }).mergeWith([dbObservable]);
+        }).mergeWith([dbObservable]).asBroadcastStream();
     }
 
     // сделать в стрим?
@@ -55,7 +55,7 @@ class PersonDao {
                 return fromUserId(memberId);
             }
         }
-        return fromUserId(CatchMeApp.userUid);
+        return fromUserId(CatchMeApp.userUid).asBroadcastStream();
     }
 
     updatePersonInfo(Person newPersonInfo) {

@@ -5,16 +5,20 @@ import 'package:catch_me/bloc/chat_screen/messages_panel/events.dart';
 import 'package:catch_me/bloc/chat_screen/sending_messages/bloc.dart';
 import 'package:catch_me/bloc/chat_screen/sending_messages/events.dart';
 import 'package:catch_me/main.dart';
+import 'package:catch_me/models/Person.dart';
 import 'package:catch_me/values/Dimens.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:rxdart/rxdart.dart';
 
 class MessageField extends StatefulWidget {
     final SendingMessagesBloc bloc;
 
-    MessageField(this.bloc)
-        : assert(bloc != null),
+    MessageField(Person person)
+        :
+            bloc = SendingMessagesBloc(person),
             super();
 
     _MessageFieldState createState() => _MessageFieldState();

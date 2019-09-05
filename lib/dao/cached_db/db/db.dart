@@ -27,5 +27,11 @@ abstract class Db {
         }
         return _db;
     }
+
+    static Future<void> deleteDb() async {
+        var databasesPath = await getDatabasesPath();
+        final path = join(databasesPath, dbName);
+        deleteDatabase(path);
+    }
 }
 

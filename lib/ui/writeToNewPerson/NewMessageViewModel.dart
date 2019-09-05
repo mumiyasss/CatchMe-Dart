@@ -15,6 +15,10 @@ class NewMessageViewModel {
         }
     }
 
+    // 1) вынести логику создания и проверки чата в блок который посылает сообщения
+    // 2) если сообщений еще нет, поставить заглушку что и их нет на экран, проверить через Obserbable
+    // 3) возможно все таки нужно создать bloc для writeToNewPerson, но теперь функциональность
+    // его viewModel поглотит блок для отправки сообщений.
     Future<DocumentReference> startNewConversation(String companionId) async {
         var chat = await Firestore.instance
             .document('chats/' + chatName(companionId, CatchMeApp.userUid))
@@ -27,11 +31,11 @@ class NewMessageViewModel {
                 .collection('chats')
                 .document(chatName(companionId, CatchMeApp.userUid))
                 .setData({
-                'members': [companionId, CatchMeApp.userUid],
+                'members' : [companionId, CatchMeApp.userUid],
                 'lastMessageText':
                 (await (await PersonDao.instance).fromUserId(CatchMeApp.userUid).first).name +
                     " создал",
-                'lastMessageAuthorId': 1,
+                'lastMessageAuthorId': CatchMeApp.userUid,
                 'lastMessageTime': Timestamp.now(),
             });
             var newChat = await Firestore.instance

@@ -32,7 +32,7 @@ class SignInViewModel {
     Future<AuthCredential> _getGoogleCredential() async {
         GoogleSignInAccount googleSignInAccount = await _gSignIn.signIn();
         GoogleSignInAuthentication authentication =
-            await googleSignInAccount.authentication;
+        await googleSignInAccount.authentication;
 
         return GoogleAuthProvider.getCredential(
             idToken: authentication.idToken,
@@ -42,10 +42,7 @@ class SignInViewModel {
 
     Future<FirebaseUser> initUser() async {
         var firebaseUser = await FirebaseAuth.instance.currentUser();
-        if (firebaseUser != null) {
-            var user = CatchMeApp.personDao.fromUserId(firebaseUser.uid);
-            CatchMeApp.userUid = firebaseUser.uid;
-        }
+        CatchMeApp.userUid = firebaseUser.uid;
         return firebaseUser;
     }
 

@@ -61,6 +61,8 @@ class SettingsState extends State<Settings> {
                             child: RaisedButton(
                                 elevation: 4,
                                 onPressed: () {
+                                    Db.deleteDb();
+
                                     FirebaseAuth.instance.signOut();
                                 },
                                 child: Text(

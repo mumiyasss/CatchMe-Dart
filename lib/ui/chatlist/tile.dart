@@ -35,8 +35,8 @@ class ChatTile extends StatelessWidget {
             onTap: () {
                 Navigator.push(
                     context,
-                    MaterialPageRoute( // TODO: cache hashMap chatReference
-                        builder: (context) => ChatScreen(_chat)),
+                    MaterialPageRoute(
+                        builder: (context) => ChatScreen(_chat.companion)),
                 );
             },
             child: Column(

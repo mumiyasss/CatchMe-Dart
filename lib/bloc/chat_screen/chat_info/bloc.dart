@@ -1,6 +1,8 @@
 import 'package:bloc/bloc.dart';
+import 'package:catch_me/bloc/chat_screen/messages_panel/bloc.dart';
 import 'package:catch_me/dao/ChatDao.dart';
 import 'package:catch_me/dao/PersonDao.dart';
+import 'package:catch_me/dao/cached_db/db/exceptions.dart';
 import 'package:catch_me/main.dart';
 import 'package:catch_me/models/Chat.dart';
 import 'package:catch_me/models/Person.dart';
@@ -14,22 +16,37 @@ import 'states.dart';
 /// но пока приложение слишком маленькое
 class ChatBloc extends Bloc<ChatInfoEvent, ChatInfoState> {
 
-    final Chat _chat;
+    Chat _chat;
+    Observable<DocumentSnapshot> chatSnapshots;
+    final Observable<Person> _personStream;
 
-    ChatBloc(this._chat) {
+    ChatBloc(Person person, this._personStream) {
+        startAsyncInfoUpdater(person.userId);
         this.dispatch(GetChatInfo());
     }
 
+    startAsyncInfoUpdater(String personId) {
+        try {
+            _chat = CatchMeApp.chatDao.getChatWithPerson(personId);
+        } on NotFound {
+            print("There is no cached chat with personId $personId");
+        }
+        chatSnapshots =
+        Observable(CatchMeApp.chatDao.getChatWithPersonFromInet(personId))
+            ..listen((DocumentSnapshot chat) async {
+                if (chat.data != null) {
+                    _chat = await Chat.fromSnapshot(chat);
+                }
+            });
+    }
+
     @override
-    ChatInfoState get initialState =>
-        ChatInfoLoadedState(Observable.just(_chat.companion));
+    ChatInfoState get initialState => ChatInfoLoadedState(_personStream);
 
     @override
     Stream<ChatInfoState> mapEventToState(ChatInfoEvent event) async* {
         if (event is GetChatInfo) {
-            yield ChatInfoLoadedState(
-                CatchMeApp.personDao.fromUserId(_chat.companion.userId)
-            );
+            yield ChatInfoLoadedState(_personStream);
         }
         if (event is DeleteChat) {
             // ToDO: dao очищает кэш и firebase, (Или остаться, чтобы выдно было что нет сообщений,
@@ -38,6 +55,5 @@ class ChatBloc extends Bloc<ChatInfoEvent, ChatInfoState> {
             CatchMeApp.chatDao.deleteChat(_chat);
         }
     }
-
 
 }
