@@ -7,6 +7,7 @@ import 'package:catch_me/main.dart';
 import 'package:catch_me/models/Chat.dart';
 import 'package:catch_me/models/Message.dart';
 import 'package:catch_me/models/Person.dart';
+import 'package:catch_me/utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
@@ -48,17 +49,7 @@ class SendingMessagesBloc extends Bloc<NewMessageEvent, MessageSent> {
     }
 
     _sendImageMessage(File image) async {
-        var filename = CatchMeApp.userUid + image.path;
-        final StorageReference storageRef =
-        FirebaseStorage.instance.ref().child(filename);
-
-        final StorageUploadTask uploadTask =
-        storageRef.putFile(image); // add some metadata?
-
-        final StorageTaskSnapshot downloadUrl =
-        (await uploadTask.onComplete);
-        final String url = (await downloadUrl.ref.getDownloadURL());
-        print('URL Is $url');
+        String url = await uploadImageToStorage(image);
         Map<String, dynamic> data = {
             'image': url
         };

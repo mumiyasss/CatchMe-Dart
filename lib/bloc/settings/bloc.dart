@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:bloc/bloc.dart';
 import 'package:catch_me/main.dart';
 import 'package:catch_me/models/Person.dart';
 import 'package:catch_me/utils.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:rxdart/rxdart.dart';
 
 class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
@@ -39,7 +42,9 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
             CatchMeApp.personDao.updatePersonInfo(event.user..name = event.name);
         }
         if (event is UploadNewAvatarEvent) {
-            var newAvatarUrl = await takePhotoAndUploadToStorage();
+            File image = await ImagePicker.pickImage(source: ImageSource.gallery);
+            // todo: загрузка началась
+            var newAvatarUrl = await uploadImageToStorage(image);
             CatchMeApp.personDao.updatePersonInfo(event.user..photoUrl = newAvatarUrl);
         }
 

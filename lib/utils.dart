@@ -9,10 +9,9 @@ import 'package:path_provider/path_provider.dart' as path_provider;
 import 'main.dart';
 
 // todo: проверить работоспособность
-Future<String> takePhotoAndUploadToStorage() async {
+Future<String> uploadImageToStorage(File image) async {
 
-    File image = await ImagePicker.pickImage(source: ImageSource.gallery);
-    var filename = CatchMeApp.userUid + image.path + Timestamp.now().seconds.toString();
+    var filename = Timestamp.now().seconds.toString() + CatchMeApp.userUid + image.path;
 
     var tempDir = (await path_provider.getTemporaryDirectory()).absolute.path;
     var targetPath = tempDir + "/temp${Timestamp.now().nanoseconds}.jpeg";
