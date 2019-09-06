@@ -35,7 +35,16 @@ class _MessageFieldState extends State<MessageField> {
     void initState() {
         send = _SendButton(_controller, widget.bloc);
         actionButton = attach = _AttachButton(widget.bloc);
+        _controller.addListener(updateActionButton);
         super.initState();
+    }
+
+    updateActionButton() {
+        _controller.text.length == 0
+            ? setState(() =>
+        actionButton = attach)
+            : setState(() =>
+        actionButton = send);
     }
 
     @override
@@ -58,16 +67,10 @@ class _MessageFieldState extends State<MessageField> {
                                 child: TextField(
                                     controller: _controller,
                                     keyboardType: TextInputType.text,
-                                    onChanged: (text) {
-                                        text.length == 0
-                                            ? setState(() =>
-                                        actionButton = attach)
-                                            : setState(() =>
-                                        actionButton = send);
-                                    },
                                     decoration: InputDecoration(
                                         border: InputBorder.none,
                                         hintText: "Type your message"),
+                                    textCapitalization: TextCapitalization.sentences,
                                 ),
                             ),
                             actionButton
