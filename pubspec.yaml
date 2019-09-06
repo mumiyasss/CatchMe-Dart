@@ -16,6 +16,7 @@ dependencies:
   flutter:
     sdk: flutter
   cloud_firestore: any     # new
+  cloud_functions: any
   firebase_auth: ^0.11.1+7
   google_sign_in: any
   flutter_signin_button: ^0.2.4

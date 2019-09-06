@@ -4,6 +4,7 @@ import 'package:catch_me/main.dart';
 import 'package:catch_me/models/Chat.dart';
 import 'package:catch_me/models/Person.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:catch_me/dao/cached_db/db/exceptions.dart';
 
@@ -51,6 +52,13 @@ class ChatDao {
     deleteChat(Chat chat) async {
         chat.reference.delete();
         _chatsStore.delete(chat);
+        final HttpsCallable callable = CloudFunctions.instance.getHttpsCallable(
+            functionName: 'deleteChat',
+        );
+        dynamic resp = await callable.call(<String, dynamic>{
+            'chatPath': chat.pk,
+        });
+        print("response for chat delete $resp ");
     }
 
     // Может быть сделать стрим кэша?

@@ -27,6 +27,7 @@ class SendingMessagesBloc extends Bloc<NewMessageEvent, MessageSent> {
     @override
     Stream<MessageSent> mapEventToState(NewMessageEvent event) async* {
         await startConversation(_person);
+        print(_chatReference);
         if (event is WriteNewTextMessageEvent) {
             await _sendTextMessage(event.message);
             yield MessageSent();

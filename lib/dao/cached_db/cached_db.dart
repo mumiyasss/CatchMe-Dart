@@ -36,7 +36,8 @@ class CachedDb<T extends Model> {
     /// Каждые несколько секунд обновляет данные из базы данных.
     @protected
     startDelayedDbUpdating({@required int seconds}) async {
-        Future.delayed(Duration(seconds: seconds)).then((_) {
+        Future.delayed(Duration(seconds: seconds)).then((_) async {
+            await dbHelper.deleteAll();
             cachedData?.forEach((_, obj) => dbHelper.insert(obj));
             startDelayedDbUpdating(seconds: seconds);
         });
@@ -44,6 +45,7 @@ class CachedDb<T extends Model> {
 
     /// Один раз немедля обновить базу данных.
     updateDbRightNow() async {
+        await dbHelper.deleteAll();
         cachedData?.forEach((_, obj) => dbHelper.insert(obj));
     }
     

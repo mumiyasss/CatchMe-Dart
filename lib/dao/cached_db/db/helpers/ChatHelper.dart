@@ -32,8 +32,8 @@ class ChatHelper extends Repository<Chat> {
         return _dao;
     }
 
-    delete(Chat chat) {
-        _db.delete(chatTable,
+    Future delete(Chat chat) {
+        return _db.delete(chatTable,
             where: '$chatPathColumn = ?',
             whereArgs: [chat.reference.path]
         );
@@ -54,8 +54,8 @@ class ChatHelper extends Repository<Chat> {
             whereArgs: [chat.reference.path]);
     }
 
-    deleteAll() {
-        _db.rawQuery("DELETE FROM $chatTable");
+    Future deleteAll() async {
+        return _db.rawQuery("DELETE FROM $chatTable");
     }
 
 

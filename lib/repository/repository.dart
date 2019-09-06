@@ -5,9 +5,9 @@ abstract class Repository<T extends Model> {
 
     update(T obj);
 
-    delete(T obj);
+    Future delete(T obj);
 
-    deleteAll();
+    Future deleteAll();
 
     /// Возвращает все объекты. Если передан параметр pageNumber,
     /// возвращаются последние 50 объектов.
