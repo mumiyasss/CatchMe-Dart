@@ -62,35 +62,39 @@ class ChatScreen extends StatelessWidget {
 
 class MessagesPanel extends StatelessWidget {
 
-    ChatBloc _chatBloc;
+    final ChatBloc _chatBloc;
 
     MessagesPanel(this._chatBloc);
 
     @override
     Widget build(BuildContext context) {
-        return FocusSwitcher(
-            child: StreamBuilder<DocumentSnapshot>(
-                stream: _chatBloc.chatSnapshots,
-                builder: (context, snapshot) {
-                    var chatSnapshot = snapshot.data;
-                    if (snapshot.hasData && chatSnapshot.data != null) {
-                        return BlocBuilder(
-                            bloc: MessagesBloc(chatSnapshot.reference),
-                            builder: (context, ChatScreenState state) {
-                                if (state is MessagesAreLoading) {
-                                    return Center(
-                                        child: CircularProgressIndicator()
-                                    );
-                                }
-                                if (state is MessagesAreLoaded) {
-                                    return MessagesList(state.messages);
-                                }
-                                throw Exception(['No such state in Mes Panel']);
-                            });
-                    } else { // todo : make nice...
-                        return Center(child: Text("No Messages yet"),);
+        return Container(
+            margin: EdgeInsets.only(top: 60),
+            child: FocusSwitcher(
+                child: StreamBuilder<DocumentSnapshot>(
+                    stream: _chatBloc.chatSnapshots,
+                    builder: (context, snapshot) {
+                        var chatSnapshot = snapshot.data;
+                        if (snapshot.hasData && chatSnapshot.data != null) {
+                            return BlocBuilder(
+                                bloc: MessagesBloc(chatSnapshot.reference),
+                                builder: (context, ChatScreenState state) {
+                                    if (state is MessagesAreLoading) {
+                                        return Center(
+                                            child: CircularProgressIndicator()
+                                        );
+                                    }
+                                    if (state is MessagesAreLoaded) {
+                                        return MessagesList(state.messages);
+                                    }
+                                    throw Exception(
+                                        ['No such state in Mes Panel']);
+                                });
+                        } else { // todo : make nice...
+                            return Center(child: Text("No Messages yet"),);
+                        }
                     }
-                }
+                ),
             ),
         );
     }
@@ -124,8 +128,12 @@ class MessagesList extends StatelessWidget {
             color: Colors.white,
             child: ListView(
                 reverse: true,
-                children:
-                _messages.map((message) => MessageBubble(message)).toList(),
+                children: [
+                    ..._messages.map((message) => MessageBubble(message))
+                        .toList(),
+                    ...List()     // space upper first message
+                        ..add(Container(height: 16,)),
+                ],
             ),
         );
     }

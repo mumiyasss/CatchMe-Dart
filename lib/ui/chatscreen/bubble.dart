@@ -1,5 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:catch_me/models/Message.dart';
+import 'package:catch_me/ui/chatscreen/photo_viewer.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../main.dart';
@@ -38,31 +40,48 @@ class MessageBubble extends StatelessWidget {
 
         ) : Container(
             height: 200,
-            child: CachedNetworkImage(
-                imageUrl: _message.imageUrl,
-                imageBuilder: (context, imageProvider) =>
-                    Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(20)),
-                            //border: Border.all(color: Color(self ? 0xFFCECECE : 0)),
-                            color: Color(self ? 0xFFFFFFFF : 0xFF2196F3),
-                            image: DecorationImage(
-                                fit: BoxFit.cover,
-                                image: imageProvider
+            child: GestureDetector(
+                onTap: () {
+                    Navigator.push(
+                        context,
+                        FadeRoute(page: PhotoViewer(_message.imageUrl))
+                    );
+                },
+                child: Hero(
+                    tag: _message.imageUrl,
+                    child: CachedNetworkImage(
+                        imageUrl: _message.imageUrl,
+                        imageBuilder: (context, imageProvider) =>
+                            Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(20)),
+                                    //border: Border.all(color: Color(self ? 0xFFCECECE : 0)),
+                                    color: Color(
+                                        self ? 0xFFFFFFFF : 0xFF2196F3),
+                                    image: DecorationImage(
+                                        fit: BoxFit.cover,
+                                        image: imageProvider
+                                    ),
+                                ),
                             ),
-                        ),
-                    ),
-                placeholder: (context, url) =>
-                    Container(
-                        width: 266,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(20)),
-                            border: Border.all(color: Color(self ? 0xFFCECECE : 0)),
-                            color: Color(self ? 0xFFFFFFFF : 0xFF2196F3),
-                        ),
-                        child: Center(child: CircularProgressIndicator()),
-                    ),
+                        placeholder: (context, url) =>
+                            Container(
+                                width: 266,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(20)),
+                                    border: Border.all(
+                                        color: Color(self ? 0xFFCECECE : 0)),
+                                    color: Color(
+                                        self ? 0xFFFFFFFF : 0xFF2196F3),
+                                ),
+                                child: Center(
+                                    child: CircularProgressIndicator()),
+                            ),
 
+                    ),
+                ),
             ),
         );
 
@@ -76,4 +95,47 @@ class MessageBubble extends StatelessWidget {
             child: messageBubble,
         );
     }
+}
+
+class SlideUpRoute extends PageRouteBuilder {
+    final Widget page;
+
+    SlideUpRoute({this.page}) : super(
+        pageBuilder: (BuildContext context,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,) =>
+        page,
+        transitionsBuilder: (BuildContext context,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,
+            Widget child,) =>
+            SlideTransition(
+                position: Tween<Offset>(
+                    begin: const Offset(0, -1),
+                    end: Offset.zero,
+                ).animate(animation),
+                child: child,
+            ),
+    );
+}
+
+class FadeRoute extends PageRouteBuilder {
+    final Widget page;
+
+    FadeRoute({this.page})
+        : super(
+        pageBuilder: (BuildContext context,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,) =>
+        page,
+        transitionsBuilder: (BuildContext context,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,
+            Widget child,) =>
+            FadeTransition(
+                opacity: animation,
+                child: child,
+            ),
+        transitionDuration: Duration(milliseconds: 350),
+    );
 }

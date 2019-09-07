@@ -42,7 +42,8 @@ class SignInViewModel {
 
     Future<FirebaseUser> initUser() async {
         var firebaseUser = await FirebaseAuth.instance.currentUser();
-        CatchMeApp.userUid = firebaseUser.uid ?? null;
+        if (firebaseUser != null)
+            CatchMeApp.userUid = firebaseUser.uid;
         return firebaseUser;
     }
 

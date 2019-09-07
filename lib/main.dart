@@ -23,15 +23,16 @@ import 'ui/signin/SignIn.dart';
 void main() {
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
         .then((_) async {
-        await onAppStart();
+        await initIfLoggedIn();
         runApp(CatchMeApp());
     });
 }
 
-onAppStart() async {
-    await SignInViewModel().initUser();
-    CatchMeApp.chatDao = await ChatDao.instance;
-    CatchMeApp.personDao = await PersonDao.instance;
+initIfLoggedIn() async {
+    if (await SignInViewModel().initUser() != null) {
+        CatchMeApp.chatDao = await ChatDao.instance;
+        CatchMeApp.personDao = await PersonDao.instance;
+    }
 }
 
 onAppClose() async {
@@ -79,7 +80,7 @@ class CatchMeApp extends StatelessWidget {
     Widget _handleCurrentScreen() {
         var stream = Observable(FirebaseAuth.instance.onAuthStateChanged)
             .asyncMap((user) async {
-            await SignInViewModel().initUser();
+            await initIfLoggedIn();
             return user;
         });
         return StreamBuilder<FirebaseUser>(
