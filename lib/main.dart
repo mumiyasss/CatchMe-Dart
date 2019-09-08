@@ -1,4 +1,5 @@
 import 'package:catch_me/LifecycleEventHandler.dart';
+import 'package:catch_me/bloc/background_tasks/online_stamp_bloc.dart';
 import 'package:catch_me/dao/ChatDao.dart';
 import 'package:catch_me/dao/PersonDao.dart';
 import 'package:catch_me/dao/cached_db/cached_db.dart';
@@ -58,13 +59,19 @@ class CatchMeApp extends StatelessWidget {
     static PersonDao personDao;
     static ChatDao chatDao;
 
+    final _onlineStampBloc = OnlineStampBloc();
+    sendStamp() async {
+        _onlineStampBloc.dispatch(SendStamp());
+    }
+
     @override
     Widget build(BuildContext context) {
         print(SystemUiOverlayStyle.dark.statusBarColor);
         WidgetsBinding.instance.addObserver(LifecycleEventHandler(
             inactiveCallBack: onAppClose(),
             pausedCallBack: onAppClose(),
-            suspendingCallBack: onAppClose()
+            suspendingCallBack: onAppClose(),
+            resumeCallBack: sendStamp()
         ));
 
         appContext = context;

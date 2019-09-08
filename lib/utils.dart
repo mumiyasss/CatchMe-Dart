@@ -8,7 +8,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'main.dart';
 
-// todo: проверить работоспособность
 Future<String> uploadImageToStorage(File image) async {
 
     var filename = Timestamp.now().seconds.toString() + CatchMeApp.userUid + image.path;
@@ -40,4 +39,41 @@ Future<File> compressAndGetFile(File file, String targetPath) async {
     print(result.lengthSync());
 
     return result;
+}
+
+String toReadableTime(Timestamp timestamp, {bool withArticle = false}) {
+    String plusZero(int x) => "${x < 10 ? "0$x" : x}";
+
+    var date = timestamp.toDate();
+
+
+    if (DateTime.now().year != date.year) {
+        return "${withArticle ? "on ": ""}${plusZero(date.day)}.${plusZero(date.month)}.${date.year % 2000}";
+    } else if (DateTime.now().difference(date) > Duration(days: 7)) {
+        return "${withArticle ? "on ": ""}${plusZero(date.day)}.${plusZero(date.month)}";
+    } else if (DateTime.now().weekday != date.weekday && !withArticle) {
+        switch (date.weekday) {
+            case DateTime.monday: return "Mon";
+            case DateTime.tuesday: return "Tue";
+            case DateTime.wednesday: return "Wed";
+            case DateTime.thursday: return "Thu";
+            case DateTime.friday: return "Fri";
+            case DateTime.saturday: return "Sat";
+            case DateTime.sunday: return "Sun";
+        }
+        throw Exception("no such weekday");
+    } else if (DateTime.now().weekday != date.weekday && withArticle) {
+        switch (date.weekday) {
+            case DateTime.monday: return "on Monday";
+            case DateTime.tuesday: return "on Tuesday";
+            case DateTime.wednesday: return "on Wednesday";
+            case DateTime.thursday: return "on Thursday";
+            case DateTime.friday: return "on Friday";
+            case DateTime.saturday: return "on Saturday";
+            case DateTime.sunday: return "on Sunday";
+        }
+        throw Exception("no such weekday");
+    } else {
+        return "${withArticle ? "at ": ""}${plusZero(date.hour)}:${plusZero(date.minute)}";
+    }
 }

@@ -5,6 +5,8 @@ import 'package:catch_me/bloc/chat_screen/chat_info/events.dart';
 import 'package:catch_me/bloc/chat_screen/chat_info/states.dart';
 import 'package:catch_me/bloc/chat_screen/messages_panel/states.dart';
 import 'package:catch_me/models/Person.dart';
+import 'package:catch_me/utils.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -96,10 +98,14 @@ class MenuPanel extends StatelessWidget {
                     return Platform.isIOS ?
                     CupertinoAlertDialog(
                         title: Text("Вы уверены?"),
-                        content: Text("Чат будет удалён на этом устройстве и у собеседника"),
+                        content: Text(
+                            "Чат будет удалён на этом устройстве и у собеседника"),
                         actions: <Widget>[
                             FlatButton(
-                                child: Text("Удалить", style: TextStyle(color: Colors.red, fontSize: 18, fontWeight: FontWeight.w400),),
+                                child: Text("Удалить", style: TextStyle(
+                                    color: Colors.red,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w400),),
                                 onPressed: () {
                                     _bloc.dispatch(DeleteChat());
                                     Navigator.of(context).pop();
@@ -107,7 +113,10 @@ class MenuPanel extends StatelessWidget {
                                 },
                             ),
                             FlatButton(
-                                child: Text("Отмена", style: TextStyle(color: Colors.blue, fontSize: 18, fontWeight: FontWeight.bold),),
+                                child: Text("Отмена", style: TextStyle(
+                                    color: Colors.blue,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold),),
                                 onPressed: () {
                                     Navigator.of(context).pop();
                                 },
@@ -115,10 +124,14 @@ class MenuPanel extends StatelessWidget {
                         ],) :
                     AlertDialog(
                         title: Text("Вы уверены?"),
-                        content: Text("Чат будет удалён на этом устройстве и у собеседника"),
+                        content: Text(
+                            "Чат будет удалён на этом устройстве и у собеседника"),
                         actions: <Widget>[
                             FlatButton(
-                                child: Text("Удалить", style: TextStyle(color: Colors.red, fontSize: 18, fontWeight: FontWeight.w400),),
+                                child: Text("Удалить", style: TextStyle(
+                                    color: Colors.red,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w400),),
                                 onPressed: () {
                                     _bloc.dispatch(DeleteChat());
                                     Navigator.of(context).pop();
@@ -126,7 +139,10 @@ class MenuPanel extends StatelessWidget {
                                 },
                             ),
                             FlatButton(
-                                child: Text("Отмена", style: TextStyle(color: Colors.blue, fontSize: 18, fontWeight: FontWeight.bold),),
+                                child: Text("Отмена", style: TextStyle(
+                                    color: Colors.blue,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold),),
                                 onPressed: () {
                                     Navigator.of(context).pop();
                                 },
@@ -252,14 +268,27 @@ class _AppBarContent extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                             Text(person.name, style: TextStyle(fontSize: 20)),
-                            Text(
-                                'last seen at 8:30',
-                                style: TextStyle(fontSize: 12),
-                            )
+                            _makeLastSeen(person)
                         ],
                     ),
                 ),
             ],
         );
+    }
+
+    Text _makeLastSeen(Person person) {
+        final style = TextStyle(fontSize: 12);
+        if (person.lastSeen != null) {
+            var timestamp = Timestamp.fromMillisecondsSinceEpoch(
+                person.lastSeen);
+            if (timestamp.compareTo(Timestamp.now()).abs() < 15) {
+                return Text('online',
+                    style: TextStyle(fontSize: 12, color: Colors.blue),);
+            } else
+                return Text(
+                    'last seen ${toReadableTime(timestamp, withArticle: true)}',
+                    style: style,);
+        } else
+            return Text('last seen recently', style: style);
     }
 }

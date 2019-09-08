@@ -1,5 +1,6 @@
 import 'package:catch_me/models/Chat.dart';
 import 'package:catch_me/ui/chatscreen/chat_screen.dart';
+import 'package:catch_me/utils.dart';
 import 'package:catch_me/values/Dimens.dart';
 import 'package:catch_me/values/Styles.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -83,26 +84,3 @@ class ChatTile extends StatelessWidget {
     );
 }
 
-String toReadableTime(Timestamp timestamp) {
-    var date = timestamp.toDate();
-    if (DateTime.now().year != date.year) {
-        return "${plusZero(date.day)}.${plusZero(date.month)}.${date.year % 2000}";
-    } else if (DateTime.now().difference(date) > Duration(days: 7)) {
-        return "${plusZero(date.day)}.${plusZero(date.month)}";
-    } else if (DateTime.now().weekday != date.weekday) {
-        switch (date.weekday) {
-            case DateTime.monday: return "Mon";
-            case DateTime.tuesday: return "Tue";
-            case DateTime.wednesday: return "Wed";
-            case DateTime.thursday: return "Thu";
-            case DateTime.friday: return "Fri";
-            case DateTime.saturday: return "Sat";
-            case DateTime.sunday: return "Sun";
-        }
-        throw Exception("no such weekday");
-    } else {
-        return "${plusZero(date.hour)}:${plusZero(date.minute)}";
-    }
-}
-
-String plusZero(int x) => "${x < 10 ? "0$x" : x}";

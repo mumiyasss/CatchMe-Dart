@@ -19,7 +19,8 @@ class PersonHelper extends Repository<Person> {
                             $userIdColumn text primary key,
                             $nameColumn text not null,
                             $photoUrlColumn text,
-                            $emailColumn text)
+                            $emailColumn text,
+                            $lastSeenColumn integer)
                             ''');
             _dao = PersonHelper._();
         }
