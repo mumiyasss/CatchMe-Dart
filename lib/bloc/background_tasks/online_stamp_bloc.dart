@@ -24,11 +24,15 @@ class OnlineStampBloc extends Bloc<OnlineStampEvent, OnlineStampState> {
 
     _sendStamp() async {
         await Future.delayed(Duration(seconds: 15)).then((_) {
-            if (isSending) {
-                CloudFunctions.instance
-                    .getHttpsCallable(
-                    functionName: 'iAmOnline',
-                ).call();
+            if (isSending) { // todo handle exception
+                try {
+                    CloudFunctions.instance
+                        .getHttpsCallable(
+                        functionName: 'iAmOnline',
+                    ).call();
+                } on Exception {
+                    print("UNABLE TO SEND ONLINE STAMP");
+                }
                 _sendStamp();
             }
         });

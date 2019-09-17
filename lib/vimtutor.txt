@@ -64,7 +64,9 @@ NOTE: The cursor keys should also work.  But using hjkl you will be able to
 NOTE:  :q! <ENTER>  discards any changes you made.  In a few lessons you
        will learn how to save the changes to a file.
 
+
   5. Move the cursor down to lesson 1.3.
+
 
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

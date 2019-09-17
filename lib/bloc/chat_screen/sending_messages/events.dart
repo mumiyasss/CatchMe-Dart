@@ -9,3 +9,6 @@ class WriteNewTextMessageEvent extends NewMessageEvent {
 }
 
 class AttachImageEvent extends NewMessageEvent { }
+
+
+

@@ -50,6 +50,7 @@ class ChatList extends StatelessWidget {
                 } else if (state is SomeChatsExists) {
                     return _buildList(context, state.chats);
                 }
+                throw Exception('excpertio here');
             }
         
       );

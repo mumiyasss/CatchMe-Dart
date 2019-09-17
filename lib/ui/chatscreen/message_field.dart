@@ -4,22 +4,93 @@ import 'package:catch_me/bloc/chat_screen/messages_panel/bloc.dart';
 import 'package:catch_me/bloc/chat_screen/messages_panel/events.dart';
 import 'package:catch_me/bloc/chat_screen/sending_messages/bloc.dart';
 import 'package:catch_me/bloc/chat_screen/sending_messages/events.dart';
+import 'package:catch_me/bloc/chat_screen/sending_messages/states.dart';
 import 'package:catch_me/main.dart';
 import 'package:catch_me/models/Person.dart';
 import 'package:catch_me/values/Dimens.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:rxdart/rxdart.dart';
+
+class MessageSendingWidget extends StatelessWidget {
+    final SendingMessagesBloc bloc;
+
+    MessageSendingWidget(this.bloc);
+
+    @override
+    Widget build(BuildContext context) {
+        return Column(
+            children: <Widget>[
+                StreamBuilder(
+                    stream: SendingMessagesBloc.imageQuantityStreamController.stream,
+                    builder: (context, AsyncSnapshot<int> snapshot) {
+                        print("In stream builder ${snapshot.data}");
+                        return ImagesUploadIndicator(snapshot.data ?? 0);
+                    }
+                ),
+                MessageField(bloc),
+            ]
+        );
+    }
+}
+
+class ImagesUploadIndicator extends StatelessWidget {
+    final int quantity;
+
+    ImagesUploadIndicator(this.quantity);
+
+    @override
+    Widget build(BuildContext context) {
+        return AnimatedContainer(
+            duration: Duration(milliseconds: 500),
+            curve: Curves.fastOutSlowIn,
+            height: quantity > 0 ? 40 : 0,
+            child: Container(
+                child: Row(children: <Widget>[
+                    Container(
+                        margin: EdgeInsets.only(left: 20, right: 13),
+                        height: 25,
+                        width: 50,
+                        child: FlareActor(
+                            'assets/upload_image_indicator.flr',
+                            isPaused: quantity == 0,
+                            animation: 'Play',
+                        ),
+                    ),
+                    Container(
+                        margin: EdgeInsets.only(right: 4),
+                        child: Text(indicatorText,
+                            style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.blue
+                            ),
+                        ),
+                    ),
+                    //Text('🚀', style: TextStyle(fontSize: 21),)
+                ],
+                ),
+            )
+        );
+    }
+
+    get indicatorText {
+        if(quantity == 0) return 'Готово 👍';
+        if(quantity == 1) return 'Отправляю фотографию';
+        if(quantity % 10 < 5) return 'Отправляю $quantity фотографии';
+        return 'Отправляю $quantity фотографий';
+
+    }
+}
 
 class MessageField extends StatefulWidget {
     final SendingMessagesBloc bloc;
 
-    MessageField(Person person)
-        :
-            bloc = SendingMessagesBloc(person),
-            super();
+    MessageField(this.bloc);
 
     _MessageFieldState createState() => _MessageFieldState();
 }
@@ -50,32 +121,34 @@ class _MessageFieldState extends State<MessageField> {
     @override
     Widget build(BuildContext context) {
         return Container(
-            child: Container(
-                height: Dimens.messageFieldHeight,
-                decoration: BoxDecoration(color: Colors.white, boxShadow: [
-                    BoxShadow(
-                        offset: Offset(0, -2),
-                        blurRadius: 0,
-                        color: Color(0x22000000))
-                ]),
-                child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20),
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                            Expanded(
-                                child: TextField(
-                                    controller: _controller,
-                                    keyboardType: TextInputType.text,
-                                    decoration: InputDecoration(
-                                        border: InputBorder.none,
-                                        hintText: "Type your message"),
-                                    textCapitalization: TextCapitalization.sentences,
-                                ),
+            height: Dimens.messageFieldHeight,
+            decoration: BoxDecoration(
+                color: Colors.white, boxShadow: [
+                BoxShadow(
+                    offset: Offset(0, -2),
+                    blurRadius: 0,
+                    color: Color(0x22000000))
+            ]),
+            child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment
+                        .spaceBetween,
+                    children: <Widget>[
+                        Expanded(
+                            child: TextField(
+                                controller: _controller,
+                                keyboardType: TextInputType
+                                    .text,
+                                decoration: InputDecoration(
+                                    border: InputBorder.none,
+                                    hintText: "Type your message"),
+                                textCapitalization: TextCapitalization
+                                    .sentences,
                             ),
-                            actionButton
-                        ],
-                    ),
+                        ),
+                        actionButton
+                    ],
                 ),
             ),
         );

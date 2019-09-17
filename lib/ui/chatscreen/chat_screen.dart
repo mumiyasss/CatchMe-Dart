@@ -8,6 +8,7 @@ import 'package:catch_me/models/Message.dart';
 import 'package:catch_me/models/Person.dart';
 import 'package:catch_me/ui/chatscreen/app_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
@@ -17,24 +18,21 @@ import 'message_field.dart';
 import 'app_bar.dart';
 
 class ChatScreen extends StatelessWidget {
-    ChatBloc _chatBloc;
+    final ChatBloc _chatBloc;
 
 //    Chat _chat;
 
 //    ChatScreen(this._chat) :
 //            _bloc = MessagesBloc(_chat.reference);
 
-    Observable<Person> _personStream;
-    Person person;
+    final Observable<Person> _personStream;
+    final Person person;
+    final SendingMessagesBloc _sendingBloc;
 
-    ChatScreen(this.person) {
-        // todo init MessagesBloc if already exist
-        _personStream = CatchMeApp.personDao.fromUserId(person.userId);
-        _chatBloc = ChatBloc(person, _personStream);
-        // сначала надо инициализировать chat, потом через него MessagesBloc
-        // может тут должен быть какой нибудь subscriber
-
-    }
+    ChatScreen(this.person)
+        :   _personStream = CatchMeApp.personDao.fromUserId(person.userId),
+            _chatBloc = ChatBloc(person),
+            _sendingBloc = SendingMessagesBloc(person);
 
     @override
     Widget build(BuildContext context) {
@@ -52,11 +50,36 @@ class ChatScreen extends StatelessWidget {
                             ),
                         ),
 
-                        MessageField(person)
+                        MessageSendingWidget(_sendingBloc)
                     ],
                 ),
             ),
         );
+    }
+}
+
+class LoadingFlareActor extends StatelessWidget {
+    final double persentage;
+
+    LoadingFlareActor(this.persentage);
+
+    @override
+    Widget build(BuildContext context) {
+        return Container(
+            width: MediaQuery
+                .of(context)
+                .size
+                .width * 0.3,
+            height: MediaQuery
+                .of(context)
+                .size
+                .width * 0.3,
+            child:
+            FlareActor(
+                'assets/loading.flr',
+                shouldClip: false,
+                animation: 'Aura', // or Aura2
+            ));
     }
 }
 
@@ -81,7 +104,7 @@ class MessagesPanel extends StatelessWidget {
                                 builder: (context, ChatScreenState state) {
                                     if (state is MessagesAreLoading) {
                                         return Center(
-                                            child: CircularProgressIndicator()
+                                            child: LoadingFlareActor(0.3)
                                         );
                                     }
                                     if (state is MessagesAreLoaded) {
@@ -131,7 +154,7 @@ class MessagesList extends StatelessWidget {
                 children: [
                     ..._messages.map((message) => MessageBubble(message))
                         .toList(),
-                    ...List()     // space upper first message
+                    ...List() // space upper first message
                         ..add(Container(height: 16,)),
                 ],
             ),

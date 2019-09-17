@@ -17,11 +17,11 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     /// Преобразует поток событий, данные на сервер отправляются
     /// каждые полсекунды для оптимизации.
     @override
-    Stream<SettingsState> transform(
+    Stream<SettingsState> transformEvents(
         Stream<SettingsEvent> events,
         Stream<SettingsState> Function(SettingsEvent event) next,
         ) {
-        return super.transform(
+        return super.transformEvents(
             (events as Observable<SettingsEvent>).debounceTime(
                 Duration(milliseconds: 500),
             ),

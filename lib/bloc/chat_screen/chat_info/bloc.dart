@@ -20,7 +20,8 @@ class ChatBloc extends Bloc<ChatInfoEvent, ChatInfoState> {
     Observable<DocumentSnapshot> chatSnapshots;
     final Observable<Person> _personStream;
 
-    ChatBloc(Person person, this._personStream) {
+    ChatBloc(Person person) :
+        _personStream = CatchMeApp.personDao.fromUserId(person.userId) {
         startAsyncInfoUpdater(person.userId);
         this.dispatch(GetChatInfo());
     }

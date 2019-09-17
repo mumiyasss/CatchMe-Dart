@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:bloc/bloc.dart';
 import 'package:catch_me/dao/PersonDao.dart';
@@ -16,28 +18,40 @@ import 'package:rxdart/rxdart.dart';
 import 'events.dart';
 import 'states.dart';
 
-class SendingMessagesBloc extends Bloc<NewMessageEvent, MessageSent> {
+class SendingMessagesBloc extends Bloc<NewMessageEvent, ImagesAreUploading> {
     DocumentReference _chatReference;
     Person _person;
+    static var _uploadingImagesQuantity = 0;
+
+    static final imageQuantityStreamController = StreamController<int>.broadcast(sync: true)
+        ..add(_uploadingImagesQuantity);
 
     SendingMessagesBloc(this._person);
 
     @override
-    MessageSent get initialState => MessageSent();
+    ImagesAreUploading get initialState => ImagesAreUploading(quantity: 0);
 
     @override
-    Stream<MessageSent> mapEventToState(NewMessageEvent event) async* {
-        await startConversation(_person);
+    Stream<ImagesAreUploading> mapEventToState(NewMessageEvent event) async* {
+        await _startConversation(_person);
         print(_chatReference);
         if (event is WriteNewTextMessageEvent) {
+
+            // он создает новый chat screen после photo select
+            //imageQuantityStreamController.add(1);
+//            yield ImagesAreUploading(quantity: 1);
             await _sendTextMessage(event.message);
-            yield MessageSent();
+            //imageQuantityStreamController.add(0);
+
         }
         if (event is AttachImageEvent) {
             var file = await ImagePicker.pickImage(source: ImageSource.gallery);
-            // todo: send MESSAGE IS SENDING...
+//            yield ImagesAreUploading(quantity: ++_uploadingImagesQuantity);
+            imageQuantityStreamController.add(++_uploadingImagesQuantity);
+            print(" in mapevent" + _uploadingImagesQuantity.toString());
             await _sendImageMessage(file);
-            yield MessageSent();
+//            yield ImagesAreUploading(quantity: --_uploadingImagesQuantity);
+            imageQuantityStreamController.add(--_uploadingImagesQuantity);
         }
     }
 
@@ -70,7 +84,7 @@ class SendingMessagesBloc extends Bloc<NewMessageEvent, MessageSent> {
         });
     }
 
-    startConversation(Person person) async {
+    _startConversation(Person person) async {
         var companionId = person.userId;
         Chat chat;
         try {
