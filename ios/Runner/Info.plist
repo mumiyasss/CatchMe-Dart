@@ -13,7 +13,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>catch_me</string>
+	<string>CatchMe</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -27,7 +27,7 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.googleusercontent.apps.761658287629-uerabnmtb6m68engqq61vuqunc39l5du</string>
+				<string>com.googleusercontent.apps.761658287629-k5ict2m1u1rgkemeifbmu9srkic1bite</string>
 			</array>
 		</dict>
 	</array>

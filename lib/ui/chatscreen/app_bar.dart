@@ -281,7 +281,7 @@ class _AppBarContent extends StatelessWidget {
         if (person.lastSeen != null) {
             var timestamp = Timestamp.fromMillisecondsSinceEpoch(
                 person.lastSeen);
-            if (timestamp.compareTo(Timestamp.now()).abs() < 15) {
+            if (timestamp.compareTo(Timestamp.now()).abs() < 25) {
                 return Text('online',
                     style: TextStyle(fontSize: 12, color: Colors.blue),);
             } else

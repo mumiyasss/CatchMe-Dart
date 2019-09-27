@@ -31,7 +31,7 @@ class MessageBubble extends StatelessWidget {
             ),
             child: Text(
                 _message.text,
-                textAlign: TextAlign.justify,
+                textAlign: TextAlign.left,
                 style: TextStyle(
                     fontWeight: FontWeight.w400,
                     fontSize: 16,

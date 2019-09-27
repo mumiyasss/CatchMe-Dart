@@ -22,11 +22,13 @@ class PhotoViewer extends StatelessWidget {
                 backgroundColor: Color(0xffffffff),
                 brightness: Brightness.light,
             ),
-            body: PhotoView(
-                heroTag: photoUrl,
-                backgroundDecoration: BoxDecoration(color: Colors.white),
-                imageProvider: CachedNetworkImageProvider(photoUrl),
+            body: Hero(
+                tag: photoUrl,
+                child: PhotoView(
+                  backgroundDecoration: BoxDecoration(color: Colors.white),
+                  imageProvider: CachedNetworkImageProvider(photoUrl),
 
+              ),
             ),
         );
     }
