@@ -51,7 +51,7 @@ class _MyAppBarState extends State<MyAppBar> {
                         curve: Curves.fastOutSlowIn,
                         height: opened ? 175 : 105,
                         margin: EdgeInsets.only(top: opened ? 60 : 0),
-                        child: MenuPanel(widget._bloc)
+                        child: MenuPanel(widget._bloc, opened ? 1 : 0)
                     ),
                 ),
             Container(
@@ -156,8 +156,9 @@ class _DeleteChatForeverButton extends StatelessWidget {
 
 class MenuPanel extends StatelessWidget {
     final ChatBloc _bloc;
-
-    MenuPanel(this._bloc);
+    final double openedRelation;
+    // openedRelation should be from 0 to 1
+    MenuPanel(this._bloc, this.openedRelation);
 
     @override
     Widget build(BuildContext context) {
@@ -168,7 +169,7 @@ class MenuPanel extends StatelessWidget {
                 color: Colors.white,
                 boxShadow: [
                     BoxShadow(offset: Offset(0, 0),
-                        blurRadius: 20,
+                        blurRadius: 20 * openedRelation,
                         color: Color(0x22000000))
                 ]
             ),
