@@ -8,6 +8,7 @@ final String nameColumn = 'name';
 final String userIdColumn = 'userId';
 final String emailColumn = 'email';
 final String lastSeenColumn = 'lastSeen';
+final String phoneColumn = 'phone';
 
 class Person extends Model {
     String photoUrl;
@@ -19,12 +20,12 @@ class Person extends Model {
     Person();
 
     Person.fromSnapshot(DocumentSnapshot userSnapshot) {
+
         photoUrl = userSnapshot.data[photoUrlColumn];
         name = userSnapshot.data[nameColumn];
         userId = userSnapshot.data[userIdColumn];
         email = userSnapshot.data[emailColumn];
         lastSeen = userSnapshot.data[lastSeenColumn];
-        assert(photoUrl != null);
         assert(name != null);
         assert(userId != null);
     }
@@ -53,7 +54,6 @@ class Person extends Model {
         userId = map[userIdColumn];
         email = map[emailColumn];
         lastSeen = map[lastSeenColumn];
-        assert(photoUrl != null);
         assert(name != null);
         assert(userId != null);
     }

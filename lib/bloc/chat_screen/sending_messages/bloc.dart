@@ -23,7 +23,8 @@ class SendingMessagesBloc extends Bloc<NewMessageEvent, ImagesAreUploading> {
     Person _person;
     static var _uploadingImagesQuantity = 0;
 
-    static final imageQuantityStreamController = StreamController<int>.broadcast(sync: true)
+    static final imageQuantityStreamController = StreamController<
+        int>.broadcast(sync: true)
         ..add(_uploadingImagesQuantity);
 
     SendingMessagesBloc(this._person);
@@ -36,7 +37,6 @@ class SendingMessagesBloc extends Bloc<NewMessageEvent, ImagesAreUploading> {
         await _startConversation(_person);
         print(_chatReference);
         if (event is WriteNewTextMessageEvent) {
-
             // он создает новый chat screen после photo select
             //imageQuantityStreamController.add(1);
 //            yield ImagesAreUploading(quantity: 1);
@@ -46,12 +46,12 @@ class SendingMessagesBloc extends Bloc<NewMessageEvent, ImagesAreUploading> {
         }
         if (event is AttachImageEvent) {
             var file = await ImagePicker.pickImage(source: ImageSource.gallery);
-//            yield ImagesAreUploading(quantity: ++_uploadingImagesQuantity);
-            imageQuantityStreamController.add(++_uploadingImagesQuantity);
-            print(" in mapevent" + _uploadingImagesQuantity.toString());
-            await _sendImageMessage(file);
-//            yield ImagesAreUploading(quantity: --_uploadingImagesQuantity);
-            imageQuantityStreamController.add(--_uploadingImagesQuantity);
+            if (file != null) {
+                imageQuantityStreamController.add(++_uploadingImagesQuantity);
+                print(" in mapevent" + _uploadingImagesQuantity.toString());
+                await _sendImageMessage(file);
+                imageQuantityStreamController.add(--_uploadingImagesQuantity);
+            }
         }
     }
 

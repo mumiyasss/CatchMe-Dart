@@ -28,7 +28,6 @@ class MessageSendingWidget extends StatelessWidget {
                 StreamBuilder(
                     stream: SendingMessagesBloc.imageQuantityStreamController.stream,
                     builder: (context, AsyncSnapshot<int> snapshot) {
-                        print("In stream builder ${snapshot.data}");
                         return ImagesUploadIndicator(snapshot.data ?? 0);
                     }
                 ),

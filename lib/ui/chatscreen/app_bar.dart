@@ -1,9 +1,11 @@
 import 'dart:io';
 
+import 'package:catch_me/bloc/blocking/bloc.dart';
 import 'package:catch_me/bloc/chat_screen/chat_info/bloc.dart';
 import 'package:catch_me/bloc/chat_screen/chat_info/events.dart';
 import 'package:catch_me/bloc/chat_screen/chat_info/states.dart';
 import 'package:catch_me/bloc/chat_screen/messages_panel/states.dart';
+import 'package:catch_me/main.dart';
 import 'package:catch_me/models/Person.dart';
 import 'package:catch_me/utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -30,20 +32,28 @@ class _MyAppBarState extends State<MyAppBar> {
     callback(bool opened) {
         setState(() {
             this.opened = opened;
-            print("state changed ${this.opened}");
         });
     }
 
     @override
     Widget build(BuildContext context) {
-        return Stack(children: <Widget>[
-            AnimatedContainer(
-                duration: Duration(milliseconds: 500),
-                curve: Curves.fastOutSlowIn,
-                height: opened ? 115 : 70,
-                margin: EdgeInsets.only(top: opened ? 60 : 0),
-                child: MenuPanel(widget._bloc)
-            ),
+        return Stack(
+            overflow: Overflow.visible,
+            children: <Widget>[
+                AnimatedPositioned(
+                    duration: Duration(milliseconds: 500),
+                    curve: Curves.fastOutSlowIn,
+                    top: opened ? 0 : -160,
+                    height: opened ? 225 : 0,
+                    width: MediaQuery.of(context).size.width,
+                    child: AnimatedContainer(
+                        duration: Duration(milliseconds: 500),
+                        curve: Curves.fastOutSlowIn,
+                        height: opened ? 175 : 105,
+                        margin: EdgeInsets.only(top: opened ? 60 : 0),
+                        child: MenuPanel(widget._bloc)
+                    ),
+                ),
             Container(
                 height: 60,
                 padding: EdgeInsets.symmetric(horizontal: 26, vertical: 8),
@@ -67,31 +77,13 @@ class _MyAppBarState extends State<MyAppBar> {
     }
 }
 
-class MenuPanel extends StatelessWidget {
+class _DeleteChatForeverButton extends StatelessWidget {
     final ChatBloc _bloc;
 
-    MenuPanel(this._bloc);
+    _DeleteChatForeverButton(this._bloc);
 
     @override
     Widget build(BuildContext context) {
-        return Container(
-            decoration: BoxDecoration(
-                border: Border.all(color: Colors.black12, width: 1.5),
-                borderRadius: BorderRadius.circular(30),
-                color: Colors.white,
-                boxShadow: [
-                    BoxShadow(offset: Offset(0, 0),
-                        blurRadius: 20,
-                        color: Color(0x22000000))
-                ]
-            ),
-            margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-            height: 80,
-            child: _child(context),
-        );
-    }
-
-    _child(BuildContext context) {
         return GestureDetector(
             onTap: () {
                 showDialog(context: context, builder: (context) {
@@ -158,6 +150,74 @@ class MenuPanel extends StatelessWidget {
                         style: TextStyle(color: Colors.red, fontSize: 20),)
                 ],
             ),
+        );
+    }
+}
+
+class MenuPanel extends StatelessWidget {
+    final ChatBloc _bloc;
+
+    MenuPanel(this._bloc);
+
+    @override
+    Widget build(BuildContext context) {
+        return Container(
+            decoration: BoxDecoration(
+                border: Border.all(color: Colors.black12, width: 1.5),
+                borderRadius: BorderRadius.circular(30),
+                color: Colors.white,
+                boxShadow: [
+                    BoxShadow(offset: Offset(0, 0),
+                        blurRadius: 20,
+                        color: Color(0x22000000))
+                ]
+            ),
+            margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                    _DeleteChatForeverButton(_bloc),
+
+                    _BlockUnblockUserButton(_bloc.companionId),
+                ],
+            ),
+        );
+    }
+}
+
+class _BlockUnblockUserButton extends StatelessWidget {
+    final BlockingBloc _bloc;
+
+    _BlockUnblockUserButton(String companionId) :
+            _bloc = BlockingBloc(companionId);
+
+    @override
+    Widget build(BuildContext context) {
+        return Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+                Icon(Icons.block, color: Colors.black, size: 30,),
+                StreamBuilder(
+                    stream: _bloc.blockState,
+                    builder: (context, AsyncSnapshot<bool> snapshot) {
+                        var value = " Заблокировать";
+                        if (snapshot.data == true) {
+                            value = " Разблокировать";
+                        }
+                        return GestureDetector(
+                            onTap: () {
+                                _bloc.dispatch(
+                                    snapshot.data
+                                        ? UnblockUser()
+                                        : BlockUser()
+                                );
+                            },
+                            child: Text(value, style: TextStyle(
+                                color: Colors.black, fontSize: 20),));
+                    },
+                    initialData: false,
+                )
+            ],
         );
     }
 }

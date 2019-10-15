@@ -41,6 +41,10 @@ class PersonDao {
         }
 
         return netObservable.map((DocumentSnapshot personSnapshot) {
+            if (personSnapshot.data == null) {
+                print(personSnapshot);
+
+            }
             var person = Person.fromSnapshot(personSnapshot);
             _personStore.insert(person);
             assert(person != null);
@@ -57,6 +61,11 @@ class PersonDao {
         }
         return fromUserId(CatchMeApp.userUid).asBroadcastStream();
     }
+
+    Observable<Person> get authPerson {
+        return this.fromUserId(CatchMeApp.userUid);
+    }
+
 
     updatePersonInfo(Person newPersonInfo) {
         // photoUrl - photo, userId - id

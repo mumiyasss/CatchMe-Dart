@@ -20,11 +20,11 @@ class SignInViewModel {
         var userDoesNotExists = userToCheck.data == null;
         if (userDoesNotExists) {
             Firestore.instance.document('users/' + CatchMeApp.userUid).setData({
-                'id': CatchMeApp.userUid,
-                'name': user.displayName,
-                'email': user.email,
-                'phone': user.phoneNumber,
-                'photo': user.photoUrl
+                userIdColumn: CatchMeApp.userUid,
+                nameColumn: user.displayName,
+                emailColumn: user.email,
+                phoneColumn: user.phoneNumber,
+                photoUrlColumn: user.photoUrl
             });
         }
     }

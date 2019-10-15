@@ -19,10 +19,10 @@ class ChatTile extends StatelessWidget {
             context, _chat.companion.photoUrl, Dimens.chatListProfilePictureProportion);
         var name = _wrappedText(context, _chat.companion.name, Styles.chatNameStyle(), 0.5);
         var time = Text(toReadableTime(_chat.time), style: Styles.lastMessageTime());
-        var lastMessage = _wrappedText(context, _chat.message, Styles.lastMessageTime(), 0.5);
+        var lastMessage = _wrappedText(context, _chat.message, Styles.lastMessageTime(), 0.66);
         var _unread = _chat.unread;
         var badge = _unread == null
-            ? Container()
+            ? Container(width: 0,)
             : Container(
             padding: EdgeInsets.fromLTRB(7.2, 3, 7.2, 3),
             decoration: BoxDecoration(
