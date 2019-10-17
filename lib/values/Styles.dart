@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 
 class Styles {
-  static final mainTheme = ThemeData(primaryColor: Colors.blue, platform: TargetPlatform.iOS);
+  static final mainTheme = ThemeData(
+      primaryColor: Colors.white,
+      accentColor: Colors.blue,
+      platform: TargetPlatform.iOS
+  );
+  static final darkTheme = mainTheme.copyWith();
+
   static var defaultTitle = getToolbarTextStyle(fontSize: 40, shade: 0);
   static var defaultSubtitle = getToolbarTextStyle(fontSize: 20, shade: 0x7d);
 

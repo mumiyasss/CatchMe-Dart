@@ -4,7 +4,6 @@ import 'package:catch_me/bloc/blocking/bloc.dart';
 import 'package:catch_me/bloc/chat_screen/chat_info/bloc.dart';
 import 'package:catch_me/bloc/chat_screen/chat_info/events.dart';
 import 'package:catch_me/bloc/chat_screen/chat_info/states.dart';
-import 'package:catch_me/bloc/chat_screen/messages_panel/states.dart';
 import 'package:catch_me/main.dart';
 import 'package:catch_me/models/Person.dart';
 import 'package:catch_me/utils.dart';
@@ -40,40 +39,43 @@ class _MyAppBarState extends State<MyAppBar> {
         return Stack(
             overflow: Overflow.visible,
             children: <Widget>[
-                AnimatedPositioned(
+                AnimatedContainer(
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black12, width: 1.5),
+                        borderRadius: BorderRadius.circular(30),
+                        color: Colors.white,
+                        boxShadow: [
+                            BoxShadow(offset: Offset(0, 0),
+                                blurRadius: opened ? 20 : 0,
+                                color: Color(opened ? 0x25000000 : 0))
+                        ]
+                    ),
                     duration: Duration(milliseconds: 500),
                     curve: Curves.fastOutSlowIn,
-                    top: opened ? 0 : -160,
-                    height: opened ? 225 : 0,
-                    width: MediaQuery.of(context).size.width,
-                    child: AnimatedContainer(
-                        duration: Duration(milliseconds: 500),
-                        curve: Curves.fastOutSlowIn,
-                        height: opened ? 175 : 105,
-                        margin: EdgeInsets.only(top: opened ? 60 : 0),
-                        child: MenuPanel(widget._bloc, opened ? 1 : 0)
+                    height: opened ? 165 : 60,
+                    margin: EdgeInsets.fromLTRB(20, opened ? 80 : 0, 20, 0),
+                    child: MenuPanel(widget._bloc, opened ? 1 : 0)
+                ),
+                Container(
+                    height: 63,
+                    padding: EdgeInsets.symmetric(horizontal: 26, vertical: 8),
+                    margin: EdgeInsets.only(bottom: 2),
+                    decoration: BoxDecoration(color: Colors.white, boxShadow: [
+                        BoxShadow(offset: Offset(0, 5),
+                            blurRadius: 5,
+                            color: Color(0x09000000))
+                    ]),
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                            _BackButton(),
+                            Expanded(child: _AppBarContent(widget._bloc)),
+                            _MenuButton(callback)
+                        ],
                     ),
                 ),
-            Container(
-                height: 60,
-                padding: EdgeInsets.symmetric(horizontal: 26, vertical: 8),
-                margin: EdgeInsets.only(bottom: 2),
-                decoration: BoxDecoration(color: Colors.white, boxShadow: [
-                    BoxShadow(offset: Offset(0, 5),
-                        blurRadius: 5,
-                        color: Color(0x09000000))
-                ]),
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                        _BackButton(),
-                        Expanded(child: _AppBarContent(widget._bloc)),
-                        _MenuButton(callback)
-                    ],
-                ),
-            ),
 
-        ],);
+            ],);
     }
 }
 
@@ -157,23 +159,23 @@ class _DeleteChatForeverButton extends StatelessWidget {
 class MenuPanel extends StatelessWidget {
     final ChatBloc _bloc;
     final double openedRelation;
+
     // openedRelation should be from 0 to 1
     MenuPanel(this._bloc, this.openedRelation);
 
     @override
     Widget build(BuildContext context) {
         return Container(
-            decoration: BoxDecoration(
-                border: Border.all(color: Colors.black12, width: 1.5),
-                borderRadius: BorderRadius.circular(30),
-                color: Colors.white,
-                boxShadow: [
-                    BoxShadow(offset: Offset(0, 0),
-                        blurRadius: 20 * openedRelation,
-                        color: Color(0x22000000))
-                ]
-            ),
-            margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+//            decoration: BoxDecoration(
+//                border: Border.all(color: Colors.black12, width: 1.5),
+//                borderRadius: BorderRadius.circular(30),
+//                color: Colors.white,
+//                boxShadow: [
+//                    BoxShadow(offset: Offset(0, 0),
+//                        blurRadius: 20 * openedRelation,
+//                        color: Color(0x22000000))
+//                ]
+//            ),
             child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
@@ -194,31 +196,34 @@ class _BlockUnblockUserButton extends StatelessWidget {
 
     @override
     Widget build(BuildContext context) {
-        return Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-                Icon(Icons.block, color: Colors.black, size: 30,),
-                StreamBuilder(
-                    stream: _bloc.blockState,
-                    builder: (context, AsyncSnapshot<bool> snapshot) {
-                        var value = App.lang.block;
-                        if (snapshot.data == true) {
-                            value = App.lang.unblock;
-                        }
-                        return GestureDetector(
-                            onTap: () {
-                                _bloc.dispatch(
-                                    snapshot.data
-                                        ? UnblockUser()
-                                        : BlockUser()
-                                );
-                            },
-                            child: Text(value, style: TextStyle(
-                                color: Colors.black, fontSize: 20),));
+        return StreamBuilder(
+            stream: _bloc.blockState,
+            builder: (context, AsyncSnapshot<bool> snapshot) {
+                var value = App.lang.block;
+                BlockingEvent blockingEvent = BlockUser();
+                if (snapshot.data == true) {
+                    value = App.lang.unblock;
+                    blockingEvent = UnblockUser();
+                }
+                return GestureDetector(
+                    onTap: () {
+                        _bloc.dispatch(blockingEvent);
                     },
-                    initialData: false,
-                )
-            ],
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                            Icon(Icons.block, color: Colors.black, size: 30),
+                            Text(value,
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 20
+                                ),
+                            ),
+                        ],
+                    ),
+                );
+            },
+            initialData: false
         );
     }
 }

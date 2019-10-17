@@ -36,7 +36,7 @@ class BlockingBloc extends Bloc<BlockingEvent, BlockingState> {
 
     @override
     Stream<BlockingState> mapEventToState(BlockingEvent event,) async* {
-
+        print(event);
         if (event is BlockUser) {
             print("Block gesture registered");
             _blockingCollection.document(companionId).setData(

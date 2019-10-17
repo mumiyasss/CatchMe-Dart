@@ -77,7 +77,7 @@ class MessageBubble extends StatelessWidget {
                                         self ? 0xFFFFFFFF : 0xFF2196F3),
                                 ),
                                 child: Center(
-                                    child: CircularProgressIndicator()),
+                                    child: CircularProgressIndicator(backgroundColor: self ? Colors.white : null,)),
                             ),
 
                     ),
