@@ -24,19 +24,19 @@ class ChatBloc extends Bloc<ChatInfoEvent, ChatInfoState> {
 
     ChatBloc(Person person) :
         companionId = person.userId,
-        _personStream = CatchMeApp.personDao.fromUserId(person.userId) {
+        _personStream = App.personDao.fromUserId(person.userId) {
         startAsyncInfoUpdater(person.userId);
         this.dispatch(GetChatInfo());
     }
 
     startAsyncInfoUpdater(String personId) {
         try {
-            _chat = CatchMeApp.chatDao.getChatWithPerson(personId);
+            _chat = App.chatDao.getChatWithPerson(personId);
         } on NotFound {
             print("There is no cached chat with personId $personId");
         }
         chatSnapshots =
-        Observable(CatchMeApp.chatDao.getChatWithPersonFromInet(personId))
+        Observable(App.chatDao.getChatWithPersonFromInet(personId))
             ..listen((DocumentSnapshot chat) async {
                 if (chat.data != null) {
                     _chat = await Chat.fromSnapshot(chat);
@@ -56,7 +56,7 @@ class ChatBloc extends Bloc<ChatInfoEvent, ChatInfoState> {
             // ToDO: dao очищает кэш и firebase, (Или остаться, чтобы выдно было что нет сообщений,
             //  но тогда надо так сделать, чтобы чат создавался только после
             //  первого сообщения.
-            CatchMeApp.chatDao.deleteChat(_chat);
+            App.chatDao.deleteChat(_chat);
         }
     }
 

@@ -35,7 +35,7 @@ class SettingsState extends State<Settings> {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 25.0, vertical: 5),
                     child: StreamBuilder<Person>(
-                        stream: CatchMeApp.personDao.fromUserId(CatchMeApp.userUid),
+                        stream: App.personDao.fromUserId(App.userUid),
                         builder: (context, snapshot) {
                             if (snapshot.hasData) {
                                 return Row(children: <Widget>[
@@ -66,7 +66,7 @@ class SettingsState extends State<Settings> {
                                     FirebaseAuth.instance.signOut();
                                 },
                                 child: Text(
-                                    "Выйти",
+                                    App.lang.signOutButton,
                                     style: TextStyle(color: Colors.white),),
                                 color: Colors.blue,
                             ),
@@ -143,7 +143,7 @@ class _AccountCredentialsState extends State<_AccountCredentials> {
                     style: TextStyle(color: Colors.black),
                     controller: nameController,
                     decoration: InputDecoration(
-                        hintText: "Name"
+                        hintText: App.lang.changeNameHint
                     ),),
                 TextField(
                     onChanged: (email) {
@@ -152,7 +152,7 @@ class _AccountCredentialsState extends State<_AccountCredentials> {
                     style: TextStyle(color: Colors.black),
                     controller: emailController,
                     decoration: InputDecoration(
-                        hintText: "Email"
+                        hintText: App.lang.changeEmailHint
                     ),
                 )
             ],),

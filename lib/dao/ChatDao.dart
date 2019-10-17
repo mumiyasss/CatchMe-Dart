@@ -24,9 +24,9 @@ class ChatDao {
     final Observable<List<Chat>> _chatCollectionFromNet = Observable(
         Firestore.instance
             .collection('chats')
-            .where('members', arrayContains: CatchMeApp.userUid)
+            .where('members', arrayContains: App.userUid)
             .orderBy(
-            'lastMessageTime', descending: true) // ? Query requires Index.
+            'lastMessageTime') // ? Query requires Index.
             .snapshots())
         .asyncMap((chatCollection) async {
         var chats = List<Chat>();
@@ -69,12 +69,12 @@ class ChatDao {
 
     /// Requires internet connection
     Chat getChatWithPerson(String personId) {
-        var chatName = _chatName(personId, CatchMeApp.userUid);
+        var chatName = _chatName(personId, App.userUid);
         return _chatsStore.get('chats/' + chatName);
     }
 
     Stream<DocumentSnapshot> getChatWithPersonFromInet(String personId){
-        var chatName = _chatName(personId, CatchMeApp.userUid);
+        var chatName = _chatName(personId, App.userUid);
 
         var chat = Firestore.instance
             .document('chats/' + chatName)

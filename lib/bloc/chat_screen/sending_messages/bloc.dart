@@ -73,12 +73,12 @@ class SendingMessagesBloc extends Bloc<NewMessageEvent, ImagesAreUploading> {
     _sendMessage(Map<String, dynamic> data) async {
         assert(data['text'] != null || data['image'] != null);
 
-        data['author'] = CatchMeApp.userUid;
+        data['author'] = App.userUid;
         data['timestamp'] = Timestamp.now(); // Todo: cloud function
 
         _chatReference.collection('messages').add(data);
         _chatReference.updateData({
-            'lastMessageAuthorId': CatchMeApp.userUid,
+            'lastMessageAuthorId': App.userUid,
             'lastMessageText': data['text'] ?? '🏞 Picture', // TODO: locale
             'lastMessageTime': Timestamp.now() // Todo: cloud function
         });
@@ -88,25 +88,25 @@ class SendingMessagesBloc extends Bloc<NewMessageEvent, ImagesAreUploading> {
         var companionId = person.userId;
         Chat chat;
         try {
-            chat = CatchMeApp.chatDao.getChatWithPerson(companionId);
+            chat = App.chatDao.getChatWithPerson(companionId);
         } on NotFound {
             final tempMessages = List<String>();
             tempMessages.add("Conversation Started");
             await Firestore.instance
                 .collection('chats')
-                .document(chatName(companionId, CatchMeApp.userUid))
+                .document(chatName(companionId, App.userUid))
                 .setData({
-                'members': [companionId, CatchMeApp.userUid],
+                'members': [companionId, App.userUid],
                 'lastMessageText':
                 (await (await PersonDao.instance)
-                    .fromUserId(CatchMeApp.userUid)
+                    .fromUserId(App.userUid)
                     .first).name +
                     " создал",
-                'lastMessageAuthorId': CatchMeApp.userUid,
+                'lastMessageAuthorId': App.userUid,
                 'lastMessageTime': Timestamp.now(),
             });
 
-            chat = await Chat.fromSnapshot(await CatchMeApp.chatDao
+            chat = await Chat.fromSnapshot(await App.chatDao
                 .getChatWithPersonFromInet(companionId)
                 .first);
         }

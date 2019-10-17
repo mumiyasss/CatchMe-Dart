@@ -1,3 +1,4 @@
+import 'package:catch_me/main.dart';
 import 'package:catch_me/ui/signin/SingInViewModel.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
@@ -38,13 +39,14 @@ class SignIn extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: <Widget>[
                                     Padding(
-                                      padding: const EdgeInsets.only(top: 80.0),
+                                      padding: const EdgeInsets.only(top: 80.0, right: 20, left: 20),
                                       child: Column(
                                           crossAxisAlignment: CrossAxisAlignment
                                               .end,
                                           children: <Widget>[
                                               Text(
-                                                  "Welcome to CatchMe.",
+                                                  App.lang.welcomeToCatchMe,
+                                                  textAlign: TextAlign.center,
                                                   style: TextStyle(
                                                       fontSize: 35,
                                                       color: Colors.white,
@@ -62,9 +64,10 @@ class SignIn extends StatelessWidget {
                                     Container(
                                         height: 45,
                                         child: SignInButton(
-                                            Buttons.Google, onPressed: () {
-                                            viewModel.googleSignIn();
-                                        }),
+                                            Buttons.Google,
+                                            onPressed: () => viewModel.googleSignIn(),
+                                            text: App.lang.signInWithGoogle,
+                                        ),
                                     ),
                                 ]),
                         ),

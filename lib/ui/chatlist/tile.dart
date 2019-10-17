@@ -6,6 +6,7 @@ import 'package:catch_me/values/Styles.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
+import '../../main.dart';
 import '../Widgets.dart';
 
 class ChatTile extends StatelessWidget {
@@ -16,10 +17,15 @@ class ChatTile extends StatelessWidget {
     @override
     Widget build(BuildContext context) {
         var profilePhoto = Widgets.profilePicture(
-            context, _chat.companion.photoUrl, Dimens.chatListProfilePictureProportion);
-        var name = _wrappedText(context, _chat.companion.name, Styles.chatNameStyle(), 0.5);
-        var time = Text(toReadableTime(_chat.time), style: Styles.lastMessageTime());
-        var lastMessage = _wrappedText(context, _chat.message, Styles.lastMessageTime(), 0.66);
+            context, _chat.companion.photoUrl,
+            Dimens.chatListProfilePictureProportion);
+        var name = _wrappedText(
+            context, _chat.companion.name, Styles.chatNameStyle(), 0.5);
+        var time = Text(
+            toReadableTime(_chat.time), style: Styles.lastMessageTime());
+        var lastMessage = _wrappedText(context, _chat.message == '🏞 Picture'
+            ? App.lang.lastMessageIsPicture
+            : _chat.message, Styles.lastMessageTime(), 0.66);
         var _unread = _chat.unread;
         var badge = _unread == null
             ? Container(width: 0,)
@@ -69,7 +75,10 @@ class ChatTile extends StatelessWidget {
     Container _wrappedText(BuildContext context,
         String text, TextStyle style, double screenPercentage) =>
         Container(
-            width: MediaQuery.of(context).size.width * screenPercentage,
+            width: MediaQuery
+                .of(context)
+                .size
+                .width * screenPercentage,
             child: Text(
                 text,
                 style: style,
@@ -77,10 +86,11 @@ class ChatTile extends StatelessWidget {
                 maxLines: 1,
             ));
 
-    Row _messageRow(Widget widget1, Widget widget2) => Row(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[widget1, widget2],
-    );
+    Row _messageRow(Widget widget1, Widget widget2) =>
+        Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[widget1, widget2],
+        );
 }
 

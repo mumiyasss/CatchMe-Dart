@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:catch_me/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -18,7 +19,7 @@ class PhotoViewer extends StatelessWidget {
                     onTap: () => Navigator.of(context).pop(),
                     child: Icon(Icons.arrow_back, color: Colors.black,),
                 ),
-                title: Text("Photo", style: TextStyle(color: Colors.black),),
+                title: Text(App.lang.photoTitle, style: TextStyle(color: Colors.black),),
                 backgroundColor: Color(0xffffffff),
                 brightness: Brightness.light,
             ),

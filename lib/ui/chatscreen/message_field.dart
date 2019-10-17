@@ -62,7 +62,7 @@ class ImagesUploadIndicator extends StatelessWidget {
                     ),
                     Container(
                         margin: EdgeInsets.only(right: 4),
-                        child: Text(indicatorText,
+                        child: Text(App.lang.photoUploadingIndicator(quantity),
                             style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w400,
@@ -70,19 +70,10 @@ class ImagesUploadIndicator extends StatelessWidget {
                             ),
                         ),
                     ),
-                    //Text('🚀', style: TextStyle(fontSize: 21),)
                 ],
                 ),
             )
         );
-    }
-
-    get indicatorText {
-        if(quantity == 0) return 'Готово 👍';
-        if(quantity == 1) return 'Отправляю фотографию';
-        if(quantity % 10 < 5) return 'Отправляю $quantity фотографии';
-        return 'Отправляю $quantity фотографий';
-
     }
 }
 
@@ -141,7 +132,7 @@ class _MessageFieldState extends State<MessageField> {
                                     .text,
                                 decoration: InputDecoration(
                                     border: InputBorder.none,
-                                    hintText: "Type your message"),
+                                    hintText: App.lang.typeYourMessageHere),
                                 textCapitalization: TextCapitalization
                                     .sentences,
                             ),

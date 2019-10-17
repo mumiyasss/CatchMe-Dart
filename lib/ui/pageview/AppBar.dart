@@ -1,9 +1,9 @@
+import 'package:catch_me/main.dart';
 import 'package:catch_me/ui/pageview/PageView.dart';
 import 'package:flutter/material.dart';
 import 'package:catch_me/values/Styles.dart';
 import 'dart:async';
 import 'package:catch_me/values/Dimens.dart';
-import 'package:catch_me/values/Strings.dart';
 
 class MyAppBar extends StatelessWidget {
     MyAppBar(this.controller);
@@ -12,16 +12,6 @@ class MyAppBar extends StatelessWidget {
 
     @override
     Widget build(BuildContext context) {
-        var title = Title(
-            Strings.titleName,
-            TitleState(Dimens.leftMarginTitle, Dimens.bottomMarginTitle,
-                Styles.defaultTitle, controller));
-        var subtitle = Title(
-            Strings.subtitleName,
-            SubtitleState(
-                Dimens.leftMarginSubtitle, Dimens.bottomMarginSubtitle,
-                Styles.defaultSubtitle, controller));
-
         return SafeArea(
             bottom: false,
             child: Container(
@@ -29,10 +19,41 @@ class MyAppBar extends StatelessWidget {
                 height: Dimens.appBarHeight,
                 color: Colors.white,
                 padding: EdgeInsets.only(bottom: 20),
-                child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: <Widget>[title, subtitle],
-                ),
+                child: TitleSubtitleContainer(controller),
+            ),
+        );
+        // todo: title/subitle into container, which change margin
+        // todo: due to context size and MediaQuery size
+    }
+}
+
+class TitleSubtitleContainer extends StatefulWidget {
+    TitleSubtitleContainer(this.controller);
+
+    final StreamController controller;
+
+
+    @override
+    _TitleSubtitleContainerState createState() =>
+        _TitleSubtitleContainerState();
+}
+
+class _TitleSubtitleContainerState extends State<TitleSubtitleContainer> {
+    @override
+    Widget build(BuildContext context) {
+        var title = Title(
+            App.lang.dialogTitle,
+            TitleState(Dimens.leftMarginTitle, Dimens.bottomMarginTitle,
+                Styles.defaultTitle));
+        var subtitle = Title(
+            App.lang.settingsTitle,
+            SubtitleState(
+                Dimens.leftMarginSubtitle, Dimens.bottomMarginSubtitle,
+                Styles.defaultSubtitle));
+        return Container(
+            child: Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: <Widget>[title, subtitle],
             ),
         );
     }
@@ -48,10 +69,8 @@ class Title extends StatefulWidget {
 }
 
 class TitleState extends State<Title> {
-    TitleState(this.leftMargin, this._bottomMargin, this.style,
-        this.controller);
+    TitleState(this.leftMargin, this._bottomMargin, this.style);
 
-    StreamController controller;
     double leftMargin;
     double _bottomMargin;
     TextStyle style;
@@ -91,7 +110,7 @@ class TitleState extends State<Title> {
             shade: (subtitleColorShade * positionOffset).toInt());
         var titleBottomMargin = bottomMargin * positionOffset;
         var translation = screenSize.width - Dimens.maxValidShiftForAppBarTitle;
-        var leftMargin = 26 + translation * positionOffset;
+        //var leftMargin = 26 + translation * positionOffset;
         update(leftMargin, titleBottomMargin, newTitleStyle);
     }
 
@@ -121,9 +140,8 @@ class TitleState extends State<Title> {
 }
 
 class SubtitleState extends TitleState {
-    SubtitleState(double leftMargin, double bottomMargin, TextStyle style,
-        StreamController controller)
-        : super(leftMargin, bottomMargin, style, controller);
+    SubtitleState(double leftMargin, double bottomMargin, TextStyle style)
+        : super(leftMargin, bottomMargin, style);
 
     @override
     void calculateNewValues(double positionOffset) {

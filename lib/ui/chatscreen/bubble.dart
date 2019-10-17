@@ -14,7 +14,7 @@ class MessageBubble extends StatelessWidget {
 
     @override
     Widget build(BuildContext context) {
-        bool self = _message.author == CatchMeApp.userUid;
+        bool self = _message.author == App.userUid;
         var bigMargin = MediaQuery
             .of(context)
             .size

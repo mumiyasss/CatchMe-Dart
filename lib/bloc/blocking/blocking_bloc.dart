@@ -9,9 +9,9 @@ class BlockingBloc extends Bloc<BlockingEvent, BlockingState> {
     static CollectionReference _blockingCollection = _initBlockingRef();
 
     static _initBlockingRef() {
-        assert(CatchMeApp.userUid != null);
+        assert(App.userUid != null);
         _blockingCollection = Firestore.instance.collection('blocked_users')
-            .document(CatchMeApp.userUid).collection('blocked');
+            .document(App.userUid).collection('blocked');
         return _blockingCollection;
     }
 
@@ -36,11 +36,14 @@ class BlockingBloc extends Bloc<BlockingEvent, BlockingState> {
 
     @override
     Stream<BlockingState> mapEventToState(BlockingEvent event,) async* {
+
         if (event is BlockUser) {
+            print("Block gesture registered");
             _blockingCollection.document(companionId).setData(
                 {'blocked': true});
         }
         if (event is UnblockUser) {
+            print("Unblock gesture registered");
             _blockingCollection.document(companionId).setData(
                 {'blocked': false});
         }

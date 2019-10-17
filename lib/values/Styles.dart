@@ -9,6 +9,7 @@ class Styles {
           {@required double fontSize, @required int shade}) =>
       TextStyle(
           fontFamily: 'sans-serif',
+          fontWeight: FontWeight.bold,
           fontSize: fontSize,
           color: Color.fromARGB(0xFFF, shade, shade, shade));
 

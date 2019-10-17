@@ -30,7 +30,7 @@ class ChatScreen extends StatelessWidget {
     final SendingMessagesBloc _sendingBloc;
 
     ChatScreen(this.person)
-        :   _personStream = CatchMeApp.personDao.fromUserId(person.userId),
+        :   _personStream = App.personDao.fromUserId(person.userId),
             _chatBloc = ChatBloc(person),
             _sendingBloc = SendingMessagesBloc(person);
 
@@ -114,7 +114,7 @@ class MessagesPanel extends StatelessWidget {
                                         ['No such state in Mes Panel']);
                                 });
                         } else { // todo : make nice...
-                            return Center(child: Text("No Messages yet"),);
+                            return Center(child: Text(App.lang.noMessagesYet),);
                         }
                     }
                 ),

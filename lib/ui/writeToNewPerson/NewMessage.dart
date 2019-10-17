@@ -32,7 +32,7 @@ class NewMessage extends StatelessWidget {
                 padding: EdgeInsets.only(left: 25, top: 25, bottom: 20),
 //                height: 90,
                 child: Text(
-                    "All Users",
+                    App.lang.allUsersTitle,
                     style: TextStyle(
                         fontSize: 50,
                         color: Colors.black,

@@ -67,7 +67,8 @@ class ChatHelper extends Repository<Chat> {
     Future<List<Chat>> getAll({int pageNumber = 0}) async {
         List<Map> maps = await _db.query(chatTable,
             columns: null,
-            orderBy: timeColumn,
+            orderBy: timeColumn + " DESC",
+
             limit: pageNumber > 0 ? OBJECTS_PER_PAGE : null,
             offset: pageNumber > 0 ? --pageNumber * OBJECTS_PER_PAGE : null
         );

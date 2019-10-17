@@ -146,7 +146,7 @@ class _DeleteChatForeverButton extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                     Icon(Icons.delete_forever, color: Colors.red, size: 30,),
-                    Text("Удалить этот чат навсегда",
+                    Text(App.lang.deleteThisChatForever,
                         style: TextStyle(color: Colors.red, fontSize: 20),)
                 ],
             ),
@@ -201,9 +201,9 @@ class _BlockUnblockUserButton extends StatelessWidget {
                 StreamBuilder(
                     stream: _bloc.blockState,
                     builder: (context, AsyncSnapshot<bool> snapshot) {
-                        var value = " Заблокировать";
+                        var value = App.lang.block;
                         if (snapshot.data == true) {
-                            value = " Разблокировать";
+                            value = App.lang.unblock;
                         }
                         return GestureDetector(
                             onTap: () {
@@ -342,14 +342,16 @@ class _AppBarContent extends StatelessWidget {
         if (person.lastSeen != null) {
             var timestamp = Timestamp.fromMillisecondsSinceEpoch(
                 person.lastSeen);
-            if (timestamp.compareTo(Timestamp.now()).abs() < 25) {
-                return Text('online',
+            var now = Timestamp.now();
+            var difference = (now.seconds - timestamp.seconds).abs();
+            if (difference < 25) {
+                return Text(App.lang.online,
                     style: TextStyle(fontSize: 12, color: Colors.blue),);
             } else
                 return Text(
                     'last seen ${toReadableTime(timestamp, withArticle: true)}',
                     style: style,);
         } else
-            return Text('last seen recently', style: style);
+            return Text(App.lang.recently, style: style);
     }
 }

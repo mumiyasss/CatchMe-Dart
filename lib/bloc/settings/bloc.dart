@@ -36,16 +36,16 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
         if (event is EmailChangedEvents) {
             // нужно педелать в корне чтобы сохранялся объект person,
             // а потом от сюда послать его измененным в dao!
-            CatchMeApp.personDao.updatePersonInfo(event.user..email = event.email);
+            App.personDao.updatePersonInfo(event.user..email = event.email);
         }
         if (event is NameChangedEvents) {
-            CatchMeApp.personDao.updatePersonInfo(event.user..name = event.name);
+            App.personDao.updatePersonInfo(event.user..name = event.name);
         }
         if (event is UploadNewAvatarEvent) {
             File image = await ImagePicker.pickImage(source: ImageSource.gallery);
             // todo: загрузка началась
             var newAvatarUrl = await uploadImageToStorage(image);
-            CatchMeApp.personDao.updatePersonInfo(event.user..photoUrl = newAvatarUrl);
+            App.personDao.updatePersonInfo(event.user..photoUrl = newAvatarUrl);
         }
 
         yield SettingsState();

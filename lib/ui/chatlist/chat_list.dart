@@ -1,6 +1,7 @@
 import 'package:catch_me/bloc/chat_list/bloc.dart';
 import 'package:catch_me/bloc/chat_list/events.dart';
 import 'package:catch_me/bloc/chat_list/states.dart';
+import 'package:catch_me/main.dart';
 import 'package:catch_me/models/Chat.dart';
 import 'package:catch_me/ui/Widgets.dart';
 import 'package:catch_me/ui/chatscreen/chat_screen.dart';
@@ -33,14 +34,14 @@ class ChatList extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                                 Text(
-                                    "У вас пока нет сообщений.",
+                                    App.lang.youDoNotHaveAnyMessagesYet,
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                         color: Colors.black, fontSize: 20, fontWeight: FontWeight.w300),
                                 ),
                                 Container(height: 7),
                                 Text(
-                                    "Напишите первыми😏",
+                                    App.lang.writeFirst,
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                         color: Colors.black, fontSize: 20, fontWeight: FontWeight.w400),
@@ -69,14 +70,14 @@ class ChatList extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
               children: [
                     Text(
-                      "У вас пока нет сообщений.",
+                      App.lang.youDoNotHaveAnyMessagesYet,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           color: Colors.black, fontSize: 20, fontWeight: FontWeight.w300),
                     ),
                     Container(height: 7,),
                     Text(
-                      "Напишите первыми😏",
+                      App.lang.youDoNotHaveAnyMessagesYet,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           color: Colors.black, fontSize: 20, fontWeight: FontWeight.w400),
@@ -84,11 +85,6 @@ class ChatList extends StatelessWidget {
               ]
           ));
   }
-
-  Widget _buildListItem(BuildContext context, Chat chat) {
-    
-  }
-
 }
 
 

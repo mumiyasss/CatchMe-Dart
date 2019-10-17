@@ -15,12 +15,12 @@ class SignInViewModel {
         await FirebaseAuth.instance.signInWithCredential(googleCredential);
         var user = await initUser();
         var userToCheck = (await Firestore.instance
-            .document('users/' + CatchMeApp.userUid)
+            .document('users/' + App.userUid)
             .get());
         var userDoesNotExists = userToCheck.data == null;
         if (userDoesNotExists) {
-            Firestore.instance.document('users/' + CatchMeApp.userUid).setData({
-                userIdColumn: CatchMeApp.userUid,
+            Firestore.instance.document('users/' + App.userUid).setData({
+                userIdColumn: App.userUid,
                 nameColumn: user.displayName,
                 emailColumn: user.email,
                 phoneColumn: user.phoneNumber,
@@ -43,7 +43,7 @@ class SignInViewModel {
     Future<FirebaseUser> initUser() async {
         var firebaseUser = await FirebaseAuth.instance.currentUser();
         if (firebaseUser != null)
-            CatchMeApp.userUid = firebaseUser.uid;
+            App.userUid = firebaseUser.uid;
         return firebaseUser;
     }
 

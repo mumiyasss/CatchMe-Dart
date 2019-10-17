@@ -10,7 +10,7 @@ import 'main.dart';
 
 Future<String> uploadImageToStorage(File image) async {
 
-    var filename = Timestamp.now().seconds.toString() + CatchMeApp.userUid + image.path;
+    var filename = Timestamp.now().seconds.toString() + App.userUid + image.path;
 
     var tempDir = (await path_provider.getTemporaryDirectory()).absolute.path;
     var targetPath = tempDir + "/temp${Timestamp.now().nanoseconds}.jpeg";

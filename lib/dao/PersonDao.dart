@@ -55,15 +55,15 @@ class PersonDao {
     // сделать в стрим?
     Observable<Person> fromPrivateChatMembers(List members) {
         for (var memberId in members) {
-            if (memberId != CatchMeApp.userUid) {
+            if (memberId != App.userUid) {
                 return fromUserId(memberId);
             }
         }
-        return fromUserId(CatchMeApp.userUid).asBroadcastStream();
+        return fromUserId(App.userUid).asBroadcastStream();
     }
 
     Observable<Person> get authPerson {
-        return this.fromUserId(CatchMeApp.userUid);
+        return this.fromUserId(App.userUid);
     }
 
 
