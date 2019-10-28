@@ -1,5 +1,6 @@
 google-services.json
 GoogleService-Info.plist
+flutter_export_enviroment.sh
 
 # Miscellaneous
 *.class

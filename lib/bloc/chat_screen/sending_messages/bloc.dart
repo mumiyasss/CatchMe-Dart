@@ -11,6 +11,7 @@ import 'package:catch_me/models/Message.dart';
 import 'package:catch_me/models/Person.dart';
 import 'package:catch_me/utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:rxdart/rxdart.dart';
@@ -23,8 +24,8 @@ class SendingMessagesBloc extends Bloc<NewMessageEvent, ImagesAreUploading> {
     Person _person;
     static var _uploadingImagesQuantity = 0;
 
-    static final imageQuantityStreamController = StreamController<
-        int>.broadcast(sync: true)
+    static final imageQuantityStreamController = StreamController<int>
+        .broadcast(sync: true)
         ..add(_uploadingImagesQuantity);
 
     SendingMessagesBloc(this._person);
@@ -70,16 +71,35 @@ class SendingMessagesBloc extends Bloc<NewMessageEvent, ImagesAreUploading> {
         _sendMessage(data);
     }
 
+
+    _sendMessage1(Map<String, dynamic> data) async {
+        assert(data['text'] != null || data['image'] != null);
+
+        var mapToSend = Map<String, dynamic>();
+        mapToSend['chatPath'] = _chatReference.path;
+        mapToSend['companionUid'] = _person.userId;
+        mapToSend['message'] = data;
+
+        final HttpsCallable callable = CloudFunctions.instance.getHttpsCallable(
+            functionName: 'sendMessage',
+        );
+        var resp = await callable.call(mapToSend);
+        print("Response on sendMessage $resp");
+    }
+
     _sendMessage(Map<String, dynamic> data) async {
         assert(data['text'] != null || data['image'] != null);
 
         data['author'] = App.userUid;
         data['timestamp'] = Timestamp.now(); // Todo: cloud function
 
+        data['chatPath'] = _chatReference.path;
+        data['companionUid'] = _person.userId;
+
         _chatReference.collection('messages').add(data);
         _chatReference.updateData({
             'lastMessageAuthorId': App.userUid,
-            'lastMessageText': data['text'] ?? '🏞 Picture', // TODO: locale
+            'lastMessageText': data['text'] ?? '🏞 Picture',
             'lastMessageTime': Timestamp.now() // Todo: cloud function
         });
     }
