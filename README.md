@@ -10,7 +10,7 @@ Key features:
 5) The ability to see when the other person last logged in.
 6) Change the username and avatar.
 
-![](project-res/#1.jpg)
-![](project-res/#2.jpg)
-![](project-res/#3.jpg)
-![](project-res/#4.jpg)
+![](/project-res/#1.jpg)
+![](/project-res/#2.jpg)
+![](/project-res/#3.jpg)
+![](/project-res/#4.jpg)
