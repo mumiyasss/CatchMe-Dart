@@ -18,20 +18,20 @@ dependencies:
   cloud_firestore: any     # new
   cloud_functions: any
   firebase_auth: ^0.11.1+7
+  firebase_storage: any
   google_sign_in: any
   flutter_signin_button: ^0.2.4
+  cached_network_image: ^1.1.1
   http: ^0.12.0
-  bloc: ^0.15.0
   flutter_bloc: ^0.21.0
+  bloc: ^0.15.0
+  photo_view: any
+  rxdart: ^0.22.1
+  flare_flutter: any
   sqflite: ^1.1.6+3
   path_provider: ^1.1.0
-  rxdart: ^0.22.1
-  cached_network_image: ^1.1.1
-  flare_flutter: any
   image_picker: any
-  firebase_storage: any
   flutter_image_compress: any
-  photo_view: any
   devicelocale: ^0.2.0
 
 

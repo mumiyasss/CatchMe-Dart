@@ -1,16 +1,16 @@
-# catch_me
+# CatchMe — Messenger
 
-Messenger
+Cross-platform messenger created using the new Flutter technology.
 
-## Getting Started
+Key features:
+1) Log in using your Google account.
+2) Sending messages.
+3) Sending photos.
+4) At any time, quickly delete the chat everywhere.
+5) The ability to see when the other person last logged in.
+6) Change the username and avatar.
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.io/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.io/docs/cookbook)
-
-For help getting started with Flutter, view our 
-[online documentation](https://flutter.io/docs), which offers tutorials, 
-samples, guidance on mobile development, and a full API reference.
+![](project-res/#1.jpg)
+![](project-res/#2.jpg)
+![](project-res/#3.jpg)
+![](project-res/#4.jpg)

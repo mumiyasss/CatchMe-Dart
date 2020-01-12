@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:cloud_functions/cloud_functions.dart';
+import 'dart:js';
 
 class OnlineStampBloc extends Bloc<OnlineStampEvent, OnlineStampState> {
 
