@@ -10,8 +10,8 @@ class BlockingBloc extends Bloc<BlockingEvent, BlockingState> {
 
     static _initBlockingRef() {
         assert(App.userUid != null);
-        _blockingCollection = Firestore.instance.collection('blocked_users')
-            .document(App.userUid).collection('blocked');
+        _blockingCollection = FirebaseFirestore.instance.collection('blocked_users')
+            .doc(App.userUid).collection('blocked');
         return _blockingCollection;
     }
 
@@ -23,8 +23,8 @@ class BlockingBloc extends Bloc<BlockingEvent, BlockingState> {
         blockState =
             Observable(_blockingCollection.document(companionId).snapshots())
                 .map<bool>((DocumentSnapshot updatedData) {
-                print('blocked data is ${updatedData.data['blocked']}');
-                if (updatedData.data['blocked'] == true) {
+                print('blocked data is ${updatedData.data()['blocked']}');
+                if (updatedData.data()['blocked'] == true) {
                     return true;
                 } else
                     return false;
@@ -39,12 +39,12 @@ class BlockingBloc extends Bloc<BlockingEvent, BlockingState> {
         print(event);
         if (event is BlockUser) {
             print("Block gesture registered");
-            _blockingCollection.document(companionId).setData(
+            _blockingCollection.doc(companionId).set(
                 {'blocked': true});
         }
         if (event is UnblockUser) {
             print("Unblock gesture registered");
-            _blockingCollection.document(companionId).setData(
+            _blockingCollection.doc(companionId).set(
                 {'blocked': false});
         }
     }

@@ -41,10 +41,10 @@ class Chat extends Model {
         var data = snapshot.data;
         return Chat()
             ..companion = await (await PersonDao.instance)
-                .fromPrivateChatMembers(data['members']).first
-            ..message = data['lastMessageText']
-            ..unread = data['unread']
-            ..time = (data['lastMessageTime'] as Timestamp)
+                .fromPrivateChatMembers(data()['members']).first
+            ..message = data()['lastMessageText']
+            ..unread = data()['unread']
+            ..time = (data()['lastMessageTime'] as Timestamp)
             ..reference = snapshot.reference;
     }
 

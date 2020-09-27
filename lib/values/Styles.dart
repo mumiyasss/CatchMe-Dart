@@ -4,7 +4,7 @@ class Styles {
   static final mainTheme = ThemeData(
       primaryColor: Colors.white,
       accentColor: Colors.blue,
-      platform: TargetPlatform.iOS
+      platform: TargetPlatform.android
   );
   static final darkTheme = mainTheme.copyWith();
 

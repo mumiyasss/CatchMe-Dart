@@ -30,7 +30,6 @@ class NewMessage extends StatelessWidget {
             Container(
                 alignment: Alignment.centerLeft,
                 padding: EdgeInsets.only(left: 25, top: 25, bottom: 20),
-//                height: 90,
                 child: Text(
                     App.lang.allUsersTitle,
                     style: TextStyle(

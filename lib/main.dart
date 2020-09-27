@@ -2,41 +2,35 @@ import 'package:catch_me/LifecycleEventHandler.dart';
 import 'package:catch_me/bloc/background_tasks/online_stamp_bloc.dart';
 import 'package:catch_me/dao/ChatDao.dart';
 import 'package:catch_me/dao/PersonDao.dart';
-import 'package:catch_me/dao/cached_db/cached_db.dart';
-import 'package:catch_me/dao/cached_db/db/Db.dart';
 import 'package:catch_me/dao/cached_db/store.dart';
-import 'package:catch_me/models/Chat.dart';
-import 'package:catch_me/models/Person.dart';
-import 'package:catch_me/ui/chatlist/chat_list.dart';
-import 'package:catch_me/ui/settings/Settings.dart';
 import 'package:catch_me/ui/signin/SingInViewModel.dart';
 import 'package:catch_me/values/Styles.dart';
 import 'package:catch_me/values/language.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:devicelocale/devicelocale.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:catch_me/ui/pageview/PageView.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_test/flutter_test.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:rxdart/rxdart.dart';
 import 'ui/signin/SignIn.dart';
 
 void main() {
-    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
-        .then((_) async {
-        List languages = await Devicelocale.preferredLanguages;
-        if ((languages[0] as String).startsWith("ru"))
-            App.lang = RuLang();
-        else App.lang = EnLang();
-
-        await initIfLoggedIn();
-        runApp(App());
-    });
+    runApp(MyApp());
+    // SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
+    //     .then((_) async {
+    //     String currentLocale = await Devicelocale.currentLocale;
+    //     if (currentLocale.startsWith("ru"))
+    //         App.lang = RuLang();
+    //     else
+    //         App.lang = EnLang();
+    //     runApp(MyApp());
+    // });
 }
 
 initIfLoggedIn() async {
-    if (await SignInViewModel().initUser() != null) {
+    if (SignInViewModel().initUser() != null) {
         App.chatDao = await ChatDao.instance;
         App.personDao = await PersonDao.instance;
     }
@@ -47,13 +41,38 @@ onAppClose() async {
     PersonStore.instance.then((store) => store.updateDbRightNow());
 }
 
-class App extends StatelessWidget {
+class MyApp extends StatelessWidget {
+    @override
+    Widget build(BuildContext context) {
+        return FutureBuilder(
+            // Initialize FlutterFire
+            future: Firebase.initializeApp(),
+            builder: (context, snapshot) {
+                // Check for errors
+                if (snapshot.hasError) {
+                    return Container(
+                        color: Colors.red,
+                    );
+                }
+                // Once complete, show your application
+                if (snapshot.connectionState == ConnectionState.done) {
+                    return App();
+                }
+                // Otherwise, show something whilst waiting for initialization to complete
+                return Center(
+                    child: CircularProgressIndicator(),
+                );
+            },
+        );
+    }
+}
 
+class App extends StatelessWidget {
     static Language lang = EnLang();
     static String _userUid;
 
     static String get userUid {
-        assert(_userUid != null );
+        assert(_userUid != null);
         return _userUid;
     }
 
@@ -68,6 +87,7 @@ class App extends StatelessWidget {
     static ChatDao chatDao;
 
     final _onlineStampBloc = OnlineStampBloc();
+
     sendStamp() async {
         _onlineStampBloc.dispatch(SendStamp());
     }
@@ -75,13 +95,11 @@ class App extends StatelessWidget {
     @override
     Widget build(BuildContext context) {
         // определение языка системы и присвоение нужного lang
-        print(SystemUiOverlayStyle.dark.statusBarColor);
         WidgetsBinding.instance.addObserver(LifecycleEventHandler(
             inactiveCallBack: onAppClose(),
             pausedCallBack: onAppClose(),
             suspendingCallBack: onAppClose(),
-            resumeCallBack: sendStamp()
-        ));
+            resumeCallBack: sendStamp()));
 
         appContext = context;
 
@@ -98,21 +116,22 @@ class App extends StatelessWidget {
     }
 
     Widget _handleCurrentScreen() {
-        var stream = Observable(FirebaseAuth.instance.onAuthStateChanged)
+        var stream = Observable(FirebaseAuth.instance.authStateChanges())
             .asyncMap((user) async {
             await initIfLoggedIn();
             return user;
         });
-        return StreamBuilder<FirebaseUser>(
+        return StreamBuilder<User>(
             stream: stream,
             builder: (BuildContext context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting)
                     return SplashScreen();
                 else if (snapshot.hasData) {
-                    //SignInViewModel().initUser();
                     return MainPage();
                 } else {
-                    print(snapshot.toString());
+                    if (snapshot.hasError) {
+                        Fluttertoast.showToast(msg: "Ошибка авторизации. ${snapshot.error.toString()}");
+                    }
                     return SignIn();
                 }
             });
@@ -129,4 +148,3 @@ class SplashScreen extends StatelessWidget {
         );
     }
 }
-

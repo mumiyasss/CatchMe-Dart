@@ -9,155 +9,146 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class Settings extends StatefulWidget {
-    final state = SettingsState();
+  final state = SettingsState();
 
-    final bloc = SettingsBloc();
+  final bloc = SettingsBloc();
 
-    @override
-    State createState() {
-        return state;
-    }
+  @override
+  State createState() {
+    return state;
+  }
 }
 
 class SettingsState extends State<Settings> {
-
-    @override
+  @override
   void dispose() {
-        // todo нужно каждый раз создавать новый observable а не сохранять его глобально чтобы
+    // todo нужно каждый раз создавать новый observable а не сохранять его глобально чтобы
     super.dispose();
   }
 
-    @override
-    Widget build(BuildContext context) {
-        return Column(
-            children: <Widget>[
-                Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 25.0, vertical: 5),
-                    child: StreamBuilder<Person>(
-                        stream: App.personDao.fromUserId(App.userUid),
-                        builder: (context, snapshot) {
-                            if (snapshot.hasData) {
-                                return Row(children: <Widget>[
-                                    _Avatar(widget.bloc, snapshot.data),
-                                    _AccountCredentials(
-                                        widget.bloc, snapshot.data),
-                                ],);
-                            } else if (snapshot.hasError) {
-                                throw Exception([snapshot.error]);
-                            }
-                            return CircularProgressIndicator();
-                        }
-                    ),
-                ),
-
-                Container(height: 80,),
-
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 5),
+          child: StreamBuilder<Person>(
+              stream: App.personDao.fromUserId(App.userUid),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return Row(
                     children: <Widget>[
-                        Container(
-                            margin: EdgeInsets.symmetric(horizontal: 25),
-                            child: RaisedButton(
-                                elevation: 4,
-                                onPressed: () {
-                                    Db.deleteDb();
-
-                                    FirebaseAuth.instance.signOut();
-                                },
-                                child: Text(
-                                    App.lang.signOutButton,
-                                    style: TextStyle(color: Colors.white),),
-                                color: Colors.blue,
-                            ),
-                        )
+                      _Avatar(widget.bloc, snapshot.data),
+                      _AccountCredentials(widget.bloc, snapshot.data),
                     ],
+                  );
+                } else if (snapshot.hasError) {
+                  throw Exception([snapshot.error]);
+                }
+                return CircularProgressIndicator();
+              }),
+        ),
+        Container(
+          height: 80,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 25),
+              child: RaisedButton(
+                elevation: 4,
+                onPressed: () {
+                  Db.deleteDb();
+
+                  FirebaseAuth.instance.signOut();
+                },
+                child: Text(
+                  App.lang.signOutButton,
+                  style: TextStyle(color: Colors.white),
                 ),
-            ],
-        );
-    }
+                color: Colors.blue,
+              ),
+            )
+          ],
+        ),
+      ],
+    );
+  }
 }
 
 class _Avatar extends StatefulWidget {
-    SettingsBloc bloc;
-    Person person;
+  SettingsBloc bloc;
+  Person person;
 
-    _Avatar(this.bloc, this.person);
+  _Avatar(this.bloc, this.person);
 
-    @override
-    __AvatarState createState() => __AvatarState();
+  @override
+  __AvatarState createState() => __AvatarState();
 }
 
 class __AvatarState extends State<_Avatar> {
-    @override
-    Widget build(BuildContext context) {
-        return GestureDetector(
-            onTap: () {
-                print("on tap");
-                widget.bloc.dispatch(UploadNewAvatarEvent(widget.person));
-            },
-            child: Widgets.profilePicture(
-                context, widget.person.photoUrl, 0.27));
-    }
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+        onTap: () {
+          print("on tap");
+          widget.bloc.dispatch(UploadNewAvatarEvent(widget.person));
+        },
+        child: Widgets.profilePicture(context, widget.person.photoUrl, 0.27));
+  }
 }
 
 class _AccountCredentials extends StatefulWidget {
-    final SettingsBloc bloc;
+  final SettingsBloc bloc;
 
-    final Person person;
+  final Person person;
 
-    _AccountCredentials(this.bloc, this.person);
+  _AccountCredentials(this.bloc, this.person);
 
-    @override
-    _AccountCredentialsState createState() => _AccountCredentialsState();
+  @override
+  _AccountCredentialsState createState() => _AccountCredentialsState();
 }
 
 class _AccountCredentialsState extends State<_AccountCredentials> {
+  get bloc => widget.bloc;
 
-    get bloc => widget.bloc;
+  @override
+  void initState() {
+    nameController.text = widget.person.name;
+    emailController.text = widget.person.email;
+    super.initState();
+  }
 
-    @override
-    void initState() {
-        nameController.text = widget.person.name;
-        emailController.text = widget.person.email;
-        super.initState();
-    }
+  final nameController = TextEditingController();
+  final emailController = TextEditingController();
 
-    final nameController = TextEditingController();
-    final emailController = TextEditingController();
-
-    @override
-    Widget build(BuildContext context) {
-        return Container(
-            margin: EdgeInsets.only(left: 20),
-            width: MediaQuery
-                .of(context)
-                .size
-                .width * 0.50,
-            height: 90,
-            child: Column(children: <Widget>[
-                TextField(
-                    onChanged: (name) {
-                        bloc.dispatch(NameChangedEvents(name, widget.person));
-                    },
-                    style: TextStyle(color: Colors.black),
-                    controller: nameController,
-                    decoration: InputDecoration(
-                        hintText: App.lang.changeNameHint
-                    ),),
-                TextField(
-                    onChanged: (email) {
-                        bloc.dispatch(EmailChangedEvents(email, widget.person));
-                    },
-                    style: TextStyle(color: Colors.black),
-                    controller: emailController,
-                    decoration: InputDecoration(
-                        hintText: App.lang.changeEmailHint
-                    ),
-                )
-            ],),
-        );
-    }
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(left: 20),
+      width: MediaQuery.of(context).size.width * 0.50,
+      height: 90,
+      child: Column(
+        children: <Widget>[
+          TextField(
+            onChanged: (name) {
+              bloc.dispatch(NameChangedEvents(name, widget.person));
+            },
+            style: TextStyle(color: Colors.black),
+            controller: nameController,
+            decoration: InputDecoration(hintText: App.lang.changeNameHint),
+          ),
+          TextField(
+            onChanged: (email) {
+              bloc.dispatch(EmailChangedEvents(email, widget.person));
+            },
+            style: TextStyle(color: Colors.black),
+            controller: emailController,
+            decoration: InputDecoration(hintText: App.lang.changeEmailHint),
+          )
+        ],
+      ),
+    );
+  }
 }
-
-

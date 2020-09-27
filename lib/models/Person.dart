@@ -21,17 +21,17 @@ class Person extends Model {
 
     Person.fromSnapshot(DocumentSnapshot userSnapshot) {
 
-        photoUrl = userSnapshot.data[photoUrlColumn];
-        name = userSnapshot.data[nameColumn];
-        userId = userSnapshot.data[userIdColumn];
-        email = userSnapshot.data[emailColumn];
-        lastSeen = userSnapshot.data[lastSeenColumn];
+        photoUrl = userSnapshot.data()[photoUrlColumn];
+        name = userSnapshot.data()[nameColumn];
+        userId = userSnapshot.data()[userIdColumn];
+        email = userSnapshot.data()[emailColumn];
+        lastSeen = userSnapshot.data()[lastSeenColumn];
         assert(name != null);
         assert(userId != null);
     }
 
     Person.fromFirebaseUserInfo(UserInfo info) {
-        photoUrl = info.photoUrl;
+        photoUrl = info.photoURL;
         name = info.displayName;
         userId = info.uid;
         email = info.email;

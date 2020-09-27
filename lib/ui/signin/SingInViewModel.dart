@@ -13,18 +13,18 @@ class SignInViewModel {
     void googleSignIn() async {
         final googleCredential = await _getGoogleCredential();
         await FirebaseAuth.instance.signInWithCredential(googleCredential);
-        var user = await initUser();
-        var userToCheck = (await Firestore.instance
-            .document('users/' + App.userUid)
+        var user = initUser();
+        var userToCheck = (await FirebaseFirestore.instance
+            .doc('users/' + App.userUid)
             .get());
         var userDoesNotExists = userToCheck.data == null;
         if (userDoesNotExists) {
-            Firestore.instance.document('users/' + App.userUid).setData({
+            FirebaseFirestore.instance.doc('users/' + App.userUid).set({
                 userIdColumn: App.userUid,
                 nameColumn: user.displayName,
                 emailColumn: user.email,
                 phoneColumn: user.phoneNumber,
-                photoUrlColumn: user.photoUrl
+                photoUrlColumn: user.photoURL
             });
         }
     }
@@ -40,8 +40,8 @@ class SignInViewModel {
         );
     }
 
-    Future<FirebaseUser> initUser() async {
-        var firebaseUser = await FirebaseAuth.instance.currentUser();
+    User initUser()  {
+        var firebaseUser = FirebaseAuth.instance.currentUser;
         if (firebaseUser != null)
             App.userUid = firebaseUser.uid;
         return firebaseUser;

@@ -18,7 +18,7 @@ class Message {
         author = map['author'];
 
   Message.fromSnapshot(DocumentSnapshot snapshot)
-      : this.fromMap(snapshot.data, reference: snapshot.reference);
+      : this.fromMap(snapshot.data(), reference: snapshot.reference);
 
   @override
   String toString() => "Record<${text ?? imageUrl}:$author>";
